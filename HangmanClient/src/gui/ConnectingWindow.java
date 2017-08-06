@@ -19,11 +19,15 @@ import java.awt.event.WindowEvent;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ConnectingWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtFindASpecific;
+	public static JTextField txtFindASpecific;
 
 	
 	/**
@@ -38,7 +42,7 @@ public class ConnectingWindow extends JFrame {
 			}
 		});
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/ValeVale/git/hangman/HangmanClient/resources/icons/h.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/ValeVale/git/hangmannn/HangmanClient/resources/icons/h.png"));
 		setTitle("Hangman");
 		setMinimumSize(new Dimension(450, 320));
 		setSize(new Dimension(800, 600));
@@ -71,6 +75,23 @@ public class ConnectingWindow extends JFrame {
 		panel_3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		txtFindASpecific = new JTextField();
+		
+		txtFindASpecific.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				txtFindASpecific.setText("");
+				txtFindASpecific.setForeground(new Color(0, 0, 0));
+				txtFindASpecific.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER){
+							GUIControler.typeAUser(txtFindASpecific.getText());
+						}
+					}
+
+				});
+			}
+		});
 		txtFindASpecific.setForeground(new Color(216, 191, 216));
 		txtFindASpecific.setFont(new Font("Arial", Font.ITALIC, 12));
 		txtFindASpecific.setText("Find a specific user...");
@@ -111,6 +132,18 @@ public class ConnectingWindow extends JFrame {
 		panel_7.add(lblYouCanAlso);
 		
 		JList list = new JList(GUIControler.onlineLista.toArray());
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent event) {
+				if (event.getClickCount() == 2) {
+					GUIControler.choose(list.getSelectedValue().toString());
+				  }
+			}
+		});
+		
+		
+		
+		
 		panel_6.add(list, BorderLayout.CENTER);
 		
 	}

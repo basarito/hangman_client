@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 
 public class GUIControler {
@@ -72,7 +73,7 @@ public class GUIControler {
 		}
 		else {
 			//JOptionPane.showMessageDialog(welcomeWindow, "Okie dokie smokie");
-			onlineLista.add(username);
+			//onlineLista.add(username);
 			GUIControler.playerUsername = username;
 			showConnectingWindow();
 		}
@@ -82,6 +83,47 @@ public class GUIControler {
 	public static JLabel welcomeUser() {
 		return new JLabel("Welcome, " + GUIControler.playerUsername + "!");
 	}
+
+	public static void choose(String user) {
+		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+user+ " ?",
+				"Connecting", JOptionPane.YES_NO_OPTION);
+		
+		if(option == JOptionPane.YES_OPTION){
+
+				connectingWindow.setVisible(false);
+				mainWindow = new MainWindow();
+				mainWindow.setVisible(true);
+				mainWindow.setLocationRelativeTo(null);
+
+		}else{
+			SwingUtilities.updateComponentTreeUI(connectingWindow);
+		}
+	}
+
+	public static void typeAUser(String text) {
+		
+		if(onlineLista.contains(text)){
+			int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+text+ " ?",
+					"Connecting", JOptionPane.YES_NO_OPTION);
+
+
+			if(option == JOptionPane.YES_OPTION){
+
+				connectingWindow.setVisible(false);
+				mainWindow = new MainWindow();
+				mainWindow.setVisible(true);
+				mainWindow.setLocationRelativeTo(null);
+			}else{
+				SwingUtilities.updateComponentTreeUI(connectingWindow);
+			}
+		}else{
+			JOptionPane.showMessageDialog(connectingWindow, "The user does not exist.");
+
+		}
+
+	}
+
+
 
 	
 	
