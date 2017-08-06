@@ -3,6 +3,7 @@ package gui;
 import java.awt.EventQueue;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -123,8 +124,28 @@ public class GUIControler {
 
 	}
 
+	public static void chooseRandom() {
+		Random randomizer = new Random();
+		String random = onlineLista.get(randomizer.nextInt(onlineLista.size()));
+
+		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), random+" is available. Do you want to play with him? ",
+				"Connecting", JOptionPane.YES_NO_OPTION);
 
 
-	
-	
+		if(option == JOptionPane.YES_OPTION){
+
+			connectingWindow.setVisible(false);
+			mainWindow = new MainWindow();
+			mainWindow.setVisible(true);
+			mainWindow.setLocationRelativeTo(null);
+		}else{
+			SwingUtilities.updateComponentTreeUI(connectingWindow);
+		}
+	}
 }
+
+
+
+	
+	
+

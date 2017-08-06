@@ -102,6 +102,12 @@ public class ConnectingWindow extends JFrame {
 		panel_3.add(lblOr);
 		
 		JButton btnRandom = new JButton("RANDOM");
+		btnRandom.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				GUIControler.chooseRandom();
+			}
+		});
 		btnRandom.setBackground(new Color(221, 160, 221));
 		btnRandom.setForeground(new Color(255, 255, 255));
 		btnRandom.setFont(new Font("Arial", Font.BOLD, 13));
