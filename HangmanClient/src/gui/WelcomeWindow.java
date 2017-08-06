@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Font;
-
+import java.awt.Image;
 
 import javax.swing.JTextArea;
 import java.awt.Color;
@@ -45,7 +45,7 @@ public class WelcomeWindow extends JFrame {
 			}
 		});
 		
-		//setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/hgmn.jpg")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/ValeVale/git/hangman/HangmanClient/resources/icons/h.png"));
 		setTitle("Hangman");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 320);
