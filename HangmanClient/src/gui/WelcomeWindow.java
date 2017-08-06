@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -29,6 +30,7 @@ public class WelcomeWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	
 
 
 
@@ -45,7 +47,7 @@ public class WelcomeWindow extends JFrame {
 			}
 		});
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/ValeVale/git/hangman/HangmanClient/resources/icons/h.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Ana\\git\\hangman3\\HangmanClient\\resources\\icons\\h.png"));
 		setTitle("Hangman");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 320);
@@ -108,7 +110,7 @@ public class WelcomeWindow extends JFrame {
 		JButton btnBegin = new JButton("BEGIN");
 		btnBegin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				GUIControler.showConnectingWindow();
+				GUIControler.sendUsername(textField.getText());
 			}
 		});
 		btnBegin.setBounds(160, 78, 100, 31);
