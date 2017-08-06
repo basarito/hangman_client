@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 
@@ -12,7 +13,8 @@ public class GUIControler {
 	private static WelcomeWindow welcomeWindow;
 	private static ConnectingWindow connectingWindow ;
 	private static MainWindow mainWindow;
-	private static LinkedList<String> onlineLista = new LinkedList<String>(Arrays.asList("pera123","mikamagija","zika90"));
+	public static LinkedList<String> onlineLista = new LinkedList<String>(Arrays.asList("pera123","mikamagija","zika90"));
+	private static String playerUsername="";
 	
 	/**
 	 * Launch the application.
@@ -71,8 +73,14 @@ public class GUIControler {
 		else {
 			//JOptionPane.showMessageDialog(welcomeWindow, "Okie dokie smokie");
 			onlineLista.add(username);
+			GUIControler.playerUsername = username;
 			showConnectingWindow();
 		}
+	}
+
+	//Personalized welcome message 
+	public static JLabel welcomeUser() {
+		return new JLabel("Welcome, " + GUIControler.playerUsername + "!");
 	}
 
 	

@@ -17,6 +17,8 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ConnectingWindow extends JFrame {
 
@@ -51,7 +53,8 @@ public class ConnectingWindow extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
 		
-		JLabel lblWelcomeUser = new JLabel("Welcome, user_var!");
+		//JLabel lblWelcomeUser = new JLabel("Welcome, user_var!");
+		JLabel lblWelcomeUser = GUIControler.welcomeUser();
 		lblWelcomeUser.setForeground(new Color(153, 50, 204));
 		lblWelcomeUser.setFont(new Font("Arial", Font.BOLD, 18));
 		panel.add(lblWelcomeUser);
@@ -61,6 +64,7 @@ public class ConnectingWindow extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.EAST);
+		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JPanel panel_3 = new JPanel();
 		contentPane.add(panel_3, BorderLayout.SOUTH);
@@ -106,8 +110,8 @@ public class ConnectingWindow extends JFrame {
 		lblYouCanAlso.setFont(new Font("Arial", Font.PLAIN, 13));
 		panel_7.add(lblYouCanAlso);
 		
-		JList list = new JList();
+		JList list = new JList(GUIControler.onlineLista.toArray());
 		panel_6.add(list, BorderLayout.CENTER);
+		
 	}
-
 }
