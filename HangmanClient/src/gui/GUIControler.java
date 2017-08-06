@@ -6,4 +6,6 @@ public class GUIControler {
 	private static ConnectingWindow connectingWindow ;
 	private static MainWindow mainWindow;
 	
+	
+	
 }
