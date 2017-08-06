@@ -13,6 +13,9 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JList;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.Color;
 
 public class ConnectingWindow extends JFrame {
@@ -20,26 +23,19 @@ public class ConnectingWindow extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtFindASpecific;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ConnectingWindow frame = new ConnectingWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	/**
 	 * Create the frame.
 	 */
 	public ConnectingWindow() {
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				GUIControler.closeApp2();
+			}
+		});
+		
 		setTitle("Hangman");
 		setMinimumSize(new Dimension(450, 320));
 		setSize(new Dimension(800, 600));

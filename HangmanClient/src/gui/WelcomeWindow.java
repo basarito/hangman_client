@@ -8,8 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-
-
 import java.awt.Font;
 
 
@@ -17,9 +15,14 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class WelcomeWindow extends JFrame {
@@ -27,26 +30,21 @@ public class WelcomeWindow extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WelcomeWindow frame = new WelcomeWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the frame.
 	 */
 	public WelcomeWindow() {
+		setResizable(false);
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				GUIControler.closeApp1();
+			}
+		});
+		
 		//setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/hgmn.jpg")));
 		setTitle("Hangman");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,6 +68,7 @@ public class WelcomeWindow extends JFrame {
 		center.setLayout(null);
 
 		JTextArea txtrWelcomeToHangman = new JTextArea();
+		txtrWelcomeToHangman.setEditable(false);
 		txtrWelcomeToHangman.setBounds(124, 0, 173, 60);
 		txtrWelcomeToHangman.setForeground(new Color(153, 50, 204));
 		txtrWelcomeToHangman.setFont(new Font("Arial", Font.BOLD, 25));
@@ -78,6 +77,7 @@ public class WelcomeWindow extends JFrame {
 		center.add(txtrWelcomeToHangman);
 
 		JTextArea txtrPleaseEnter = new JTextArea();
+		txtrPleaseEnter.setEditable(false);
 		txtrPleaseEnter.setBounds(77, 89, 282, 21);
 		center.add(txtrPleaseEnter);
 		txtrPleaseEnter.setForeground(new Color(153, 50, 204));
@@ -91,6 +91,7 @@ public class WelcomeWindow extends JFrame {
 		south.setLayout(null);
 
 		JTextArea txtruseOnlyLetters = new JTextArea();
+		txtruseOnlyLetters.setEditable(false);
 		txtruseOnlyLetters.setBounds(97, 0, 230, 19);
 		txtruseOnlyLetters.setForeground(new Color(153, 50, 204));
 		txtruseOnlyLetters.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -105,6 +106,11 @@ public class WelcomeWindow extends JFrame {
 		textField.setColumns(50);
 
 		JButton btnBegin = new JButton("BEGIN");
+		btnBegin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				GUIControler.showConnectingWindow();
+			}
+		});
 		btnBegin.setBounds(160, 78, 100, 31);
 		btnBegin.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnBegin.setForeground(Color.WHITE);
