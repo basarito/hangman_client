@@ -42,7 +42,7 @@ public class ConnectingWindow extends JFrame {
 			}
 		});
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/ValeVale/git/hangmannn/HangmanClient/resources/icons/h.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 		setTitle("Hangman");
 		setMinimumSize(new Dimension(450, 320));
 		setSize(new Dimension(800, 600));

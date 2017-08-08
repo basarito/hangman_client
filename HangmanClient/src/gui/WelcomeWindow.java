@@ -47,7 +47,7 @@ public class WelcomeWindow extends JFrame {
 			}
 		});
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:/Users/ValeVale/git/hangmannn/HangmanClient/resources/icons/h.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage((WelcomeWindow.class.getResource("/icons/h.png"))));
 		setTitle("Hangman");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 320);
