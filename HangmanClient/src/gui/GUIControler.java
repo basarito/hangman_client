@@ -17,7 +17,7 @@ public class GUIControler {
 	private static ConnectingWindow connectingWindow ;
 	private static MainWindow mainWindow;
 	public static LinkedList<String> onlineLista = new LinkedList<String>(Arrays.asList("pera123","mikamagija","zika90"));
-	private static String playerUsername="";
+	public static String playerUsername="";
 	//public static boolean goodbye = false;
 	
 	/**

@@ -7,6 +7,9 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import game.GameLogic;
+
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import java.awt.Color;
@@ -37,14 +40,12 @@ public class MainWindow extends JFrame {
 	private JTextPane txtpnABC;
 	private JTextArea txtrLettersYou;
 	private JPanel panel_4;
-	private JPanel panel_5;
-	private JButton btnA;
-	private JButton btnB;
-	private JButton btnC;
+	private static JPanel panel_5;
+	private static JButton btnLetter;
 	private JPanel panel_6;
 	private JLabel lblSlika;
 	private JPanel panel_7;
-	private JLabel lblBaskeVsComputer;
+	private JLabel lblUserVsUser;
 
 	/**
 	 * Create the frame.
@@ -74,13 +75,13 @@ public class MainWindow extends JFrame {
 		getPanel_3().add(getTxtrLettersYou(), BorderLayout.NORTH);
 		getPanel_2().add(getPanel_4(), BorderLayout.NORTH);
 		getPanel_2().add(getPanel_5(), BorderLayout.SOUTH);
-		getPanel_5().add(getBtnA());
-		getPanel_5().add(getBtnB());
-		getPanel_5().add(getBtnC());
+		//getPanel_5().add(getBtnLetter());
+		GameLogic.insertLetters();
+		
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
-		getPanel_7().add(getLblBaskeVsComputer());
+		getPanel_7().add(getUserVsUser());
 		
 	}
 
@@ -227,7 +228,7 @@ public class MainWindow extends JFrame {
 		return panel_4;
 	}
 
-	public JPanel getPanel_5() {
+	public static JPanel getPanel_5() {
 		if(panel_5 == null){
 			panel_5 = new JPanel();
 			panel_5.setOpaque(false);
@@ -238,34 +239,11 @@ public class MainWindow extends JFrame {
 		return panel_5;
 	}
 
-	public JButton getBtnA() {
-		if(btnA == null){
-			btnA = new JButton("A");
-			btnA.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		}
+	public static JButton getBtnLetter() {
+			btnLetter = new JButton("__");
+			btnLetter.setFont(new Font("Arial", Font.PLAIN, 15));
 
-		return btnA;
-	}
-
-
-	public JButton getBtnB() {
-		if(btnB == null){
-			btnB = new JButton("B");
-			btnB.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		}
-
-		return btnB;
-	}
-
-
-
-	public JButton getBtnC() {
-		if(btnC == null){
-			btnC = new JButton("C");
-			btnC.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		}
-
-		return btnC;
+		return btnLetter;
 	}
 
 
@@ -307,14 +285,14 @@ public class MainWindow extends JFrame {
 	}
 
 
-	public JLabel getLblBaskeVsComputer() {
-		if(lblBaskeVsComputer == null){
-			lblBaskeVsComputer = new JLabel("USER_VAR1 VS. USER_VAR2");
-			lblBaskeVsComputer.setForeground(new Color(153, 50, 204));
-			lblBaskeVsComputer.setFont(new Font("Arial", Font.BOLD, 15));
+	public JLabel getUserVsUser() {
+		if(lblUserVsUser == null){
+			lblUserVsUser = new JLabel(GUIControler.playerUsername+" VS. "+GameLogic.opponent);
+			lblUserVsUser.setForeground(new Color(153, 50, 204));
+			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 15));
 			
 		}
 
-		return lblBaskeVsComputer;
+		return lblUserVsUser;
 	}
 }
