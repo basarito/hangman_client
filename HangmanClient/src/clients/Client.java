@@ -8,7 +8,7 @@ import java.net.Socket;
 
 import gui.GUIControler;
 
-public class Client implements Runnable {
+public class Client {
 
 	
 	static Socket communicationSocket = null;
@@ -35,17 +35,8 @@ public static void main(String[] args) {
 			GUIControler gui = new GUIControler();
 			gui.start();
 			
-			while(true) {
-				
-			}
-			
-			
-//			while(!end){
-//			}
-			
 			//communicationSocket.close();
-			
-			
+					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,11 +59,6 @@ public static void main(String[] args) {
 				e.printStackTrace();
 			}	
 			return available;	
-	}
-
-	@Override
-	public void run() {
-	
 	}
 
 }
