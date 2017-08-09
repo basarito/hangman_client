@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -44,8 +43,6 @@ public class GUIControler {
 
 		if (option == JOptionPane.YES_OPTION) {
 			System.exit(0);
-		}else if(option == JOptionPane.NO_OPTION){
-			welcomeWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
 	}
 	
@@ -55,8 +52,6 @@ public class GUIControler {
 
 		if (option == JOptionPane.YES_OPTION) {
 			System.exit(0);
-		}else if(option == JOptionPane.NO_OPTION){
-			connectingWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
 	}
 

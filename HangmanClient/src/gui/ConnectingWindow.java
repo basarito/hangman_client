@@ -5,17 +5,26 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import java.awt.Dimension;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.JButton;
 import javax.swing.JList;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Vector;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -42,6 +51,13 @@ public class ConnectingWindow extends JFrame {
 	private JPanel panel_7;
 	private JLabel lblYouCanAlso;
 	private JList list;
+	private JScrollPane scrollPane;
+	private JTable table;
+	private DefaultTableModel dtm;
+	
+	//private JTable table;
+	//private JScrollPane spTable;
+	
 	
 	/**
 	 * Create the frame.
@@ -80,7 +96,7 @@ public class ConnectingWindow extends JFrame {
 		getPanel_4().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getPanel_7(), BorderLayout.SOUTH);
 		getPanel_7().add(getLblYouCanAlso());
-		getPanel_6().add(getList(), BorderLayout.CENTER);
+		
 	}
 	
 	public JPanel getPanel() {
@@ -131,6 +147,12 @@ public class ConnectingWindow extends JFrame {
 	public JTextField getTxtFindASpecific() {
 		if(txtFindASpecific == null){
 			txtFindASpecific = new JTextField();
+			txtFindASpecific.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent arg0) {
+					filter(txtFindASpecific.getText().toLowerCase());
+				}
+			});
 			
 			txtFindASpecific.addMouseListener(new MouseAdapter() {
 				@Override
@@ -212,6 +234,7 @@ public class ConnectingWindow extends JFrame {
 		if(panel_6 == null){
 			panel_6 = new JPanel();
 			panel_6.setLayout(new BorderLayout(0, 0));
+			panel_6.add(getScrollPane(), BorderLayout.CENTER);
 		}
 		
 		return panel_6;
@@ -235,22 +258,49 @@ public class ConnectingWindow extends JFrame {
 		
 		return lblYouCanAlso;
 	}
-
-	public JList getList() {
-		if(list == null){
-			list = new JList(GUIControler.onlineLista.toArray());
-			list.addMouseListener(new MouseAdapter() {
+	
+	public JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setViewportView(getTable());
+		}
+		return scrollPane;
+	}
+	public JTable getTable() {
+		if (table == null) {
+			
+			String [][] data = new String[GUIControler.onlineLista.size()][1];
+			 
+			for (int i=0; i< GUIControler.onlineLista.size(); i++) {
+				data[i][0]=GUIControler.onlineLista.get(i);
+				System.out.println(data[i][0]);
+			 
+			} 
+			dtm = new DefaultTableModel(data,
+			      new Object[] { "" });
+			table=new JTable(dtm);
+			table.setPreferredScrollableViewportSize(new Dimension(100, 100));
+			table.setFillsViewportHeight(true);
+			
+			table.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseClicked(MouseEvent event) {
-					if (event.getClickCount() == 2) {
-						GUIControler.choose(getList().getSelectedValue().toString());
+				public void mouseClicked(MouseEvent e) {
+					
+						GUIControler.choose((String)table.getModel().getValueAt(table.rowAtPoint(e.getPoint()), 0));
 					  }
-				}
+				
 			});
+			
 		}
 		
-		return list;
+		return table;
 	}
-				
+	
+	public void filter(String txt){
+		TableRowSorter<DefaultTableModel> trs = new TableRowSorter<DefaultTableModel>(dtm);
+		table.setRowSorter(trs);
+		trs.setRowFilter(RowFilter.regexFilter(txt));
+		
+	}
 	
 }
