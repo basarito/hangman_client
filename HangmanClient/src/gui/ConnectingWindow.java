@@ -273,9 +273,8 @@ public class ConnectingWindow extends JFrame {
 			 
 			for (int i=0; i< GUIControler.onlineLista.size(); i++) {
 				data[i][0]=GUIControler.onlineLista.get(i);
-				System.out.println(data[i][0]);
-			 
 			} 
+			
 			dtm = new DefaultTableModel(data,
 			      new Object[] { "" });
 			table=new JTable(dtm);
@@ -285,8 +284,11 @@ public class ConnectingWindow extends JFrame {
 			table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					
-						GUIControler.choose((String)table.getModel().getValueAt(table.rowAtPoint(e.getPoint()), 0));
+						int row=table.rowAtPoint(e.getPoint());
+						if(row>-1)
+							//GUIControler.choose((String)table.getModel().getValueAt(row, 0));
+							GUIControler.choose(table.getModel().getValueAt(table.
+			                          convertRowIndexToModel(row), 0).toString());
 					  }
 				
 			});
@@ -300,6 +302,8 @@ public class ConnectingWindow extends JFrame {
 		TableRowSorter<DefaultTableModel> trs = new TableRowSorter<DefaultTableModel>(dtm);
 		table.setRowSorter(trs);
 		trs.setRowFilter(RowFilter.regexFilter(txt));
+		
+		
 		
 	}
 	
