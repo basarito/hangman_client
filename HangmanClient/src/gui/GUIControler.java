@@ -9,8 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import clients.Client;
 
-public class GUIControler {
+
+public class GUIControler extends Thread {
 
 	private static WelcomeWindow welcomeWindow;
 	private static ConnectingWindow connectingWindow ;
@@ -22,7 +24,8 @@ public class GUIControler {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	@Override 
+	public void run() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -35,6 +38,7 @@ public class GUIControler {
 				}
 			}
 		});
+
 	}
 
 	public static void closeApp1() {
@@ -70,12 +74,11 @@ public class GUIControler {
 			JOptionPane.showMessageDialog(welcomeWindow, "Incorrect username. Please use only letters A-Z and/or numbers 0-9", "Try again :(", JOptionPane.ERROR_MESSAGE);
 		} else if(username.length()>10) {
 			JOptionPane.showMessageDialog(welcomeWindow, "Username too long. Please use up to 10 characters.", "Try again :(", JOptionPane.ERROR_MESSAGE);
-		} else if (onlineLista.contains(username)) {
+		} else if (!Client.validateUsername(username)) {
 			JOptionPane.showMessageDialog(welcomeWindow, "Username already taken. Please choose a different one.", "Try again :(", JOptionPane.ERROR_MESSAGE);			
 		}
 		else {
 			//JOptionPane.showMessageDialog(welcomeWindow, "Okie dokie smokie");
-			//onlineLista.add(username);
 			GUIControler.playerUsername = username;
 			showConnectingWindow();
 		}
@@ -125,6 +128,7 @@ public class GUIControler {
 
 	}
 
+	//Random button functionality
 	public static void chooseRandom() {
 		Random randomizer = new Random();
 		String random = onlineLista.get(randomizer.nextInt(onlineLista.size()));

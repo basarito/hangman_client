@@ -1,11 +1,14 @@
 package clients;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-public class Client implements Runnable{
+import gui.GUIControler;
+
+public class Client implements Runnable {
 
 	
 	static Socket communicationSocket = null;
@@ -17,7 +20,7 @@ public class Client implements Runnable{
 public static void main(String[] args) {
 		
 		try {
-			int port = 47556;
+			int port = 6666;
 			
 			if(args.length>0)
 				port = Integer.parseInt(args[0]);
@@ -29,15 +32,18 @@ public static void main(String[] args) {
 			serverOutput = new PrintStream(communicationSocket.getOutputStream());
 			serverInput = new BufferedReader(new InputStreamReader(communicationSocket.getInputStream()));
 			
+			GUIControler gui = new GUIControler();
+			gui.start();
 			
-			
-			new Thread(new Client()).start();
+			while(true) {
+				
+			}
 			
 			
 //			while(!end){
 //			}
 			
-			communicationSocket.close();
+			//communicationSocket.close();
 			
 			
 		} catch (Exception e) {
@@ -46,10 +52,27 @@ public static void main(String[] args) {
 						
 	}
 	
+	public static boolean validateUsername(String username) {
+		boolean available = false;
+			try {
+					serverOutput.println(username);
+					String input = serverInput.readLine();
+					if(input.equals("true")) {
+						available = true;
+					} else {
+						available = false;
+					}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			return available;	
+	}
+
 	@Override
 	public void run() {
-		
-		String messageFromServer;
+	
 	}
 
 }
