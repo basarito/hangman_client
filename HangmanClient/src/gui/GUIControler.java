@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.EventQueue;
+import java.awt.List;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
@@ -18,7 +19,7 @@ public class GUIControler extends Thread {
 	private static WelcomeWindow welcomeWindow;
 	private static ConnectingWindow connectingWindow ;
 	private static MainWindow mainWindow;
-	public static LinkedList<String> onlineLista = new LinkedList<String>(Arrays.asList("No online users."));
+	public static LinkedList<String> onlineLista = new LinkedList<String>();
 	public static String playerUsername="";
 	//public static boolean goodbye = false;
 	
@@ -86,6 +87,7 @@ public class GUIControler extends Thread {
 			//JOptionPane.showMessageDialog(welcomeWindow, "Okie dokie smokie");
 			GUIControler.playerUsername = username;
 			showConnectingWindow();
+			
 		}
 	}
 
@@ -110,10 +112,20 @@ public class GUIControler extends Thread {
 		}
 	}
 
-	public static void typeAUser(String text) {
-		
-		if(onlineLista.contains(text)){
-			int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+text+ " ?",
+
+
+	//Random button functionality
+	public static void chooseRandom() {
+		if(onlineLista.isEmpty()){
+			JOptionPane.showMessageDialog(connectingWindow, "There are no online players at the moment!");			
+
+		}else{
+			Random randomizer = new Random();
+
+			String random=onlineLista.get(randomizer.nextInt(onlineLista.size()));
+
+			
+			int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), random+" is available. Do you want to play with them? ",
 					"Connecting", JOptionPane.YES_NO_OPTION);
 
 
@@ -126,31 +138,9 @@ public class GUIControler extends Thread {
 			}else{
 				SwingUtilities.updateComponentTreeUI(connectingWindow);
 			}
-		}else{
-			JOptionPane.showMessageDialog(connectingWindow, "The user does not exist.");
-
 		}
+		
 
-	}
-
-	//Random button functionality
-	public static void chooseRandom() {
-		Random randomizer = new Random();
-		String random = onlineLista.get(randomizer.nextInt(onlineLista.size()));
-
-		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), random+" is available. Do you want to play with him? ",
-				"Connecting", JOptionPane.YES_NO_OPTION);
-
-
-		if(option == JOptionPane.YES_OPTION){
-
-			connectingWindow.setVisible(false);
-			mainWindow = new MainWindow();
-			mainWindow.setVisible(true);
-			mainWindow.setLocationRelativeTo(null);
-		}else{
-			SwingUtilities.updateComponentTreeUI(connectingWindow);
-		}
 	}
 }
 

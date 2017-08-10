@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -28,6 +29,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Vector;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -52,7 +54,6 @@ public class ConnectingWindow extends JFrame {
 	private JPanel panel_6;
 	private JPanel panel_7;
 	private JLabel lblYouCanAlso;
-	private JList list;
 	private JScrollPane scrollPane;
 	private JTable table;
 	private DefaultTableModel dtm;
@@ -161,15 +162,7 @@ public class ConnectingWindow extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					txtFindASpecific.setText("");
 					txtFindASpecific.setForeground(new Color(0, 0, 0));
-					txtFindASpecific.addKeyListener(new KeyAdapter() {
-						@Override
-						public void keyPressed(KeyEvent e) {
-							if(e.getKeyCode() == KeyEvent.VK_ENTER){
-								GUIControler.typeAUser(getTxtFindASpecific().getText());
-							}
-						}
 
-					});
 				}
 			});
 			txtFindASpecific.setForeground(new Color(216, 191, 216));
@@ -271,23 +264,21 @@ public class ConnectingWindow extends JFrame {
 	public JTable getTable() {
 		if (table == null) {
 			GUIControler.onlineLista = Client.getOnlineList();
-			String [][] data = new String[GUIControler.onlineLista.size()][1];
+			String [][] data;
 			
-			 
-			for (int i=0; i< GUIControler.onlineLista.size(); i++) {
-//				if(GUIControler.onlineLista.get(i).equals(GUIControler.playerUsername)) {
-//					continue;
-//				}else{
-//					data[i][0]=GUIControler.onlineLista.get(i);
-//				}
-				data[i][0]=GUIControler.onlineLista.get(i);
+			if(GUIControler.onlineLista.isEmpty()){
+				data = new String[1][1];
+				data[0][0] = "There are no online players at the moment";
 				
-				if(data[i][0].equals(GUIControler.playerUsername)) {
-					data[i][0] = "";
-				}
-				
-			} 
-			
+			}else{
+				data = new String[GUIControler.onlineLista.size()][1];
+				for (int i=0; i< GUIControler.onlineLista.size(); i++) {
+
+					data[i][0]=GUIControler.onlineLista.get(i);
+
+
+				} 
+			}
 			dtm = new DefaultTableModel(data,
 			      new Object[] { "" });
 			table=new JTable(dtm){
@@ -297,45 +288,56 @@ public class ConnectingWindow extends JFrame {
 				}
 			};
 			
+			
 			table.setPreferredScrollableViewportSize(new Dimension(100, 100));
 			table.setFillsViewportHeight(true);
 			table.setIntercellSpacing(new Dimension(0, 0));
-	        table.setShowGrid(false);
-	        
-	        for (int i = 0; i < data.length; i++) {
-	        	if(table.getModel().getValueAt(table.
-						convertRowIndexToModel(i), 0).toString().equals("")){
-					((DefaultTableModel) table.getModel()).removeRow(i);
-				}
-			}
-	        
-	        
+			table.setShowGrid(false);
+	
 			
-			table.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mousePressed(MouseEvent e) {
-
-					int row=table.rowAtPoint(e.getPoint());
-					if(row>-1){
-						if (e.getClickCount() == 2) {
-							GUIControler.choose(table.getModel().getValueAt(table.
-									convertRowIndexToModel(row), 0).toString());
-						}
-					}
-
-				}
+			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+			
+			{
+			    @Override
+			    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+			    {
+			        final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			        c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
+			        return c;
+			    }
 			});
-			
+
+
+			if(table.getRowCount() == 1 && table.getValueAt(0, 0).equals("There are no online players at the moment")){
+				table.setFocusable(false);
+				table.setRowSelectionAllowed(false);
+			}else{
+				table.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mousePressed(MouseEvent e) {
+
+						int row=table.rowAtPoint(e.getPoint());
+						if(row>-1){
+							if (e.getClickCount() == 2) {
+								GUIControler.choose(table.getModel().getValueAt(table.
+										convertRowIndexToModel(row), 0).toString());
+							}
+						}
+
+					}
+				});
+
+			}
 		}
-		
+
+
 		return table;
 	}
 	
 	public void filter(String txt){
 		TableRowSorter<DefaultTableModel> trs = new TableRowSorter<DefaultTableModel>(dtm);
 		table.setRowSorter(trs);
-		trs.setRowFilter(RowFilter.regexFilter(txt));
-		
+		trs.setRowFilter(RowFilter.regexFilter("^"+txt));
 		
 		
 	}

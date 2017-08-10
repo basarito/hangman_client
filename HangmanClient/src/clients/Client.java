@@ -72,7 +72,12 @@ public static void main(String[] args) {
 					lista.add("No online users.");
 					return lista;
 				}
+				
 				while (!input.equals("\\end")) {
+					if(input.equals(GUIControler.playerUsername)){
+						input = serverInput.readLine();
+						continue;
+					}	
 					lista.add(input);
 					input = serverInput.readLine();
 				}
