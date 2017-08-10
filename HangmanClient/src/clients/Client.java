@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.LinkedList;
 
 import gui.GUIControler;
 
@@ -59,6 +60,29 @@ public static void main(String[] args) {
 				e.printStackTrace();
 			}	
 			return available;	
+	}
+
+	public static LinkedList<String> getOnlineList() {
+		LinkedList<String> lista = new LinkedList<String>();
+		boolean end = false;
+		String input = "";		
+			try {
+				input = serverInput.readLine();
+				if(input.equals("\\empty")) {
+					lista.add("No online users.");
+					return lista;
+				}
+				while (!input.equals("\\end")) {
+					lista.add(input);
+					input = serverInput.readLine();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		return lista;
+		
 	}
 
 }

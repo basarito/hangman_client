@@ -11,6 +11,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import clients.Client;
+
 import java.awt.Dimension;
 import javax.swing.JLabel;
 import java.awt.FlowLayout;
@@ -268,10 +270,13 @@ public class ConnectingWindow extends JFrame {
 	}
 	public JTable getTable() {
 		if (table == null) {
-			
+			GUIControler.onlineLista = Client.getOnlineList();
 			String [][] data = new String[GUIControler.onlineLista.size()][1];
 			 
 			for (int i=0; i< GUIControler.onlineLista.size(); i++) {
+				/*if(GUIControler.onlineLista.get(i).equals(GUIControler.playerUsername)) {
+					continue;
+				}*/
 				data[i][0]=GUIControler.onlineLista.get(i);
 			} 
 			
