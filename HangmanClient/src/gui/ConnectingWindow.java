@@ -272,30 +272,58 @@ public class ConnectingWindow extends JFrame {
 		if (table == null) {
 			GUIControler.onlineLista = Client.getOnlineList();
 			String [][] data = new String[GUIControler.onlineLista.size()][1];
+			
 			 
 			for (int i=0; i< GUIControler.onlineLista.size(); i++) {
-				/*if(GUIControler.onlineLista.get(i).equals(GUIControler.playerUsername)) {
-					continue;
-				}*/
+//				if(GUIControler.onlineLista.get(i).equals(GUIControler.playerUsername)) {
+//					continue;
+//				}else{
+//					data[i][0]=GUIControler.onlineLista.get(i);
+//				}
 				data[i][0]=GUIControler.onlineLista.get(i);
+				
+				if(data[i][0].equals(GUIControler.playerUsername)) {
+					data[i][0] = "";
+				}
+				
 			} 
 			
 			dtm = new DefaultTableModel(data,
 			      new Object[] { "" });
-			table=new JTable(dtm);
+			table=new JTable(dtm){
+				@Override
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			};
+			
 			table.setPreferredScrollableViewportSize(new Dimension(100, 100));
 			table.setFillsViewportHeight(true);
+			table.setIntercellSpacing(new Dimension(0, 0));
+	        table.setShowGrid(false);
+	        
+	        for (int i = 0; i < data.length; i++) {
+	        	if(table.getModel().getValueAt(table.
+						convertRowIndexToModel(i), 0).toString().equals("")){
+					((DefaultTableModel) table.getModel()).removeRow(i);
+				}
+			}
+	        
+	        
 			
 			table.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseClicked(MouseEvent e) {
-						int row=table.rowAtPoint(e.getPoint());
-						if(row>-1)
-							//GUIControler.choose((String)table.getModel().getValueAt(row, 0));
+				public void mousePressed(MouseEvent e) {
+
+					int row=table.rowAtPoint(e.getPoint());
+					if(row>-1){
+						if (e.getClickCount() == 2) {
 							GUIControler.choose(table.getModel().getValueAt(table.
-			                          convertRowIndexToModel(row), 0).toString());
-					  }
-				
+									convertRowIndexToModel(row), 0).toString());
+						}
+					}
+
+				}
 			});
 			
 		}
