@@ -81,23 +81,12 @@ public class GUIControler extends Thread {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	public static void closeApp1() {
 		int option = JOptionPane.showConfirmDialog(welcomeWindow.getContentPane(), "Are you sure you want to close the game?",
 				"Closing app", JOptionPane.YES_NO_OPTION);
 
 		if (option == JOptionPane.YES_OPTION) {
+			Client.sendExitSignal();
 			System.exit(0);
 		} else if(option == JOptionPane.NO_OPTION){
  			welcomeWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -109,6 +98,7 @@ public class GUIControler extends Thread {
 				"Closing app", JOptionPane.YES_NO_OPTION);
 
 		if (option == JOptionPane.YES_OPTION) {
+			Client.sendExitSignal();
 			System.exit(0);
 		} else if(option == JOptionPane.NO_OPTION){
  			connectingWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
