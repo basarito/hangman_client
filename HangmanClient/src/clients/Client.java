@@ -60,7 +60,10 @@ public static void main(String[] args) {
 				e.printStackTrace();
 			}	
 			return available;	
+
 	}
+
+	
 
 	public static LinkedList<String> getOnlineList() {
 		LinkedList<String> lista = new LinkedList<String>();

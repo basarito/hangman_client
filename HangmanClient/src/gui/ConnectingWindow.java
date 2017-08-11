@@ -146,6 +146,35 @@ public class ConnectingWindow extends JFrame {
 
 		return panel_3;
 	}
+	/*
+	public JTextField getTxtFindASpecific() {
+		if(txtFindASpecific == null){
+			txtFindASpecific = new JTextField();
+			txtFindASpecific.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent arg0) {
+					filter(txtFindASpecific.getText().toLowerCase());
+				}
+			});
+			
+			txtFindASpecific.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					txtFindASpecific.setText("");
+					txtFindASpecific.setForeground(new Color(0, 0, 0));
+
+<<<<<<< HEAD
+					});
+				}
+			});
+			txtFindASpecific.setForeground(new Color(216, 191, 216));
+			txtFindASpecific.setFont(new Font("Arial", Font.ITALIC, 12));
+			txtFindASpecific.setText("Find a specific user...");
+			txtFindASpecific.setColumns(14);
+		}
+		
+		return txtFindASpecific;
+	} */
 	
 	public JTextField getTxtFindASpecific() {
 		if(txtFindASpecific == null){
@@ -162,6 +191,7 @@ public class ConnectingWindow extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					txtFindASpecific.setText("");
 					txtFindASpecific.setForeground(new Color(0, 0, 0));
+
 
 				}
 			});
@@ -261,6 +291,86 @@ public class ConnectingWindow extends JFrame {
 		}
 		return scrollPane;
 	}
+	/*
+	public JTable getTable() {
+		if (table == null) {
+			GUIControler.onlineLista = Client.getOnlineList();
+			String [][] data;
+			
+			if(GUIControler.onlineLista.isEmpty()){
+				data = new String[1][1];
+				data[0][0] = "There are no online players at the moment";
+				
+			}else{
+				data = new String[GUIControler.onlineLista.size()][1];
+				for (int i=0; i< GUIControler.onlineLista.size(); i++) {
+
+					data[i][0]=GUIControler.onlineLista.get(i);
+
+
+				} 
+			}
+			dtm = new DefaultTableModel(data,
+			      new Object[] { "" });
+			table=new JTable(dtm){
+				@Override
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			};
+			
+			
+			table.setPreferredScrollableViewportSize(new Dimension(100, 100));
+			table.setFillsViewportHeight(true);
+<<<<<<< HEAD
+			table.setEnabled(false);
+=======
+			table.setIntercellSpacing(new Dimension(0, 0));
+			table.setShowGrid(false);
+	
+>>>>>>> branch 'master' of https://github.com/borrovnica/hangman_client.git
+			
+			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+			
+			{
+			    @Override
+			    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+			    {
+			        final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			        c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
+			        return c;
+			    }
+			});
+
+
+			if(table.getRowCount() == 1 && table.getValueAt(0, 0).equals("There are no online players at the moment")){
+				table.setFocusable(false);
+				table.setRowSelectionAllowed(false);
+				getTxtFindASpecific().setText("");
+				getTxtFindASpecific().setEditable(false);
+			}else{
+				table.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mousePressed(MouseEvent e) {
+
+						int row=table.rowAtPoint(e.getPoint());
+						if(row>-1){
+							if (e.getClickCount() == 2) {
+								GUIControler.choose(table.getModel().getValueAt(table.
+										convertRowIndexToModel(row), 0).toString());
+							}
+						}
+
+					}
+				});
+
+			}
+		}
+
+
+		return table;
+	} */
+//	/*
 	public JTable getTable() {
 		if (table == null) {
 			GUIControler.onlineLista = Client.getOnlineList();
@@ -334,7 +444,7 @@ public class ConnectingWindow extends JFrame {
 
 
 		return table;
-	}
+	}// */
 	
 	public void filter(String txt){
 		TableRowSorter<DefaultTableModel> trs = new TableRowSorter<DefaultTableModel>(dtm);
@@ -343,5 +453,6 @@ public class ConnectingWindow extends JFrame {
 		
 		
 	}
+	
 	
 }

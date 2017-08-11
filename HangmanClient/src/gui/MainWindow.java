@@ -3,6 +3,12 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,9 +17,12 @@ import javax.swing.border.EmptyBorder;
 import game.GameLogic;
 
 import java.awt.Dimension;
+import java.awt.Event;
+
 import javax.swing.JScrollPane;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
 import java.awt.FlowLayout;
@@ -28,16 +37,16 @@ import javax.swing.JTextArea;
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private static JTextField textField;
 	private JScrollPane scrollPane;
 	private JLabel lblChatbox;
 	private JTextPane textPane;
 	private JPanel panel;
 	private JPanel panel_1;
-	private JButton btnGuess;
+	private static JButton btnGuess;
 	private JPanel panel_2;
-	private JPanel panel_3;
-	private JTextPane txtpnABC;
+	private static JPanel panel_3;
+	private static JTextPane txtpnABC;
 	private JTextArea txtrLettersYou;
 	private JPanel panel_4;
 	private static JPanel panel_5;
@@ -46,6 +55,7 @@ public class MainWindow extends JFrame {
 	private JLabel lblSlika;
 	private JPanel panel_7;
 	private JLabel lblUserVsUser;
+	public static List<JButton> listOfButtons = new ArrayList<JButton>();
 
 	/**
 	 * Create the frame.
@@ -76,7 +86,7 @@ public class MainWindow extends JFrame {
 		getPanel_2().add(getPanel_4(), BorderLayout.NORTH);
 		getPanel_2().add(getPanel_5(), BorderLayout.SOUTH);
 		//getPanel_5().add(getBtnLetter());
-		GameLogic.insertLetters();
+		GameLogic.insertButtonsForLetters();
 		
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
@@ -85,6 +95,10 @@ public class MainWindow extends JFrame {
 		
 	}
 
+	
+	public static void setIconImage(){
+		
+	}
 
 
 	public JScrollPane getScrollPane() {
@@ -138,23 +152,37 @@ public class MainWindow extends JFrame {
 	public JPanel getPanel_1() {
 		if(panel_1 == null){
 			panel_1 = new JPanel();
-			panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		}
 
 		return panel_1;
 	}
 
-	public JTextField getTextField() {
+	public static JTextField getTextField() {
 		if(textField == null){
 			textField = new JTextField();
 			textField.setFont(new Font("Arial Black", Font.PLAIN, 30));
 			textField.setSize(new Dimension(20, 20));
 			textField.setMinimumSize(new Dimension(20, 20));			
 			textField.setColumns(2);
+			
+			
+			textField.addKeyListener(new KeyAdapter(){
+				 public void keyTyped(KeyEvent e) { 
+					 
+					 if(textField.getText().length() > 0) {
+					 		e.consume();
+					 }
+		               
+				            
+				 }});
+				
+			
+			
 		}
-
 		return textField;
 	}
+	
 
 	public JButton getBtnGuess() {
 		if(btnGuess == null){
@@ -163,6 +191,20 @@ public class MainWindow extends JFrame {
 			btnGuess.setForeground(new Color(255, 255, 255));
 			btnGuess.setFont(new Font("Arial", Font.BOLD, 13));
 			
+			if(textField.getText() == null){
+			    btnGuess.setEnabled(false);
+			}
+			else {
+				btnGuess.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+							GUIControler.placeTheLetter();
+						
+						
+					}
+				});
+			
+			}
 		}
 
 		return btnGuess;
@@ -181,13 +223,16 @@ public class MainWindow extends JFrame {
 	public JPanel getPanel_3() {
 		if(panel_3 ==null){
 			panel_3 = new JPanel();
-			panel_3.setLayout(new BorderLayout(0, 0));
+			panel_3.setLayout(new BorderLayout(0,0));
+			
+			
+			
 		}
 
 		return panel_3;
 	}
 
-	public JTextPane getTxtpnABC() {
+	public static JTextPane getTxtpnABC() {
 		if(txtpnABC == null){
 			txtpnABC = new JTextPane();
 			txtpnABC.setForeground(new Color(153, 50, 204));
@@ -195,7 +240,8 @@ public class MainWindow extends JFrame {
 			txtpnABC.setBackground(new Color(255, 255, 255));
 			txtpnABC.setFont(new Font("Viner Hand ITC", Font.BOLD, 20));
 			txtpnABC.setEditable(false);
-			txtpnABC.setText("A, B, C");
+			txtpnABC.setText(" ");
+			
 			
 		}
 
@@ -240,12 +286,15 @@ public class MainWindow extends JFrame {
 	}
 
 	public static JButton getBtnLetter() {
-			btnLetter = new JButton("__");
+			btnLetter = new JButton("_");
 			btnLetter.setFont(new Font("Arial", Font.PLAIN, 15));
+			listOfButtons.add(btnLetter);
+			
 
 		return btnLetter;
 	}
-
+	
+	
 
 	public JPanel getPanel_6() {
 		if(panel_6 == null){
@@ -261,12 +310,13 @@ public class MainWindow extends JFrame {
 		if(lblSlika == null){
 			lblSlika = new JLabel("");
 			lblSlika.setPreferredSize(new Dimension(200, 270));
-			ImageIcon img = new ImageIcon(MainWindow.class.getResource("/icons/hgmn.jpg"));
+			ImageIcon img = new ImageIcon(MainWindow.class.getResource("/icons/state-0.png"));
 			Image img1 = img.getImage();
-			Image img2 = img1.getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+			Image img2 = img.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
 			img = new ImageIcon(img2);
 			lblSlika.setIcon(img);
 			lblSlika.setSize(300, 300);
+			//GUIControler.setHangmanImage();
 		}
 
 		return lblSlika;
@@ -287,7 +337,7 @@ public class MainWindow extends JFrame {
 
 	public JLabel getUserVsUser() {
 		if(lblUserVsUser == null){
-			lblUserVsUser = new JLabel(GUIControler.playerUsername+" VS. "+GameLogic.opponent);
+			lblUserVsUser = new JLabel(GUIControler.playerUsername+" VS. "+GUIControler.opponent);
 			lblUserVsUser.setForeground(new Color(153, 50, 204));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 15));
 			
