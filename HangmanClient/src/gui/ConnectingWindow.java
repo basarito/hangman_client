@@ -311,6 +311,8 @@ public class ConnectingWindow extends JFrame {
 			if(table.getRowCount() == 1 && table.getValueAt(0, 0).equals("There are no online players at the moment")){
 				table.setFocusable(false);
 				table.setRowSelectionAllowed(false);
+				getTxtFindASpecific().setText("");
+				getTxtFindASpecific().setEditable(false);
 			}else{
 				table.addMouseListener(new MouseAdapter() {
 					@Override
