@@ -257,7 +257,7 @@ public class GUIControler extends Thread {
 	
 	public static void placeTheLetter() {
 		letter = MainWindow.getTextField().getText().toLowerCase();
-		
+		MainWindow.getTextField().setText("");
 		if(letter.matches("[a-z]")) {
 			
 		
@@ -323,6 +323,20 @@ public class GUIControler extends Thread {
 			}
 		}
 		return count;
+		
+	}
+
+
+
+	public static void closeApp3() {
+		int option = JOptionPane.showConfirmDialog(welcomeWindow.getContentPane(), "Are you sure you want to close the game?",
+				"Closing app", JOptionPane.YES_NO_OPTION);
+
+		if (option == JOptionPane.YES_OPTION) {
+			System.exit(0);
+		} else if(option == JOptionPane.NO_OPTION){
+ 			mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+  		}
 		
 	}
 	
