@@ -37,6 +37,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+@SuppressWarnings("serial")
 public class ConnectingWindow extends JFrame {
 
 	private JPanel contentPane;
@@ -57,23 +58,19 @@ public class ConnectingWindow extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private DefaultTableModel dtm;
-	
-	//private JTable table;
-	//private JScrollPane spTable;
-	
-	
+
 	/**
 	 * Create the frame.
 	 */
 	public ConnectingWindow() {
-		
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				GUIControler.closeApp2();
 			}
 		});
-		
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 		setTitle("Hangman");
 		setMinimumSize(new Dimension(450, 320));
@@ -98,34 +95,34 @@ public class ConnectingWindow extends JFrame {
 		getPanel_5().add(getLblPleaseSelectAn());
 		getPanel_4().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getPanel_7(), BorderLayout.SOUTH);
-		getPanel_7().add(getLblYouCanAlso());
-		
+		getPanel_7().add(getLblYouCanAlso()); 
+
 	}
-	
+
 	public JPanel getPanel() {
 		if(panel == null){
 			panel = new JPanel();
 		}
-		
+
 		return panel;
 	}
-		
+
 	public JLabel getLblWelcomeUser() {
 		if(lblWelcomeUser == null){
 			lblWelcomeUser = GUIControler.welcomeUser();
 			lblWelcomeUser.setForeground(new Color(153, 50, 204));
 			lblWelcomeUser.setFont(new Font("Arial", Font.BOLD, 18));
-			
+
 		}
-		
+
 		return lblWelcomeUser;
 	}
-		
+
 	public JPanel getPanel_1() {
 		if(panel_1 == null){
 			panel_1 = new JPanel();
 		}
-		
+
 		return panel_1;
 	}
 
@@ -146,36 +143,7 @@ public class ConnectingWindow extends JFrame {
 
 		return panel_3;
 	}
-	/*
-	public JTextField getTxtFindASpecific() {
-		if(txtFindASpecific == null){
-			txtFindASpecific = new JTextField();
-			txtFindASpecific.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyReleased(KeyEvent arg0) {
-					filter(txtFindASpecific.getText().toLowerCase());
-				}
-			});
-			
-			txtFindASpecific.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					txtFindASpecific.setText("");
-					txtFindASpecific.setForeground(new Color(0, 0, 0));
 
-<<<<<<< HEAD
-					});
-				}
-			});
-			txtFindASpecific.setForeground(new Color(216, 191, 216));
-			txtFindASpecific.setFont(new Font("Arial", Font.ITALIC, 12));
-			txtFindASpecific.setText("Find a specific user...");
-			txtFindASpecific.setColumns(14);
-		}
-		
-		return txtFindASpecific;
-	} */
-	
 	public JTextField getTxtFindASpecific() {
 		if(txtFindASpecific == null){
 			txtFindASpecific = new JTextField();
@@ -185,7 +153,7 @@ public class ConnectingWindow extends JFrame {
 					filter(txtFindASpecific.getText().toLowerCase());
 				}
 			});
-			
+
 			txtFindASpecific.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -200,7 +168,7 @@ public class ConnectingWindow extends JFrame {
 			txtFindASpecific.setText("Find a specific user...");
 			txtFindASpecific.setColumns(14);
 		}
-		
+
 		return txtFindASpecific;
 	}
 
@@ -208,7 +176,7 @@ public class ConnectingWindow extends JFrame {
 		if(lblOr == null){
 			lblOr = new JLabel("OR");
 		}
-		
+
 		return lblOr;
 	}
 
@@ -225,16 +193,16 @@ public class ConnectingWindow extends JFrame {
 			btnRandom.setForeground(new Color(255, 255, 255));
 			btnRandom.setFont(new Font("Arial", Font.BOLD, 13));
 		}
-		
+
 		return btnRandom;
 	}
-		
+
 	public JPanel getPanel_4() {
 		if(panel_4 == null){
 			panel_4 = new JPanel();
 			panel_4.setLayout(new BorderLayout(0, 0));
 		}
-		
+
 		return panel_4;
 	}
 	public JPanel getPanel_5() {
@@ -251,19 +219,21 @@ public class ConnectingWindow extends JFrame {
 			lblPleaseSelectAn.setForeground(new Color(186, 85, 211));
 			lblPleaseSelectAn.setFont(new Font("Arial", Font.PLAIN, 13));
 		}
-		
+
 		return lblPleaseSelectAn;
 	}
-		
+
 	public JPanel getPanel_6() {
 		if(panel_6 == null){
 			panel_6 = new JPanel();
 			panel_6.setLayout(new BorderLayout(0, 0));
 			panel_6.add(getScrollPane(), BorderLayout.CENTER);
+			panel_6.add(getTable(), BorderLayout.CENTER);
 		}
-		
+
 		return panel_6;
 	}
+
 
 	public JPanel getPanel_7() {
 		if(panel_7 == null){
@@ -280,10 +250,10 @@ public class ConnectingWindow extends JFrame {
 			lblYouCanAlso.setForeground(new Color(186, 85, 211));
 			lblYouCanAlso.setFont(new Font("Arial", Font.PLAIN, 13));
 		}
-		
+
 		return lblYouCanAlso;
 	}
-	
+
 	public JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
@@ -291,64 +261,44 @@ public class ConnectingWindow extends JFrame {
 		}
 		return scrollPane;
 	}
-	/*
+
+
+
 	public JTable getTable() {
+
 		if (table == null) {
-			GUIControler.onlineLista = Client.getOnlineList();
-			String [][] data;
-			
-			if(GUIControler.onlineLista.isEmpty()){
-				data = new String[1][1];
-				data[0][0] = "There are no online players at the moment";
-				
-			}else{
-				data = new String[GUIControler.onlineLista.size()][1];
-				for (int i=0; i< GUIControler.onlineLista.size(); i++) {
-
-					data[i][0]=GUIControler.onlineLista.get(i);
-
-
-				} 
-			}
-			dtm = new DefaultTableModel(data,
-			      new Object[] { "" });
+			dtm = new DefaultTableModel(new String[0][0],
+					new Object[] { "" });
 			table=new JTable(dtm){
 				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
 				}
 			};
-			
-			
+
 			table.setPreferredScrollableViewportSize(new Dimension(100, 100));
 			table.setFillsViewportHeight(true);
-<<<<<<< HEAD
-			table.setEnabled(false);
-=======
 			table.setIntercellSpacing(new Dimension(0, 0));
 			table.setShowGrid(false);
-	
->>>>>>> branch 'master' of https://github.com/borrovnica/hangman_client.git
-			
-			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
-			
-			{
-			    @Override
-			    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-			    {
-			        final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			        c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
-			        return c;
-			    }
-			});
 
+			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+
+			{
+				@Override
+				public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+				{
+					final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+					c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
+					return c;
+				}
+			});
 
 			if(table.getRowCount() == 1 && table.getValueAt(0, 0).equals("There are no online players at the moment")){
 				table.setFocusable(false);
 				table.setRowSelectionAllowed(false);
 				getTxtFindASpecific().setText("");
 				getTxtFindASpecific().setEditable(false);
-			}else{
+			} else {
 				table.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent e) {
@@ -360,99 +310,52 @@ public class ConnectingWindow extends JFrame {
 										convertRowIndexToModel(row), 0).toString());
 							}
 						}
-
 					}
 				});
-
 			}
 		}
 
-
 		return table;
-	} */
-//	/*
-	public JTable getTable() {
-		if (table == null) {
-			GUIControler.onlineLista = Client.getOnlineList();
-			String [][] data;
-			
-			if(GUIControler.onlineLista.isEmpty()){
-				data = new String[1][1];
-				data[0][0] = "There are no online players at the moment";
-				
-			}else{
-				data = new String[GUIControler.onlineLista.size()][1];
-				for (int i=0; i< GUIControler.onlineLista.size(); i++) {
-
-					data[i][0]=GUIControler.onlineLista.get(i);
+	}
 
 
-				} 
-			}
-			dtm = new DefaultTableModel(data,
-			      new Object[] { "" });
-			table=new JTable(dtm){
-				@Override
-				public boolean isCellEditable(int row, int column) {
-					return false;
-				}
-			};
-			
-			
-			table.setPreferredScrollableViewportSize(new Dimension(100, 100));
-			table.setFillsViewportHeight(true);
-			table.setIntercellSpacing(new Dimension(0, 0));
-			table.setShowGrid(false);
-	
-			
-			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
-			
-			{
-			    @Override
-			    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-			    {
-			        final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			        c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
-			        return c;
-			    }
-			});
+	public void refreshTable() {
+		LinkedList<String> pomocnalista = Client.onlineLista;
+		int listSize = pomocnalista.size();
+		String [][] data;
 
+		if(listSize==0){
+			data = new String[1][1];
+			data[0][0] = "There are no online players at the moment";
 
-			if(table.getRowCount() == 1 && table.getValueAt(0, 0).equals("There are no online players at the moment")){
-				table.setFocusable(false);
-				table.setRowSelectionAllowed(false);
-				getTxtFindASpecific().setText("");
-				getTxtFindASpecific().setEditable(false);
-			}else{
-				table.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mousePressed(MouseEvent e) {
+		} else {
+			data = new String[listSize][1];
+			for (int i=0; i< listSize; i++) {
+				data[i][0]=pomocnalista.get(i);
+			} 
+		}
 
-						int row=table.rowAtPoint(e.getPoint());
-						if(row>-1){
-							if (e.getClickCount() == 2) {
-								GUIControler.choose(table.getModel().getValueAt(table.
-										convertRowIndexToModel(row), 0).toString());
-							}
-						}
-
-					}
-				});
-
+		DefaultTableModel dtm = (DefaultTableModel)this.table.getModel();
+		if (dtm.getRowCount() > 0) {
+			for (int i = dtm.getRowCount() - 1; i > -1; i--) {
+				dtm.removeRow(i);
 			}
 		}
 
+		dtm.fireTableDataChanged();
 
-		return table;
-	}// */
-	
+		for(int i = 0; i < data.length; i++) {
+			dtm.addRow(data[i]);
+		}
+
+		dtm.fireTableDataChanged();
+	}
+
+
 	public void filter(String txt){
 		TableRowSorter<DefaultTableModel> trs = new TableRowSorter<DefaultTableModel>(dtm);
 		table.setRowSorter(trs);
 		trs.setRowFilter(RowFilter.regexFilter("^"+txt));
-		
-		
 	}
-	
-	
+
 }

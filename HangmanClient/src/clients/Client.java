@@ -7,6 +7,9 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+import javax.xml.bind.Marshaller.Listener;
+
 import gui.GUIControler;
 
 public class Client {
@@ -15,8 +18,13 @@ public class Client {
 	static Socket communicationSocket = null;
 	static PrintStream serverOutput = null;
 	static BufferedReader serverInput = null;
-	static BufferedReader console = null;
+	//static BufferedReader console = null;
+    
+	public static LinkedList<String> onlineLista = new LinkedList<String>();
+    
+    public static ListenerThread listener = null;
 	static boolean end = false;
+	//static boolean begin = false;
 	
 public static void main(String[] args) {
 		
@@ -27,75 +35,76 @@ public static void main(String[] args) {
 				port = Integer.parseInt(args[0]);
 			
 			communicationSocket = new Socket("localhost", port);
-			
-			
-			console = new BufferedReader(new InputStreamReader(System.in));
+				
+			//console = new BufferedReader(new InputStreamReader(System.in));
 			serverOutput = new PrintStream(communicationSocket.getOutputStream());
 			serverInput = new BufferedReader(new InputStreamReader(communicationSocket.getInputStream()));
 			
 			GUIControler gui = new GUIControler();
 			gui.start();
 			
-			//communicationSocket.close();
+			listener = new ListenerThread(serverInput);
+			listener.start();
+			
+			if(end==true) {
+				communicationSocket.close();
+			}
 					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 						
 	}
-	
-	public static boolean validateUsername(String username) {
-		boolean available = false;
-			try {
-					serverOutput.println(username);
-					String input = serverInput.readLine();
-					if(input.equals("true")) {
-						available = true;
-					} else {
-						available = false;
-					}
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-			return available;	
 
-	}
-
-	
-
-	public static LinkedList<String> getOnlineList() {
-		LinkedList<String> lista = new LinkedList<String>();
-		boolean end = false;
-		String input = "";		
-			try {
-				input = serverInput.readLine();
-				if(input.equals("\\empty")) {
-					lista.add("No online users.");
-					return lista;
-				}
-				
-				while (!input.equals("\\end")) {
-					if(input.equals(GUIControler.playerUsername)){
-						input = serverInput.readLine();
-						continue;
-					}	
-					lista.add(input);
-					input = serverInput.readLine();
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		return lista;
-		
-	}
+	//Username validation
+	public static void sendUsernameToServer(String username) {
+		serverOutput.println("/USERNAME:"+username);
+	}	
 	
 	public static void sendExitSignal() {
-		serverOutput.println("-1");
+		serverOutput.println("/EXIT"); 
+	}
+
+	public static String inviteUserToPlay(String user) {
+		
+		try {
+			serverOutput.println("\\INVITE "+user);
+			String input = serverInput.readLine();
+			if (input.equals("RECEIVED")) 
+				return "OK";
+			/*if(input.equals("\\ACCEPTED")) {
+				return true;
+			} else 
+				return false;*/
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "NO";
+	}
+
+
+	public static synchronized LinkedList<String> parseOnlineList(String usernames) {
+		LinkedList<String> pomocna = new LinkedList<>();
+		String[] userarray = usernames.split(";");
+		for (int i = 0; i < userarray.length; i++) {
+			if(userarray[i].equals(GUIControler.playerUsername)) {
+				continue;
+			}
+			pomocna.add(userarray[i]);
+		}
+		System.out.println("****start****");
+		for(String s : pomocna) {
+			System.out.println(s);
+		}
+		System.out.println("****end****");
+		return pomocna;
 	}
 	
+	public static void acceptInvitation(String inviter) {
+		serverOutput.println("\\ACCEPTED");
+		
+	}
 
 }
