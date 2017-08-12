@@ -1,9 +1,10 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import java.awt.Image;
-
+import java.awt.Toolkit;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -81,7 +82,7 @@ public class GUIControler extends Thread {
 
 	//Closing MainWindow
 	public static void closeApp3() {
-		int option = JOptionPane.showConfirmDialog(welcomeWindow.getContentPane(), "Are you sure you want to close the game?",
+		int option = JOptionPane.showConfirmDialog(mainWindow.getContentPane(), "Are you sure you want to close the game?",
 				"Closing app", JOptionPane.YES_NO_OPTION);
 
 		if (option == JOptionPane.YES_OPTION) {
@@ -141,11 +142,14 @@ public class GUIControler extends Thread {
 			//loading screen:
 			dialog = new JDialog();
 			JLabel label = new JLabel("Sending invite to "+user+"...");
-			dialog.setLocationRelativeTo(connectingWindow);
+			dialog.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 			dialog.setTitle("Please Wait...");
 			dialog.add(label);
+			dialog.setPreferredSize(new Dimension(200, 90));
 			dialog.pack();
+			dialog.setLocationRelativeTo(connectingWindow);
 			dialog.setVisible(true);
+			connectingWindow.setEnabled(false);
 			Client.inviteUserToPlay(user);
 			//			if(Client.inviteUserToPlay(user).equals("OK")) {
 			//				dialog.setVisible(false);
@@ -166,15 +170,17 @@ public class GUIControler extends Thread {
 	//Receive and handle response to invite
 	public static void receiveResponseToInvite(String name, String response) {
 		if(response.equals("ACCEPTED")) {
-			opponent = name;
+			
 			dialog.setVisible(false);
-			connectingWindow.setVisible(false);
-			mainWindow = new MainWindow();
-			mainWindow.setVisible(true);
-			mainWindow.setLocationRelativeTo(null);
-		} else {
+			startGame(name);
+		}
+		//ovaj deo koda ne vidi, baca exception, ne znam zasto, jedino sto mi je palo na pamet jeste da mora da 
+		//se napravi deo gde je response REJECTED i na threadovima, da ne bi pucalo
+		else{
+			dialog.setVisible(false);
+			connectingWindow.setEnabled(true);
 			JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
-			dialog.setVisible(false);
+		
 		}
 	}
 
@@ -194,11 +200,17 @@ public class GUIControler extends Thread {
 
 
 			if(option == JOptionPane.YES_OPTION){
-
-				connectingWindow.setVisible(false);
-				mainWindow = new MainWindow();
-				mainWindow.setVisible(true);
-				mainWindow.setLocationRelativeTo(null);
+				dialog = new JDialog();
+				JLabel label = new JLabel("Sending invite to "+random+"...");
+				dialog.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
+				dialog.setTitle("Please Wait...");
+				dialog.add(label);
+				dialog.setPreferredSize(new Dimension(200, 90));
+				dialog.pack();
+				dialog.setLocationRelativeTo(connectingWindow);
+				dialog.setVisible(true);
+				connectingWindow.setEnabled(false);
+				Client.inviteUserToPlay(random);
 			}else{
 				SwingUtilities.updateComponentTreeUI(connectingWindow);
 			}

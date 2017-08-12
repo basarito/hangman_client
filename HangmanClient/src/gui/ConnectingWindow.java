@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.UIManager;
 import javax.swing.JButton;
 import javax.swing.JList;
 import java.awt.Font;
@@ -267,7 +268,7 @@ public class ConnectingWindow extends JFrame {
 	public JTable getTable() {
 
 		if (table == null) {
-			dtm = new DefaultTableModel(new String[0][0],
+			dtm = new DefaultTableModel(new String[1][1],
 					new Object[] { "" });
 			table=new JTable(dtm){
 				@Override
@@ -293,12 +294,7 @@ public class ConnectingWindow extends JFrame {
 				}
 			});
 
-			if(table.getRowCount() == 1 && table.getValueAt(0, 0).equals("There are no online players at the moment")){
-				table.setFocusable(false);
-				table.setRowSelectionAllowed(false);
-				getTxtFindASpecific().setText("");
-				getTxtFindASpecific().setEditable(false);
-			} else {
+			
 				table.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent e) {
@@ -306,13 +302,17 @@ public class ConnectingWindow extends JFrame {
 						int row=table.rowAtPoint(e.getPoint());
 						if(row>-1){
 							if (e.getClickCount() == 2) {
-								GUIControler.choose(table.getModel().getValueAt(table.
-										convertRowIndexToModel(row), 0).toString());
+								if(!table.getModel().getValueAt(table.
+										convertRowIndexToModel(row), 0).toString().equals("There are no online players at the moment")){
+									GUIControler.choose(table.getModel().getValueAt(table.
+											convertRowIndexToModel(row), 0).toString());
+								}
+								
 							}
 						}
 					}
 				});
-			}
+			
 		}
 
 		return table;
@@ -327,6 +327,13 @@ public class ConnectingWindow extends JFrame {
 		if(listSize==0){
 			data = new String[1][1];
 			data[0][0] = "There are no online players at the moment";
+			getTable().setFocusable(false);
+			getTable().setRowSelectionAllowed(false);
+			getTxtFindASpecific().setText("");
+			getTxtFindASpecific().setFocusable(false);
+			getTxtFindASpecific().setEditable(false);
+			getTxtFindASpecific().setToolTipText("There are no online players at the moment");
+			UIManager.put("ToolTip.background", new Color(229,204,255));
 
 		} else {
 			data = new String[listSize][1];
