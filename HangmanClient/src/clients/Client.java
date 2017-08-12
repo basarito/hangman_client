@@ -65,25 +65,9 @@ public static void main(String[] args) {
 		serverOutput.println("/EXIT"); 
 	}
 
-	public static String inviteUserToPlay(String user) {
-		
-		try {
-			serverOutput.println("\\INVITE "+user);
-			String input = serverInput.readLine();
-			if (input.equals("RECEIVED")) 
-				return "OK";
-			/*if(input.equals("\\ACCEPTED")) {
-				return true;
-			} else 
-				return false;*/
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return "NO";
+	public static void inviteUserToPlay(String user) {			
+			serverOutput.println("/INVITE:"+user);
 	}
-
 
 	public static synchronized LinkedList<String> parseOnlineList(String usernames) {
 		LinkedList<String> pomocna = new LinkedList<>();
@@ -101,9 +85,10 @@ public static void main(String[] args) {
 		System.out.println("****end****");
 		return pomocna;
 	}
-	
-	public static void acceptInvitation(String inviter) {
-		serverOutput.println("\\ACCEPTED");
+
+	public static void acceptInvite(String name) {
+		serverOutput.println("/RSVPTO:"+name+":ACCEPTED");
+		GUIControler.startGame(name);
 		
 	}
 

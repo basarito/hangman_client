@@ -32,8 +32,20 @@ public class ListenerThread extends Thread {
 					Client.onlineLista = Client.parseOnlineList(usernames);
 					GUIControler.updateTable();
 				}
-			
-					
+//				if(input.startsWith("/INVITE")) {
+//					response = input.split(":")[1];
+//					GUIControler.receiveResponseToInvite(response);
+//				}
+				if(input.startsWith("/INVITEDBY")) {
+					String name = input.split(":")[1];
+					GUIControler.receiveInvite(name);
+				}
+				if(input.startsWith("/RSVPBY")) {
+					String name = input.split(":")[1];
+					response = input.split(":")[2];
+					GUIControler.receiveResponseToInvite(name, response);
+				}
+								
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("Error: "+ e);
