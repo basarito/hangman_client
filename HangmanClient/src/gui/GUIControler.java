@@ -3,14 +3,8 @@ package gui;
 import java.awt.EventQueue;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 
-import java.awt.List;
-
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Random;
-
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -18,13 +12,9 @@ import javax.swing.JFrame;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 import clients.Client;
-
-import game.GameLogic;
 
 public class GUIControler extends Thread {
 	

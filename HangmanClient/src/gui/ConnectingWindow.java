@@ -288,7 +288,7 @@ public class ConnectingWindow extends JFrame {
 				public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 				{
 					final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-					c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
+					c.setBackground(row % 2 == 1 ? new Color(229,204,255) : Color.WHITE);
 					return c;
 				}
 			});
