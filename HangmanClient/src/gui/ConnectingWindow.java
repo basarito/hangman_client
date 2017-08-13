@@ -37,6 +37,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseMotionAdapter;
 
 @SuppressWarnings("serial")
 public class ConnectingWindow extends JFrame {
@@ -148,6 +149,13 @@ public class ConnectingWindow extends JFrame {
 	public JTextField getTxtFindASpecific() {
 		if(txtFindASpecific == null){
 			txtFindASpecific = new JTextField();
+			txtFindASpecific.addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseMoved(MouseEvent arg0) {
+					txtFindASpecific.setForeground(new Color(216, 191, 216));
+
+				}
+			});
 			txtFindASpecific.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent arg0) {
@@ -168,6 +176,7 @@ public class ConnectingWindow extends JFrame {
 			txtFindASpecific.setFont(new Font("Arial", Font.ITALIC, 12));
 			txtFindASpecific.setText("Find a specific user...");
 			txtFindASpecific.setColumns(14);
+			
 		}
 
 		return txtFindASpecific;
@@ -267,7 +276,7 @@ public class ConnectingWindow extends JFrame {
 		try {
 
 		if (table == null) {
-			dtm = new DefaultTableModel(new String[0][0],
+			dtm = new DefaultTableModel(new String[1][1],
 					new Object[] { "" });
 			table=new JTable(dtm){
 				@Override
@@ -289,10 +298,16 @@ public class ConnectingWindow extends JFrame {
 				{
 					final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 					c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
+					if(isSelected==true){
+						c.setBackground(new Color(153, 50, 204));
+					}
 					return c;
 				}
 			});
+			
+			
 
+			
 			
 				table.addMouseListener(new MouseAdapter() {
 					@Override
@@ -351,7 +366,7 @@ public class ConnectingWindow extends JFrame {
 			
 
 		}
-
+	
 		DefaultTableModel dtm = (DefaultTableModel)this.table.getModel();
 		if (dtm.getRowCount() > 0) {
 			for (int i = dtm.getRowCount() - 1; i > -1; i--) {

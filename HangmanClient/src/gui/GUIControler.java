@@ -146,12 +146,12 @@ public class GUIControler extends Thread {
 		if(option == JOptionPane.YES_OPTION){
 			//loading screen:
 			dialog = new JDialog();
-			JLabel label = new JLabel("Sending invite to "+tryOpponent+"...");
-			//add center text and resize(false)
+			JLabel label = new JLabel("Sending invite to "+tryOpponent+"...", JLabel.CENTER);
 			dialog.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 			dialog.setTitle("Please Wait...");
 			dialog.add(label);
 			dialog.setPreferredSize(new Dimension(200, 90));
+			dialog.setResizable(false);
 			dialog.pack();
 			dialog.setLocationRelativeTo(connectingWindow);
 			dialog.setVisible(true);
@@ -196,11 +196,12 @@ public class GUIControler extends Thread {
 			if(option == JOptionPane.YES_OPTION){
 				tryOpponent = random;
 				dialog = new JDialog();
-				JLabel label = new JLabel("Sending invite to "+tryOpponent+"...");
+				JLabel label = new JLabel("Sending invite to "+tryOpponent+"...", JLabel.CENTER);
 				dialog.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 				dialog.setTitle("Please Wait...");
 				dialog.add(label);
 				dialog.setPreferredSize(new Dimension(200, 90));
+				dialog.setResizable(false);
 				dialog.pack();
 				dialog.setLocationRelativeTo(connectingWindow);
 				dialog.setVisible(true);
