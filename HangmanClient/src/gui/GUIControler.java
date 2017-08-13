@@ -195,7 +195,7 @@ public class GUIControler extends Thread {
 			Random randomizer = new Random();
 
 			String random=Client.onlineLista.get(randomizer.nextInt(Client.onlineLista.size()));
-
+			opponent1=random;
 
 			int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), random+" is available. Do you want to play with them? ",
 					"Connecting", JOptionPane.YES_NO_OPTION);

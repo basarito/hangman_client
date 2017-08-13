@@ -268,7 +268,7 @@ public class ConnectingWindow extends JFrame {
 	public JTable getTable() {
 
 		if (table == null) {
-			dtm = new DefaultTableModel(new String[1][1],
+			dtm = new DefaultTableModel(new String[0][0],
 					new Object[] { "" });
 			table=new JTable(dtm){
 				@Override
@@ -289,7 +289,7 @@ public class ConnectingWindow extends JFrame {
 				public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 				{
 					final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-					c.setBackground(row % 2 == 1 ? new Color(229,204,255) : Color.WHITE);
+					c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
 					return c;
 				}
 			});
@@ -339,7 +339,14 @@ public class ConnectingWindow extends JFrame {
 			data = new String[listSize][1];
 			for (int i=0; i< listSize; i++) {
 				data[i][0]=pomocnalista.get(i);
-			} 
+			}
+			getTable().setFocusable(true);
+			getTable().setRowSelectionAllowed(true);
+			getTxtFindASpecific().setText("Find a specific user...");
+			getTxtFindASpecific().setFocusable(true);
+			getTxtFindASpecific().setEditable(true);
+			
+
 		}
 
 		DefaultTableModel dtm = (DefaultTableModel)this.table.getModel();
