@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
 
 import clients.Client;
 
@@ -24,8 +25,9 @@ public class GUIControler extends Thread {
 	private static MainWindow mainWindow;
 
 	public static String playerUsername="";
-	public static String opponent="";
-
+	public static String opponent1="";
+	public static String opponent2="";
+	
 	static JDialog dialog = null;
 
 	//public static boolean goodbye = false;
@@ -136,7 +138,7 @@ public class GUIControler extends Thread {
 	public static void choose(String user) {
 		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+user+ " ?",
 				"Connecting", JOptionPane.YES_NO_OPTION);
-		opponent=user;
+		opponent1=user;
 
 		if(option == JOptionPane.YES_OPTION){
 			//loading screen:
@@ -323,13 +325,24 @@ public class GUIControler extends Thread {
 	}
 
 	public static void startGame(String name) {
-		opponent = name;
+		opponent2 = name;
 		connectingWindow.setVisible(false);
 		mainWindow = new MainWindow();
 		mainWindow.setVisible(true);
-		mainWindow.setLocationRelativeTo(null);			
+		mainWindow.setLocationRelativeTo(null);	
+		setOpponent();
 	}
 
+	public static void setOpponent(){
+		if(!playerUsername.equals(opponent1)){
+			mainWindow.getUserVsUser().setText(playerUsername+" VS. "+opponent1);
+		}
+		if(!playerUsername.equals(opponent2)){
+			mainWindow.getUserVsUser().setText(playerUsername+" VS. "+opponent2);
+
+		}
+		
+	}
 }
 
 

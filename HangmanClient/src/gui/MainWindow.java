@@ -347,7 +347,7 @@ public class MainWindow extends JFrame {
 
 	public JLabel getUserVsUser() {
 		if(lblUserVsUser == null){
-			lblUserVsUser = new JLabel(GUIControler.playerUsername+" VS. "+GUIControler.opponent);
+			lblUserVsUser = new JLabel();
 			lblUserVsUser.setForeground(new Color(153, 50, 204));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 15));
 			
