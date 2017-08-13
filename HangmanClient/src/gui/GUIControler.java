@@ -27,7 +27,7 @@ public class GUIControler extends Thread {
 	public static String playerUsername="";
 	public static String opponent1="";
 	public static String opponent2="";
-	
+
 	static JDialog dialog = null;
 
 	//public static boolean goodbye = false;
@@ -144,6 +144,7 @@ public class GUIControler extends Thread {
 			//loading screen:
 			dialog = new JDialog();
 			JLabel label = new JLabel("Sending invite to "+user+"...");
+			//add center text and resize(false)
 			dialog.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 			dialog.setTitle("Please Wait...");
 			dialog.add(label);
@@ -153,17 +154,6 @@ public class GUIControler extends Thread {
 			dialog.setVisible(true);
 			connectingWindow.setEnabled(false);
 			Client.inviteUserToPlay(user);
-			//			if(Client.inviteUserToPlay(user).equals("OK")) {
-			//				dialog.setVisible(false);
-			//				opponent=user;
-			//				connectingWindow.setVisible(false);
-			//				mainWindow = new MainWindow();
-			//				mainWindow.setVisible(true);
-			//				mainWindow.setLocationRelativeTo(null);
-			//
-			//			} else {
-			//				JOptionPane.showMessageDialog(connectingWindow, "Connection to "+user+" was unsuccessful. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
-			//			}
 		} else {
 			SwingUtilities.updateComponentTreeUI(connectingWindow);
 		}
@@ -171,18 +161,21 @@ public class GUIControler extends Thread {
 
 	//Receive and handle response to invite
 	public static void receiveResponseToInvite(String name, String response) {
-		if(response.equals("ACCEPTED")) {
-			
-			dialog.setVisible(false);
-			startGame(name);
-		}
-		//ovaj deo koda ne vidi, baca exception, ne znam zasto, jedino sto mi je palo na pamet jeste da mora da 
-		//se napravi deo gde je response REJECTED i na threadovima, da ne bi pucalo
-		else{
-			dialog.setVisible(false);
-			connectingWindow.setEnabled(true);
-			JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
-		
+		try {
+			if(response.equals("ACCEPTED")) {			
+				dialog.setVisible(false);
+				startGame(name);
+			}
+			else if(response.equals("REJECTED")) {
+				dialog.setVisible(false);
+				connectingWindow.setEnabled(true);
+				JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful or the user rejected your invite. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
+			} else {
+				dialog.setVisible(false);
+				connectingWindow.setEnabled(true);
+			}
+		} catch (Exception e){
+			System.out.println("receiveResponseToInvite baca exception");
 		}
 	}
 
@@ -309,18 +302,22 @@ public class GUIControler extends Thread {
 	}
 
 
-	
+
 	/******Connecting two players in a game**************/
 
 
 	public static void receiveInvite(String name) {
+		try {
 		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), name+" has invited you to play with them. Do you want to accept?",
 				"Received an invitation!", JOptionPane.YES_NO_OPTION);
 		if (option == JOptionPane.YES_OPTION) {
 			Client.acceptInvite(name);
 		} else {
-			//Client.rejectInvitation(inviter); to add?
+			Client.rejectInvite(name);
 			SwingUtilities.updateComponentTreeUI(connectingWindow);
+		}
+		} catch (Exception e) {
+			System.out.println(">>>>>OPA EXCEPTION! " + e);
 		}
 	}
 
@@ -341,7 +338,7 @@ public class GUIControler extends Thread {
 			mainWindow.getUserVsUser().setText(playerUsername+" VS. "+opponent2);
 
 		}
-		
+
 	}
 }
 

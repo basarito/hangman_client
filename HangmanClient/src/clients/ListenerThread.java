@@ -32,10 +32,6 @@ public class ListenerThread extends Thread {
 					Client.onlineLista = Client.parseOnlineList(usernames);
 					GUIControler.updateTable();
 				}
-//				if(input.startsWith("/INVITE")) {
-//					response = input.split(":")[1];
-//					GUIControler.receiveResponseToInvite(response);
-//				}
 				if(input.startsWith("/INVITEDBY")) {
 					String name = input.split(":")[1];
 					GUIControler.receiveInvite(name);
@@ -47,8 +43,9 @@ public class ListenerThread extends Thread {
 				}
 								
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Error: "+ e);
+				System.out.println("Server is down.");
+				end=true;
+				return;
 			}catch(NullPointerException npe) {
 				return;
 			}

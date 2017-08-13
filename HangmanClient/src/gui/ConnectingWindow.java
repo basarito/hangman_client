@@ -229,7 +229,7 @@ public class ConnectingWindow extends JFrame {
 			panel_6 = new JPanel();
 			panel_6.setLayout(new BorderLayout(0, 0));
 			panel_6.add(getScrollPane(), BorderLayout.CENTER);
-			panel_6.add(getTable(), BorderLayout.CENTER);
+			//panel_6.add(getTable(), BorderLayout.CENTER);
 		}
 
 		return panel_6;
@@ -263,9 +263,8 @@ public class ConnectingWindow extends JFrame {
 		return scrollPane;
 	}
 
-
-
 	public JTable getTable() {
+		try {
 
 		if (table == null) {
 			dtm = new DefaultTableModel(new String[0][0],
@@ -316,6 +315,10 @@ public class ConnectingWindow extends JFrame {
 		}
 
 		return table;
+		} catch (Exception e) {
+			System.out.println("eve ga exception");
+			return null;
+		}
 	}
 
 

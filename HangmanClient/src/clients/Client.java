@@ -24,7 +24,16 @@ public class Client {
     
     public static ListenerThread listener = null;
 	static boolean end = false;
-	//static boolean begin = false;
+	
+	static String username="";
+	
+	public static String getUsername() {
+		return username;
+	}
+	
+	public static void setUsername(String name) {
+		username = name;
+	}
 	
 public static void main(String[] args) {
 		
@@ -78,11 +87,11 @@ public static void main(String[] args) {
 			}
 			pomocna.add(userarray[i]);
 		}
-		System.out.println("****start****");
+		System.out.println("Available online users:");
 		for(String s : pomocna) {
 			System.out.println(s);
 		}
-		System.out.println("****end****");
+		System.out.println("------------");
 		return pomocna;
 	}
 
@@ -90,6 +99,10 @@ public static void main(String[] args) {
 		serverOutput.println("/RSVPTO:"+name+":ACCEPTED");
 		GUIControler.startGame(name);
 		
+	}
+
+	public static void rejectInvite(String name) {
+		serverOutput.println("/RSVPTO:"+name+":REJECTED");
 	}
 
 }
