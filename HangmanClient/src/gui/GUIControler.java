@@ -24,9 +24,9 @@ public class GUIControler extends Thread {
 	private static ConnectingWindow connectingWindow ;
 	private static MainWindow mainWindow;
 
-	public static String playerUsername="";
-	public static String opponent1="";
-	public static String opponent2="";
+	//public static String playerUsername="";
+	//public static String opponent1="";
+	//public static String opponent2="";
 
 	static JDialog dialog = null;
 
@@ -38,6 +38,9 @@ public class GUIControler extends Thread {
 	public static int lettersCorrect=0;
 
 	public static boolean acceptedGame = false;
+	
+	static String usernameToValidate = "";
+	static String tryOpponent = "";
 
 
 	@Override 
@@ -105,7 +108,7 @@ public class GUIControler extends Thread {
 
 	//Username validation	
 	public static boolean validateUsernameLocally(String username) {
-		GUIControler.playerUsername=username;
+		usernameToValidate =username;
 		boolean valid=false;
 		if (username.isEmpty()) {
 			JOptionPane.showMessageDialog(welcomeWindow, "You have to enter a username!", "Try again :(", JOptionPane.ERROR_MESSAGE);
@@ -122,8 +125,8 @@ public class GUIControler extends Thread {
 	public static void validateUsernameFromServer(String msg) {
 		if (!msg.equals("OK")) {
 			JOptionPane.showMessageDialog(welcomeWindow, "Username already taken. Please choose a different one.", "Try again :(", JOptionPane.ERROR_MESSAGE);			
-			playerUsername="";
 		} else {
+			Client.setUsername(usernameToValidate);
 			showConnectingWindow();
 		}
 
@@ -131,19 +134,19 @@ public class GUIControler extends Thread {
 
 	//Personalized welcome message 
 	public static JLabel welcomeUser() {
-		return new JLabel("Welcome, " + GUIControler.playerUsername + "!");
+		return new JLabel("Welcome, " + Client.getUsername() + "!");
 	}
 
 	//Select user from the list to send invite
 	public static void choose(String user) {
 		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+user+ " ?",
 				"Connecting", JOptionPane.YES_NO_OPTION);
-		opponent1=user;
+		tryOpponent = user;
 
 		if(option == JOptionPane.YES_OPTION){
 			//loading screen:
 			dialog = new JDialog();
-			JLabel label = new JLabel("Sending invite to "+user+"...");
+			JLabel label = new JLabel("Sending invite to "+tryOpponent+"...");
 			//add center text and resize(false)
 			dialog.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 			dialog.setTitle("Please Wait...");
@@ -153,7 +156,7 @@ public class GUIControler extends Thread {
 			dialog.setLocationRelativeTo(connectingWindow);
 			dialog.setVisible(true);
 			connectingWindow.setEnabled(false);
-			Client.inviteUserToPlay(user);
+			Client.inviteUserToPlay(tryOpponent);
 		} else {
 			SwingUtilities.updateComponentTreeUI(connectingWindow);
 		}
@@ -161,22 +164,19 @@ public class GUIControler extends Thread {
 
 	//Receive and handle response to invite
 	public static void receiveResponseToInvite(String name, String response) {
-		try {
 			if(response.equals("ACCEPTED")) {			
+				Client.setOpponent(name);
 				dialog.setVisible(false);
-				startGame(name);
+				startGame();
 			}
 			else if(response.equals("REJECTED")) {
 				dialog.setVisible(false);
 				connectingWindow.setEnabled(true);
-				JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful or the user rejected your invite. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful or they rejected your invite. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
 			} else {
 				dialog.setVisible(false);
 				connectingWindow.setEnabled(true);
 			}
-		} catch (Exception e){
-			System.out.println("receiveResponseToInvite baca exception");
-		}
 	}
 
 	//Random button functionality 
@@ -187,16 +187,16 @@ public class GUIControler extends Thread {
 		}else{
 			Random randomizer = new Random();
 
-			String random=Client.onlineLista.get(randomizer.nextInt(Client.onlineLista.size()));
-			opponent1=random;
+			String random = Client.onlineLista.get(randomizer.nextInt(Client.onlineLista.size()));
 
 			int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), random+" is available. Do you want to play with them? ",
 					"Connecting", JOptionPane.YES_NO_OPTION);
 
 
 			if(option == JOptionPane.YES_OPTION){
+				tryOpponent = random;
 				dialog = new JDialog();
-				JLabel label = new JLabel("Sending invite to "+random+"...");
+				JLabel label = new JLabel("Sending invite to "+tryOpponent+"...");
 				dialog.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
 				dialog.setTitle("Please Wait...");
 				dialog.add(label);
@@ -205,7 +205,7 @@ public class GUIControler extends Thread {
 				dialog.setLocationRelativeTo(connectingWindow);
 				dialog.setVisible(true);
 				connectingWindow.setEnabled(false);
-				Client.inviteUserToPlay(random);
+				Client.inviteUserToPlay(tryOpponent);
 			}else{
 				SwingUtilities.updateComponentTreeUI(connectingWindow);
 			}
@@ -307,39 +307,23 @@ public class GUIControler extends Thread {
 
 
 	public static void receiveInvite(String name) {
-		try {
 		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), name+" has invited you to play with them. Do you want to accept?",
 				"Received an invitation!", JOptionPane.YES_NO_OPTION);
 		if (option == JOptionPane.YES_OPTION) {
 			Client.acceptInvite(name);
 		} else {
 			Client.rejectInvite(name);
-			SwingUtilities.updateComponentTreeUI(connectingWindow);
-		}
-		} catch (Exception e) {
-			System.out.println(">>>>>OPA EXCEPTION! " + e);
+			//SwingUtilities.updateComponentTreeUI(connectingWindow);
 		}
 	}
 
-	public static void startGame(String name) {
-		opponent2 = name;
+	public static void startGame() {
 		connectingWindow.setVisible(false);
 		mainWindow = new MainWindow();
 		mainWindow.setVisible(true);
 		mainWindow.setLocationRelativeTo(null);	
-		setOpponent();
 	}
-
-	public static void setOpponent(){
-		if(!playerUsername.equals(opponent1)){
-			mainWindow.getUserVsUser().setText(playerUsername+" VS. "+opponent1);
-		}
-		if(!playerUsername.equals(opponent2)){
-			mainWindow.getUserVsUser().setText(playerUsername+" VS. "+opponent2);
-
-		}
-
-	}
+	
 }
 
 

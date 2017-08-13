@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import clients.Client;
 import game.GameLogic;
 
 import java.awt.Dimension;
@@ -36,6 +37,7 @@ import java.awt.Image;
 
 import javax.swing.JTextArea;
 
+@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
@@ -347,7 +349,7 @@ public class MainWindow extends JFrame {
 
 	public JLabel getUserVsUser() {
 		if(lblUserVsUser == null){
-			lblUserVsUser = new JLabel();
+			lblUserVsUser = new JLabel(Client.getUsername()+" VS. "+Client.getOpponent());
 			lblUserVsUser.setForeground(new Color(153, 50, 204));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 15));
 			

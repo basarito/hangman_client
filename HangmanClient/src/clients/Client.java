@@ -25,14 +25,24 @@ public class Client {
     public static ListenerThread listener = null;
 	static boolean end = false;
 	
-	static String username="";
+	static String opponent = "";
+	
+	static String playerUsername = "";
 	
 	public static String getUsername() {
-		return username;
+		return playerUsername;
 	}
 	
 	public static void setUsername(String name) {
-		username = name;
+		playerUsername = name;
+	}
+	
+	public static String getOpponent() {
+		return opponent;
+	}
+	
+	public static void setOpponent(String name) {
+		opponent = name;
 	}
 	
 public static void main(String[] args) {
@@ -82,7 +92,7 @@ public static void main(String[] args) {
 		LinkedList<String> pomocna = new LinkedList<>();
 		String[] userarray = usernames.split(";");
 		for (int i = 0; i < userarray.length; i++) {
-			if(userarray[i].equals(GUIControler.playerUsername)) {
+			if(userarray[i].equals(getUsername())) {
 				continue;
 			}
 			pomocna.add(userarray[i]);
@@ -97,7 +107,8 @@ public static void main(String[] args) {
 
 	public static void acceptInvite(String name) {
 		serverOutput.println("/RSVPTO:"+name+":ACCEPTED");
-		GUIControler.startGame(name);
+		setOpponent(name);
+		GUIControler.startGame();
 		
 	}
 
