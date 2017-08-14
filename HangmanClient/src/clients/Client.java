@@ -84,8 +84,8 @@ public static void main(String[] args) {
 		serverOutput.println("/EXIT"); 
 	}
 	
-	public static void sendWordSetSignal(String receiver, String word){
-		serverOutput.println("/WORD:SET:"+receiver+":"+word);
+	public static void sendWordSetSignal(String receiver, String word, String category){
+		serverOutput.println("/WORD:SET:"+receiver+":"+word+":"+category);
 	}
 
 	public static void inviteUserToPlay(String user) {			

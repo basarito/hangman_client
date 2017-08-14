@@ -60,6 +60,7 @@ public class MainWindow extends JFrame {
 	private JPanel panel_7;
 	private JLabel lblUserVsUser;
 	public static List<JButton> listOfButtons = new ArrayList<JButton>();
+	private JLabel lblCategory;
 
 	/**
 	 * Create the frame.
@@ -104,7 +105,8 @@ public class MainWindow extends JFrame {
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
 		getPanel_7().add(getUserVsUser());
-		
+		getPanel_4().add(getLblCategory());
+		getLblCategory().setVisible(false);
 	}
 
 	
@@ -282,6 +284,9 @@ public class MainWindow extends JFrame {
 	public JPanel getPanel_4() {
 		if(panel_4 == null){
 			panel_4 = new JPanel();
+			panel_4.setPreferredSize(new Dimension(10, 20));
+			panel_4.setLayout(null);
+			
 			
 		}
 
@@ -301,6 +306,7 @@ public class MainWindow extends JFrame {
 
 	public static JButton getBtnLetter() {
 			btnLetter = new JButton("_");
+			btnLetter.setOpaque(true);
 			btnLetter.setFont(new Font("Arial", Font.PLAIN, 15));
 			listOfButtons.add(btnLetter);
 			
@@ -358,5 +364,15 @@ public class MainWindow extends JFrame {
 		}
 
 		return lblUserVsUser;
+	}
+	public JLabel getLblCategory() {
+		if (lblCategory == null) {
+			lblCategory = new JLabel("Category: ");
+			lblCategory.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
+			lblCategory.setForeground(new Color(0, 0, 0));
+			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 18));
+			lblCategory.setBounds(106, 0, 200, 20);
+		}
+		return lblCategory;
 	}
 }

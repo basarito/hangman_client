@@ -45,7 +45,8 @@ public class ListenerThread extends Thread {
 				
 				if(input.startsWith("/WORD_SET")){
 					String word = input.split(":")[1];
-					GUIControler.receiveSignalWordSet(word);
+					String category = input.split(":")[2];
+					GUIControler.receiveSignalWordSet(word, category);
 				}
 								
 			} catch (IOException e) {

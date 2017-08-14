@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
@@ -35,6 +37,7 @@ public class GUIControler extends Thread {
 
 	//public static boolean goodbye = false;
 	public static String word="";
+	public static String category="";
 	public static String newW=null;
 	public static String letter;
 	public static int errorCount=0;
@@ -355,14 +358,65 @@ public class GUIControler extends Thread {
 			
 		}
 		else {
-			String w = JOptionPane.showInputDialog("Enter a word");
+			String w="";
+			String[] options = {"OK"};
+			JPanel panel = new JPanel();
+			panel.setPreferredSize(new Dimension(80, 50));
+			JLabel lbl = new JLabel("Enter a word: ");
+			JTextField txt = new JTextField(15);
+			panel.add(lbl);
+			panel.add(txt);
+			int selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+
+			
+			if(selectedOption == 0)
+			{
+			    w = txt.getText();
+			    
+			}
+			while(w.equals("")){
+				selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+
+//				if(selectedOption==JOptionPane.CANCEL_OPTION){
+//					System.out.println("NOOOOOOo");
+//					break;
+//				}
+				
+				if(selectedOption == 0)
+				{
+				    w = txt.getText();
+				    
+				}			
+			}
+			
 			if(w!=null){
 				word=w;
-				Client.sendWordSetSignal(Client.getOpponent(), word);
-				setOpponentMainWindow();
-			}
-			else{
-				JOptionPane.showMessageDialog(null, "Enter a letter", "Error", JOptionPane.ERROR_MESSAGE );
+				String c="";
+				lbl.setText("Enter word category");
+				txt.setText("");
+				int selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+
+				if(selectedOption1 == 0)
+				{
+				    c = txt.getText();
+				    
+				}
+				
+				while(c.equals("")){
+					selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+
+					if(selectedOption1 == 0)
+					{
+					    c = txt.getText();
+					    
+					}				
+				}
+				
+				if(c!=null){
+					category = c;
+					Client.sendWordSetSignal(Client.getOpponent(), word, category);
+					setOpponentMainWindow();
+				}
 			}
 			
 			
@@ -370,15 +424,16 @@ public class GUIControler extends Thread {
 		
 	}
 	
-	public static void receiveSignalWordSet(String w) {
+	public static void receiveSignalWordSet(String w, String c) {
 		dialogForWord.setVisible(false);
-		setPlayerMainWindow(w);
+		setPlayerMainWindow(w, c);
 	}
 	
 	
-	public static void setPlayerMainWindow(String w){ 
+	public static void setPlayerMainWindow(String w, String c){ 
 		
 		word=w;
+		category=c;
 		mainWindow.getBtnGuess().setVisible(true);
 		mainWindow.getTextField().setVisible(true);
 		for (int i=0; i<word.length(); i++) {
@@ -389,8 +444,8 @@ public class GUIControler extends Thread {
 		} 
 		
 		mainWindow.getPanel_1().revalidate();
-		
-		
+		mainWindow.getLblCategory().setVisible(true);
+		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 	}
 	
 	public static void setOpponentMainWindow() { //samo rec umesto guess i dugmica
@@ -405,8 +460,9 @@ public class GUIControler extends Thread {
 		mainWindow.getPanel_1().add(lblWord);
 		mainWindow.getPanel_1().revalidate();
 		mainWindow.getPanel_1().repaint();
-		
-		
+		mainWindow.getLblCategory().setVisible(true);
+		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
+
 	}
 	
 }
