@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -16,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
 
 import clients.Client;
@@ -27,11 +30,9 @@ public class GUIControler extends Thread {
 	private static ConnectingWindow connectingWindow ;
 	private static MainWindow mainWindow;
 
-	//public static String playerUsername="";
-	//public static String opponent1="";
-	//public static String opponent2="";
-
 	static JDialog dialog = null;
+	static JDialog timeoutDialog = null;
+	static boolean answered = false;
 
 	//public static boolean goodbye = false;
 	public static String word="";
@@ -41,14 +42,12 @@ public class GUIControler extends Thread {
 	public static int lettersCorrect=0;
 
 	public static boolean acceptedGame = false;
-	
+
 	static String usernameToValidate = "";
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
 
 
-
-	
 	@Override 
 	public void run() {
 		EventQueue.invokeLater(new Runnable() {
@@ -107,9 +106,9 @@ public class GUIControler extends Thread {
 
 	public static void showConnectingWindow() {
 		connectingWindow = new ConnectingWindow();
+		connectingWindow.setLocationRelativeTo(welcomeWindow);		
 		welcomeWindow.setVisible(false);
 		connectingWindow.setVisible(true);
-		connectingWindow.setLocationRelativeTo(null);		
 	}
 
 	//Username validation	
@@ -148,7 +147,7 @@ public class GUIControler extends Thread {
 		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+user+ " ?",
 				"Connecting", JOptionPane.YES_NO_OPTION);
 		tryOpponent = user;
-		
+
 
 		if(option == JOptionPane.YES_OPTION){
 			//loading screen:
@@ -163,6 +162,9 @@ public class GUIControler extends Thread {
 			dialog.setLocationRelativeTo(connectingWindow);
 			dialog.setVisible(true);
 			connectingWindow.setEnabled(false);
+			
+			dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
 			Client.inviteUserToPlay(tryOpponent);
 		} else {
 			SwingUtilities.updateComponentTreeUI(connectingWindow);
@@ -171,27 +173,21 @@ public class GUIControler extends Thread {
 
 	//Receive and handle response to invite
 	public static void receiveResponseToInvite(String name, String response) {
-			if(response.equals("ACCEPTED")) {			
-				Client.setOpponent(name);
-				Client.sentRequestForGame=1;
-				dialog.setVisible(false);
-				startGame();
-			}
-			else if(response.equals("REJECTED")) {
-				dialog.setVisible(false);
-				connectingWindow.setEnabled(true);
-				JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful or they rejected your invite. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
-			} else {
-				dialog.setVisible(false);
-				connectingWindow.setEnabled(true);
-			}
+		if(response.equals("ACCEPTED")) {			
+			Client.setOpponent(name);
+			Client.sentRequestForGame=1;
+			dialog.setVisible(false);
+			startGame();
+		}
+		else if(response.equals("REJECTED")) {
+			dialog.setVisible(false);
+			connectingWindow.setEnabled(true);
+			JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful or they rejected your invite. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
+		} else {
+			dialog.setVisible(false);
+			connectingWindow.setEnabled(true);
+		}
 	}
-	
-	
-	
-	
-	
-	
 
 	//Random button functionality 
 	public static void chooseRandom() {
@@ -322,26 +318,68 @@ public class GUIControler extends Thread {
 
 
 	public static void receiveInvite(String name) {
-		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), name+" has invited you to play with them. Do you want to accept?",
-				"Received an invitation!", JOptionPane.YES_NO_OPTION);
-		if (option == JOptionPane.YES_OPTION) {
-			Client.acceptInvite(name);
-		} else {
-			Client.rejectInvite(name);
-			//SwingUtilities.updateComponentTreeUI(connectingWindow);
+		JOptionPane pane = null;
+		answered=false;
+
+		Timer timer = new Timer(5000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!answered) {
+					timeoutDialog.setVisible(false);
+					answered=false;
+					Client.rejectInvite(name);
+					//System.out.println("timer went off");
+					return;
+				}
+			}
+		});
+		timer.start();
+		timer.setRepeats(false);
+
+		pane = new JOptionPane(name+" has invited you to play with them. Do you want to accept?", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
+		timeoutDialog = pane.createDialog(connectingWindow.getContentPane(), "Received an invitation!");
+		timeoutDialog.setVisible(true);
+
+		try {
+			Object selectedValue = pane.getValue();
+			int value = 0;
+
+			if(selectedValue == null)
+		        value = JOptionPane.CLOSED_OPTION;      
+		    else
+		        value = Integer.parseInt(selectedValue.toString());
+
+			if(value == JOptionPane.YES_OPTION) {
+				answered=true;
+				Client.acceptInvite(name);
+			} else if (value == JOptionPane.NO_OPTION) {
+				answered=true;
+				Client.rejectInvite(name);
+				//System.out.println("clicked no");
+			} else if (value == JOptionPane.CLOSED_OPTION) {
+				answered=true;
+				Client.rejectInvite(name);
+				//System.out.println("clicked X");
+			}
+		} catch (NumberFormatException e1) {
+			answered=false;
+			//System.out.println("did nothing");
+			return;
+		} catch (Exception e) {
+			return;
 		}
 	}
 
 	public static void startGame() {
-		connectingWindow.setVisible(false);
 		mainWindow = new MainWindow();
+		mainWindow.setLocationRelativeTo(connectingWindow);	 
+		connectingWindow.setVisible(false);
 		mainWindow.getBtnGuess().setVisible(false);
 		mainWindow.getTextField().setVisible(false);
 		mainWindow.setVisible(true);
-		mainWindow.setLocationRelativeTo(null);	 
-		
-		
-		
+
+
+
 		if (Client.sentRequestForGame==1) { //wait for opponent to tell a word
 			dialogForWord = new JDialog();
 			JLabel label = new JLabel("Waiting on opponent to set the word to guess...");
@@ -352,7 +390,7 @@ public class GUIControler extends Thread {
 			dialogForWord.pack();
 			dialogForWord.setLocationRelativeTo(mainWindow);
 			dialogForWord.setVisible(true);
-			
+
 		}
 		else {
 			String w = JOptionPane.showInputDialog("Enter a word");
@@ -364,20 +402,20 @@ public class GUIControler extends Thread {
 			else{
 				JOptionPane.showMessageDialog(null, "Enter a letter", "Error", JOptionPane.ERROR_MESSAGE );
 			}
-			
-			
+
+
 		}
-		
+
 	}
-	
+
 	public static void receiveSignalWordSet(String w) {
 		dialogForWord.setVisible(false);
 		setPlayerMainWindow(w);
 	}
-	
-	
+
+
 	public static void setPlayerMainWindow(String w){ 
-		
+
 		word=w;
 		mainWindow.getBtnGuess().setVisible(true);
 		mainWindow.getTextField().setVisible(true);
@@ -385,16 +423,16 @@ public class GUIControler extends Thread {
 			mainWindow.getPanel_5().add(mainWindow.getBtnLetter());
 			mainWindow.getPanel_5().revalidate();
 			mainWindow.getPanel_5().repaint();
-					
+
 		} 
-		
+
 		mainWindow.getPanel_1().revalidate();
-		
-		
+
+
 	}
-	
+
 	public static void setOpponentMainWindow() { //samo rec umesto guess i dugmica
-		
+
 		mainWindow.remove(mainWindow.getBtnGuess());
 		mainWindow.remove(mainWindow.getTextField());
 		//mainWindow.getTextField().setText(word);
@@ -405,10 +443,10 @@ public class GUIControler extends Thread {
 		mainWindow.getPanel_1().add(lblWord);
 		mainWindow.getPanel_1().revalidate();
 		mainWindow.getPanel_1().repaint();
-		
-		
+
+
 	}
-	
+
 }
 
 
