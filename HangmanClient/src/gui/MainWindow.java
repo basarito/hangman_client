@@ -190,7 +190,18 @@ public class MainWindow extends JFrame {
 					 }
 		               
 				            
-				 }});
+				 }
+				 @Override
+					public void keyPressed(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER){
+							if(textField.getText()!=null && textField.getText()!=""){
+								GUIControler.placeTheLetter();
+							}
+						}
+					}
+});
+			
+
 			
 				
 			

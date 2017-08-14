@@ -49,8 +49,8 @@ public class GUIControler extends Thread {
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
 
-
-
+	public static int selectedOption;
+	public static int selectedOption1;
 	
 	@Override 
 	public void run() {
@@ -366,46 +366,53 @@ public class GUIControler extends Thread {
 			JTextField txt = new JTextField(15);
 			panel.add(lbl);
 			panel.add(txt);
-			int selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
-
 			
-			if(selectedOption == 0)
-			{
-			    w = txt.getText();
-			    
+			selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+			
+			if(selectedOption==JOptionPane.CLOSED_OPTION){
+				System.out.println("NOOOOOO");
+			
+			}else if(selectedOption == 0){
+					w = txt.getText();			
 			}
-			while(w.equals("")){
+							
+			while(!w.matches("[A-Za-z]+")){
+				JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
 				selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+				if(selectedOption==JOptionPane.CLOSED_OPTION){
+					System.out.println("NOOOOOO");
+					return;
+				}
+				if(selectedOption==0){   
+					w = txt.getText();
 
-//				if(selectedOption==JOptionPane.CANCEL_OPTION){
-//					System.out.println("NOOOOOOo");
-//					break;
-//				}
-				
-				if(selectedOption == 0)
-				{
-				    w = txt.getText();
-				    
-				}			
+				}
 			}
+			
+
 			
 			if(w!=null){
 				word=w;
 				String c="";
 				lbl.setText("Enter word category");
 				txt.setText("");
-				int selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
-
-				if(selectedOption1 == 0)
+				selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+				if(selectedOption1==JOptionPane.CLOSED_OPTION){
+					System.out.println("NOOOOOOo");
+					return;
+				}else if(selectedOption1 == 0)
 				{
 				    c = txt.getText();
 				    
 				}
 				
-				while(c.equals("")){
+				while(!c.matches("[A-Za-z]+")){
+					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
 					selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
-
-					if(selectedOption1 == 0)
+					if(selectedOption1==JOptionPane.CLOSED_OPTION){
+						System.out.println("NOOOOOOo");
+						return;
+					}else if(selectedOption1 == 0)
 					{
 					    c = txt.getText();
 					    
