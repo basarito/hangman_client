@@ -43,13 +43,15 @@ public class ListenerThread extends Thread {
 				}
 				if(input.startsWith("/WORD_SET")){
 					String word = input.split(":")[1];
-					GUIControler.receiveSignalWordSet(word);
+					String category = input.split(":")[2];
+					GUIControler.receiveSignalWordSet(word, category);
 				}
 				if(input.startsWith("/ACTIVEGAMES")) {
 					String usernames = input.split(":")[1];
 					if(usernames.equals("/EMPTY")) 
 						continue;
 					Client.activeGames = Client.parseList(usernames);
+
 				}
 								
 			} catch (IOException e) {

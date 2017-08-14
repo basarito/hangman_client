@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -36,6 +38,7 @@ public class GUIControler extends Thread {
 
 	//public static boolean goodbye = false;
 	public static String word="";
+	public static String category="";
 	public static String newW=null;
 	public static String letter;
 	public static int errorCount=0;
@@ -47,6 +50,9 @@ public class GUIControler extends Thread {
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
 
+	public static int selectedOption;
+	public static int selectedOption1;
+	
 
 	@Override 
 	public void run() {
@@ -340,7 +346,7 @@ public class GUIControler extends Thread {
 		JOptionPane pane = null;
 		answered=false;
 
-		Timer timer = new Timer(5000, new ActionListener() {
+		Timer timer = new Timer(7000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!answered) {
@@ -412,14 +418,69 @@ public class GUIControler extends Thread {
 
 		}
 		else {
-			String w = JOptionPane.showInputDialog("Enter a word");
+			String w="";
+			String[] options = {"OK"};
+			JPanel panel = new JPanel();
+			panel.setPreferredSize(new Dimension(80, 50));
+			JLabel lbl = new JLabel("Enter a word: ");
+			JTextField txt = new JTextField(15);
+			panel.add(lbl);
+			panel.add(txt);
+			
+			selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+			
+			if(selectedOption==JOptionPane.CLOSED_OPTION){
+				return;
+			
+			}else if(selectedOption == 0){
+					w = txt.getText();			
+			}
+							
+			while(!w.matches("[A-Za-z]+")){
+				JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+				selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+				if(selectedOption==JOptionPane.CLOSED_OPTION){
+					return;
+				}
+				if(selectedOption==0){   
+					w = txt.getText();
+
+				}
+			}
+			
+
+			
 			if(w!=null){
 				word=w;
-				Client.sendWordSetSignal(Client.getOpponent(), word);
-				setOpponentMainWindow();
-			}
-			else{
-				JOptionPane.showMessageDialog(null, "Enter a letter", "Error", JOptionPane.ERROR_MESSAGE );
+				String c="";
+				lbl.setText("Enter word category");
+				txt.setText("");
+				selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+				if(selectedOption1==JOptionPane.CLOSED_OPTION){
+					return;
+				}else if(selectedOption1 == 0)
+				{
+				    c = txt.getText();
+				    
+				}
+				
+				while(!c.matches("[A-Za-z]+")){
+					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+					selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+					if(selectedOption1==JOptionPane.CLOSED_OPTION){
+						return;
+					}else if(selectedOption1 == 0)
+					{
+					    c = txt.getText();
+					    
+					}				
+				}
+				
+				if(c!=null){
+					category = c;
+					Client.sendWordSetSignal(Client.getOpponent(), word, category);
+					setOpponentMainWindow();
+				}
 			}
 
 
@@ -427,15 +488,21 @@ public class GUIControler extends Thread {
 
 	}
 
-	public static void receiveSignalWordSet(String w) {
+	public static void receiveSignalWordSet(String w, String c) {
+
 		dialogForWord.setVisible(false);
-		setPlayerMainWindow(w);
+		setPlayerMainWindow(w, c);
 	}
 
 
-	public static void setPlayerMainWindow(String w){ 
+
+
+	
+	
+	public static void setPlayerMainWindow(String w, String c){ 
 
 		word=w;
+		category=c;
 		mainWindow.getBtnGuess().setVisible(true);
 		mainWindow.getTextField().setVisible(true);
 		for (int i=0; i<word.length(); i++) {
@@ -446,7 +513,8 @@ public class GUIControler extends Thread {
 		} 
 
 		mainWindow.getPanel_1().revalidate();
-
+		mainWindow.getLblCategory().setVisible(true);
+		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 
 	}
 
@@ -462,6 +530,8 @@ public class GUIControler extends Thread {
 		mainWindow.getPanel_1().add(lblWord);
 		mainWindow.getPanel_1().revalidate();
 		mainWindow.getPanel_1().repaint();
+		mainWindow.getLblCategory().setVisible(true);
+		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 
 
 	}
