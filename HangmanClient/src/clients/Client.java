@@ -1,14 +1,11 @@
 package clients;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.LinkedList;
 
-import javax.swing.JOptionPane;
-import javax.xml.bind.Marshaller.Listener;
 
 import gui.GUIControler;
 
