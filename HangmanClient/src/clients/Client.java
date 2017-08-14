@@ -18,16 +18,18 @@ public class Client {
 	//static BufferedReader console = null;
     
 	public static LinkedList<String> onlineLista = new LinkedList<String>();
+	public static LinkedList<String> activeGames = new LinkedList<String>();
     
     public static ListenerThread listener = null;
 	static boolean end = false;
 	
 	
 	static String opponent = "";
-	
 	static String playerUsername = "";
 	
 	public static int sentRequestForGame=0;
+	
+	//static boolean gameActive = false;
 	
 	public static String getUsername() {
 		return playerUsername;
@@ -92,7 +94,7 @@ public static void main(String[] args) {
 			serverOutput.println("/INVITE:"+user);
 	}
 
-	public static synchronized LinkedList<String> parseOnlineList(String usernames) {
+	public static synchronized LinkedList<String> parseList(String usernames) {
 		LinkedList<String> pomocna = new LinkedList<>();
 		String[] userarray = usernames.split(";");
 		for (int i = 0; i < userarray.length; i++) {
@@ -101,23 +103,28 @@ public static void main(String[] args) {
 			}
 			pomocna.add(userarray[i]);
 		}
-		System.out.println("Available online users:");
-		for(String s : pomocna) {
-			System.out.println(s);
-		}
-		System.out.println("------------");
+//		System.out.println("Available online users:");
+//		for(String s : pomocna) {
+//			System.out.println(s);
+//		}
+//		System.out.println("------------");
 		return pomocna;
 	}
 
 	public static void acceptInvite(String name) {
 		serverOutput.println("/RSVPTO:"+name+":ACCEPTED");
 		setOpponent(name);
+		
 		GUIControler.startGame();
 		
 	}
 
 	public static void rejectInvite(String name) {
 		serverOutput.println("/RSVPTO:"+name+":REJECTED");
+	}
+
+	public static void changeGameStatus(String status) {
+		serverOutput.println("/STATUS:"+status);
 	}
 
 }

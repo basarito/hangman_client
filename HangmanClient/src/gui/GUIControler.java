@@ -144,12 +144,17 @@ public class GUIControler extends Thread {
 
 	//Select user from the list to send invite
 	public static void choose(String user) {
+		if(Client.activeGames.contains(user)) {
+			JOptionPane.showMessageDialog(connectingWindow, user+" is already playing a game. Try a different user or try again later.",
+					"User unavailable", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+user+ " ?",
 				"Connecting", JOptionPane.YES_NO_OPTION);
 		tryOpponent = user;
 
-
 		if(option == JOptionPane.YES_OPTION){
+
 			//loading screen:
 			dialog = new JDialog();
 			JLabel label = new JLabel("Sending invite to "+tryOpponent+"...", JLabel.CENTER);
@@ -162,7 +167,7 @@ public class GUIControler extends Thread {
 			dialog.setLocationRelativeTo(connectingWindow);
 			dialog.setVisible(true);
 			connectingWindow.setEnabled(false);
-			
+
 			dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 			Client.inviteUserToPlay(tryOpponent);
@@ -173,8 +178,15 @@ public class GUIControler extends Thread {
 
 	//Receive and handle response to invite
 	public static void receiveResponseToInvite(String name, String response) {
+		//		if(response.equals("BUSY")) {
+		//			dialog.setVisible(false);
+		//			connectingWindow.setEnabled(true);
+		//			JOptionPane.showMessageDialog(connectingWindow, "User "+name+" is already playing a game. Try a different user or try again later.",
+		//					"Connection failed", JOptionPane.ERROR_MESSAGE);
+		//		}
 		if(response.equals("ACCEPTED")) {			
 			Client.setOpponent(name);
+			//Client.changeGameStatus("true");
 			Client.sentRequestForGame=1;
 			dialog.setVisible(false);
 			startGame();
@@ -182,7 +194,8 @@ public class GUIControler extends Thread {
 		else if(response.equals("REJECTED")) {
 			dialog.setVisible(false);
 			connectingWindow.setEnabled(true);
-			JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful or they rejected your invite. Try a different user.", "Connection failed", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(connectingWindow, "Connection to "+name+" was unsuccessful or they rejected your invite. Try a different user.",
+					"Connection failed", JOptionPane.ERROR_MESSAGE);
 		} else {
 			dialog.setVisible(false);
 			connectingWindow.setEnabled(true);
@@ -191,14 +204,20 @@ public class GUIControler extends Thread {
 
 	//Random button functionality 
 	public static void chooseRandom() {
-		if(Client.onlineLista.isEmpty()){
-			JOptionPane.showMessageDialog(connectingWindow, "There are no online players at the moment!");			
-
+		if(Client.onlineLista.isEmpty() || (Client.onlineLista.size()-Client.activeGames.size()<1)){
+			JOptionPane.showMessageDialog(connectingWindow, "There are no available players at the moment!");						
 		}else{
 			Random randomizer = new Random();
+			String random = "";
 
-			String random = Client.onlineLista.get(randomizer.nextInt(Client.onlineLista.size()));
-
+			while(true) {
+				random = Client.onlineLista.get(randomizer.nextInt(Client.onlineLista.size()));
+				if(Client.activeGames.contains(random)) 
+					continue;
+				else 
+					break;
+			}
+			
 			int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), random+" is available. Do you want to play with them? ",
 					"Connecting", JOptionPane.YES_NO_OPTION);
 
@@ -345,9 +364,9 @@ public class GUIControler extends Thread {
 			int value = 0;
 
 			if(selectedValue == null)
-		        value = JOptionPane.CLOSED_OPTION;      
-		    else
-		        value = Integer.parseInt(selectedValue.toString());
+				value = JOptionPane.CLOSED_OPTION;      
+			else
+				value = Integer.parseInt(selectedValue.toString());
 
 			if(value == JOptionPane.YES_OPTION) {
 				answered=true;

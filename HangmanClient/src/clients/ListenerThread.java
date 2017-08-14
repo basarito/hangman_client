@@ -29,7 +29,7 @@ public class ListenerThread extends Thread {
 				if(input.startsWith("/LIST")) {
 					String usernames = input.substring(6);
 					//System.out.println(usernames);
-					Client.onlineLista = Client.parseOnlineList(usernames);
+					Client.onlineLista = Client.parseList(usernames);
 					GUIControler.updateTable();
 				}
 				if(input.startsWith("/INVITEDBY")) {
@@ -41,18 +41,22 @@ public class ListenerThread extends Thread {
 					response = input.split(":")[2];
 					GUIControler.receiveResponseToInvite(name, response);
 				}
-				
-				
 				if(input.startsWith("/WORD_SET")){
 					String word = input.split(":")[1];
 					GUIControler.receiveSignalWordSet(word);
+				}
+				if(input.startsWith("/ACTIVEGAMES")) {
+					String usernames = input.split(":")[1];
+					if(usernames.equals("/EMPTY")) 
+						continue;
+					Client.activeGames = Client.parseList(usernames);
 				}
 								
 			} catch (IOException e) {
 				System.out.println("Server is down.");
 				end=true;
 				return;
-			}catch(NullPointerException npe) {
+			} catch(NullPointerException npe) {
 				return;
 			}
 		}	
