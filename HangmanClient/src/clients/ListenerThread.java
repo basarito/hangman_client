@@ -41,6 +41,12 @@ public class ListenerThread extends Thread {
 					response = input.split(":")[2];
 					GUIControler.receiveResponseToInvite(name, response);
 				}
+				
+				
+				if(input.startsWith("/WORD_SET")){
+					String word = input.split(":")[1];
+					GUIControler.receiveSignalWordSet(word);
+				}
 								
 			} catch (IOException e) {
 				System.out.println("Server is down.");

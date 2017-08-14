@@ -25,9 +25,12 @@ public class Client {
     public static ListenerThread listener = null;
 	static boolean end = false;
 	
+	
 	static String opponent = "";
 	
 	static String playerUsername = "";
+	
+	public static int sentRequestForGame=0;
 	
 	public static String getUsername() {
 		return playerUsername;
@@ -82,6 +85,10 @@ public static void main(String[] args) {
 	
 	public static void sendExitSignal() {
 		serverOutput.println("/EXIT"); 
+	}
+	
+	public static void sendWordSetSignal(String receiver, String word){
+		serverOutput.println("/WORD:SET:"+receiver+":"+word);
 	}
 
 	public static void inviteUserToPlay(String user) {			

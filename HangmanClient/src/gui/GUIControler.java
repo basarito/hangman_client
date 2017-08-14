@@ -2,7 +2,8 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
-
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Random;
@@ -13,10 +14,12 @@ import javax.swing.JFrame;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
 
 import clients.Client;
+
 
 public class GUIControler extends Thread {
 
@@ -31,7 +34,7 @@ public class GUIControler extends Thread {
 	static JDialog dialog = null;
 
 	//public static boolean goodbye = false;
-	public static String word = "Desperados";
+	public static String word="";
 	public static String newW=null;
 	public static String letter;
 	public static int errorCount=0;
@@ -41,8 +44,11 @@ public class GUIControler extends Thread {
 	
 	static String usernameToValidate = "";
 	static String tryOpponent = "";
+	private static JDialog dialogForWord;
 
 
+
+	
 	@Override 
 	public void run() {
 		EventQueue.invokeLater(new Runnable() {
@@ -142,6 +148,7 @@ public class GUIControler extends Thread {
 		int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), "Are you sure you want to play with "+user+ " ?",
 				"Connecting", JOptionPane.YES_NO_OPTION);
 		tryOpponent = user;
+		
 
 		if(option == JOptionPane.YES_OPTION){
 			//loading screen:
@@ -166,6 +173,7 @@ public class GUIControler extends Thread {
 	public static void receiveResponseToInvite(String name, String response) {
 			if(response.equals("ACCEPTED")) {			
 				Client.setOpponent(name);
+				Client.sentRequestForGame=1;
 				dialog.setVisible(false);
 				startGame();
 			}
@@ -178,6 +186,12 @@ public class GUIControler extends Thread {
 				connectingWindow.setEnabled(true);
 			}
 	}
+	
+	
+	
+	
+	
+	
 
 	//Random button functionality 
 	public static void chooseRandom() {
@@ -320,8 +334,78 @@ public class GUIControler extends Thread {
 	public static void startGame() {
 		connectingWindow.setVisible(false);
 		mainWindow = new MainWindow();
+		mainWindow.getBtnGuess().setVisible(false);
+		mainWindow.getTextField().setVisible(false);
 		mainWindow.setVisible(true);
-		mainWindow.setLocationRelativeTo(null);	
+		mainWindow.setLocationRelativeTo(null);	 
+		
+		
+		
+		if (Client.sentRequestForGame==1) { //wait for opponent to tell a word
+			dialogForWord = new JDialog();
+			JLabel label = new JLabel("Waiting on opponent to set the word to guess...");
+			dialogForWord.setIconImage(Toolkit.getDefaultToolkit().getImage(ConnectingWindow.class.getResource("/icons/h.png")));
+			dialogForWord.setTitle("Please Wait...");
+			dialogForWord.add(label);
+			dialogForWord.setPreferredSize(new Dimension(400, 90));
+			dialogForWord.pack();
+			dialogForWord.setLocationRelativeTo(mainWindow);
+			dialogForWord.setVisible(true);
+			
+		}
+		else {
+			String w = JOptionPane.showInputDialog("Enter a word");
+			if(w!=null){
+				word=w;
+				Client.sendWordSetSignal(Client.getOpponent(), word);
+				setOpponentMainWindow();
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Enter a letter", "Error", JOptionPane.ERROR_MESSAGE );
+			}
+			
+			
+		}
+		
+	}
+	
+	public static void receiveSignalWordSet(String w) {
+		dialogForWord.setVisible(false);
+		setPlayerMainWindow(w);
+	}
+	
+	
+	public static void setPlayerMainWindow(String w){ 
+		
+		word=w;
+		mainWindow.getBtnGuess().setVisible(true);
+		mainWindow.getTextField().setVisible(true);
+		for (int i=0; i<word.length(); i++) {
+			mainWindow.getPanel_5().add(mainWindow.getBtnLetter());
+			mainWindow.getPanel_5().revalidate();
+			mainWindow.getPanel_5().repaint();
+					
+		} 
+		
+		mainWindow.getPanel_1().revalidate();
+		
+		
+	}
+	
+	public static void setOpponentMainWindow() { //samo rec umesto guess i dugmica
+		
+		mainWindow.remove(mainWindow.getBtnGuess());
+		mainWindow.remove(mainWindow.getTextField());
+		//mainWindow.getTextField().setText(word);
+		//mainWindow.getTextField().setEditable(false);
+		JLabel lblWord = new JLabel(word.toUpperCase(), SwingConstants.CENTER);
+		lblWord.setPreferredSize(new Dimension(200, 30));
+		lblWord.setFont(new Font("Arial", Font.BOLD, 20));
+		mainWindow.getPanel_1().add(lblWord);
+		mainWindow.getPanel_1().revalidate();
+		mainWindow.getPanel_1().repaint();
+		
+		
 	}
 	
 }

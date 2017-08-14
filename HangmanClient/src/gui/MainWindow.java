@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import clients.Client;
-import game.GameLogic;
+
 
 import java.awt.Dimension;
 import java.awt.Event;
@@ -98,7 +98,7 @@ public class MainWindow extends JFrame {
 		getPanel_2().add(getPanel_4(), BorderLayout.NORTH);
 		getPanel_2().add(getPanel_5(), BorderLayout.SOUTH);
 		//getPanel_5().add(getBtnLetter());
-		GameLogic.insertButtonsForLetters();
+		//GameLogic.insertButtonsForLetters();
 		
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
@@ -175,7 +175,8 @@ public class MainWindow extends JFrame {
 			textField = new JTextField();
 			textField.setFont(new Font("Arial Black", Font.PLAIN, 30));
 			textField.setSize(new Dimension(20, 20));
-			textField.setMinimumSize(new Dimension(20, 20));			
+			textField.setMinimumSize(new Dimension(20, 20));
+			textField.setMaximumSize(new Dimension(100, 20));
 			textField.setColumns(2);
 			
 			
@@ -188,6 +189,7 @@ public class MainWindow extends JFrame {
 		               
 				            
 				 }});
+			
 				
 			
 			
