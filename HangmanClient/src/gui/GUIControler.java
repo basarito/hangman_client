@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.server.ServerCloneException;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -441,54 +442,71 @@ public class GUIControler extends Thread {
 			panel.add(lbl);
 			panel.add(txt);
 			
-			selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
-			
-			if(selectedOption==JOptionPane.CLOSED_OPTION){
-				return;
-			
-			}else if(selectedOption == 0){
-					w = txt.getText();			
-			}
-							
-			while(!w.matches("[A-Za-z]+")){
-				JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
-				selectedOption = JOptionPane.showOptionDialog(null, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+			do {
+
+				selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
 				if(selectedOption==JOptionPane.CLOSED_OPTION){
-					return;
-				}
+					int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
+							"Leaving the game", JOptionPane.YES_NO_OPTION);
+
+					if (option == JOptionPane.YES_OPTION) {
+						connectingWindow.setVisible(true);
+						connectingWindow.setLocationRelativeTo(mainWindow);
+						connectingWindow.setEnabled(true);
+						mainWindow.setVisible(false);
+						Client.sendQuitTheGameSignal(Client.getOpponent());
+						return;
+						
+					}
+				} 
+
 				if(selectedOption==0){   
 					w = txt.getText();
-
+					if(w.equals("")){
+						JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
+					}else if(!w.matches("[A-Za-z]+")){
+						JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+					}else{
+						break;
+					}
 				}
-			}
-			
-
+			} while (true);
+							
 			
 			if(w!=null){
 				word=w;
 				String c="";
 				lbl.setText("Enter word category");
 				txt.setText("");
-				selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
-				if(selectedOption1==JOptionPane.CLOSED_OPTION){
-					return;
-				}else if(selectedOption1 == 0)
-				{
-				    c = txt.getText();
-				    
-				}
 				
-				while(!c.matches("[A-Za-z]+")){
-					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
-					selectedOption1 = JOptionPane.showOptionDialog(null, panel, "Now give us a category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+				do {
+
+					selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
 					if(selectedOption1==JOptionPane.CLOSED_OPTION){
-						return;
-					}else if(selectedOption1 == 0)
-					{
-					    c = txt.getText();
-					    
-					}				
-				}
+						int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
+								"Leaving the game", JOptionPane.YES_NO_OPTION);
+
+						if (option == JOptionPane.YES_OPTION) {
+							connectingWindow.setVisible(true);
+							connectingWindow.setLocationRelativeTo(mainWindow);
+							connectingWindow.setEnabled(true);
+							mainWindow.setVisible(false);
+							Client.sendQuitTheGameSignal(Client.getOpponent());
+							return;
+						}
+					}
+					if(selectedOption1==0){   
+						c = txt.getText();
+						if(c.equals("") || c.equals(" ")){
+							JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
+						}else if(!c.matches("[A-Za-z ]+")){
+							JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+						}else{
+							break;
+						}
+					}
+				} while (true);
+				
 				
 				if(c!=null){
 					category = c;
@@ -579,6 +597,15 @@ public class GUIControler extends Thread {
 			} 
 			else continue;
 		} 
+		
+	}
+
+	public static void recieveQuitTheGameSignal(String name) {
+		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game; Please choose a new one to play with.");
+		connectingWindow.setVisible(true);
+		connectingWindow.setEnabled(true);
+		connectingWindow.setLocationRelativeTo(mainWindow);
+		mainWindow.setVisible(false);
 		
 	}
 

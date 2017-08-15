@@ -143,5 +143,8 @@ public static void main(String[] args) {
 		serverOutput.println("/GUESSED_LETTER:"+letter+":"+opponent);
 		
 	}
-
+	
+	public static void sendQuitTheGameSignal(String opponent){
+		serverOutput.println("/QUIT:"+opponent);
+	}
 }

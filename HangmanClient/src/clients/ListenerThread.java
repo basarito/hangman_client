@@ -70,6 +70,10 @@ public class ListenerThread extends Thread {
 					GUIControler.receiveSignalRightLetter(letter);
 				}
 				
+				if(input.startsWith("/QUIT_SENT")){
+					String name=input.split(":")[1];
+					GUIControler.recieveQuitTheGameSignal(name);
+				}
 								
 			} catch (IOException e) {
 				System.out.println("Server is down.");
