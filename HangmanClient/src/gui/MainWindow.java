@@ -3,10 +3,14 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -34,8 +38,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Insets;
 
 import javax.swing.JTextArea;
+import java.awt.Rectangle;
+import javax.swing.JList;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -44,7 +51,6 @@ public class MainWindow extends JFrame {
 	private static JTextField textField;
 	private JScrollPane scrollPane;
 	private JLabel lblChatbox;
-	private JTextPane textPane;
 	private JPanel panel;
 	private JPanel panel_1;
 	private static JButton btnGuess;
@@ -62,6 +68,10 @@ public class MainWindow extends JFrame {
 	public static List<JButton> listOfButtons = new ArrayList<JButton>();
 	private JLabel lblCategory;
 	private static JLabel lblWord;
+	private JScrollPane scrollPane_1;
+	private JTextArea txtMessage;
+	private JButton btnSend;
+	private JList<String> list;
 
 	/**
 	 * Create the frame.
@@ -87,8 +97,6 @@ public class MainWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.add(getScrollPane());
-		getScrollPane().setColumnHeaderView(getLblChatbox());
-		getScrollPane().setViewportView(getTextPane());
 		contentPane.add(getPanel());
 		getPanel().add(getPanel_1(), BorderLayout.SOUTH);
 		getPanel_1().add(getTextField());
@@ -107,6 +115,8 @@ public class MainWindow extends JFrame {
 		contentPane.add(getPanel_7());
 		getPanel_7().add(getUserVsUser());
 		getPanel_4().add(getLblCategory());
+		contentPane.add(getScrollPane_1_1());
+		contentPane.add(getBtnSend());
 		getLblCategory().setVisible(false);
 	}
 
@@ -130,8 +140,12 @@ public class MainWindow extends JFrame {
 
 		if(scrollPane == null){
 			scrollPane = new JScrollPane();
+			scrollPane.setBorder(null);
 			scrollPane.setBackground(Color.BLACK);
-			scrollPane.setBounds(584, 34, 200, 404);
+			scrollPane.setBounds(584, 11, 200, 351);
+			scrollPane.setColumnHeaderView(getLblChatbox());
+			//scrollPane.setViewportView(getChatbox());
+			scrollPane.setViewportView(getList());
 
 		}
 
@@ -150,18 +164,6 @@ public class MainWindow extends JFrame {
 		}
 
 		return lblChatbox;
-	}
-
-	public JTextPane getTextPane() {
-		if(textPane == null){
-			textPane = new JTextPane();
-			textPane.setBorder(null);
-			textPane.setEditable(false);
-			
-		}
-
-		return textPane;
-
 	}
 
 	public JPanel getPanel() {
@@ -390,11 +392,118 @@ public class MainWindow extends JFrame {
 	public JLabel getLblCategory() {
 		if (lblCategory == null) {
 			lblCategory = new JLabel("Category: ");
-			lblCategory.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
+			lblCategory.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
 			lblCategory.setForeground(new Color(0, 0, 0));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 18));
 			lblCategory.setBounds(106, 0, 200, 20);
 		}
 		return lblCategory;
+	}
+	
+	
+	/***************CHATBOX**********************/
+	
+//	public JTextArea getChatbox() {
+//		if (textArea == null) {
+//			textArea = new JTextArea();
+//			textArea.setWrapStyleWord(true);
+//			textArea.setLineWrap(true);
+//			textArea.setForeground(Color.WHITE);
+//			textArea.setBackground(Color.DARK_GRAY);
+//		}
+//		return textArea;
+//	}
+	
+	
+	public JScrollPane getScrollPane_1_1() {
+		if (scrollPane_1 == null) {
+			scrollPane_1 = new JScrollPane();
+			scrollPane_1.setBounds(584, 362, 200, 56);
+			scrollPane_1.setViewportView(getMessage());
+		}
+		return scrollPane_1;
+	}
+
+	public JTextArea getMessage() {
+		if (txtMessage == null) {
+			txtMessage = new JTextArea();
+			txtMessage.setFont(new Font("Monospaced", Font.PLAIN, 11));
+			txtMessage.setLineWrap(true);
+			txtMessage.setWrapStyleWord(true);
+			txtMessage.setText("Write your message here...");
+			txtMessage.setForeground(new Color(216, 191, 216));
+			txtMessage.setMargin(new Insets(5, 5, 5, 5));
+			
+			txtMessage.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					txtMessage.setText("");
+					txtMessage.setForeground(new Color(0, 0, 0));
+				}
+			});	
+			
+			txtMessage.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_ENTER){
+						String message = getMessage().getText();
+						if(!message.equals("")) {
+							Client.sendMessage(message);
+							GUIControler.addMessage(Client.getUsername(), message);
+						}
+						txtMessage.setText("Write your message here...");
+						txtMessage.setForeground(new Color(216, 191, 216)); 
+						
+					}
+				}
+			});
+		}
+		return txtMessage;
+	}
+	private JButton getBtnSend() {
+		if (btnSend == null) {
+			btnSend = new JButton("SEND");
+			btnSend.setBackground(new Color(221, 160, 221));
+			btnSend.setForeground(Color.WHITE);
+			btnSend.setFont(new Font("Arial", Font.BOLD, 13));
+			btnSend.setBounds(584, 417, 200, 23);
+			
+			btnSend.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					String message = getMessage().getText();
+					if(!message.equals("")) {
+						Client.sendMessage(message);
+						GUIControler.addMessage(Client.getUsername(), message);
+					}
+					txtMessage.setText("Write your message here...");
+					txtMessage.setForeground(new Color(216, 191, 216)); 
+					
+				}
+			});
+			
+		}
+		return btnSend;
+	}
+	private JList getList() {
+		if (list == null) {
+			list = new JList(Client.chatHistory);
+			
+			list.setBackground(Color.DARK_GRAY);
+			
+			//custom rendering of cells:
+			list.setCellRenderer(new MyCellRenderer());
+
+		    ComponentListener l = new ComponentAdapter() {
+		        @Override
+		        public void componentResized(ComponentEvent e) {
+		            // for core: force cache invalidation by temporarily setting fixed height
+		            list.setFixedCellHeight(10);
+		            list.setFixedCellHeight(-1);
+		        }
+		    };
+		    list.addComponentListener(l);			
+		}
+		return list;
 	}
 }

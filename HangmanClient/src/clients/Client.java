@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import javax.swing.DefaultListModel;
 
 import gui.GUIControler;
 
@@ -28,6 +29,8 @@ public class Client {
 	static String playerUsername = "";
 	
 	public static int sentRequestForGame=0;
+	
+	public static DefaultListModel<String> chatHistory = new DefaultListModel<>();
 	
 	//static boolean gameActive = false;
 	
@@ -142,6 +145,12 @@ public static void main(String[] args) {
 	public static void changeRigthLetterSignal(String letter, String opponent) {
 		serverOutput.println("/GUESSED_LETTER:"+letter+":"+opponent);
 		
+	}
+	
+	/********CHATBOX**********/
+
+	public static void sendMessage(String message) {
+		serverOutput.println("/CHATSEND:"+getOpponent()+":"+message);
 	}
 
 }

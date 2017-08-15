@@ -153,7 +153,6 @@ public class ConnectingWindow extends JFrame {
 				@Override
 				public void mouseMoved(MouseEvent arg0) {
 					txtFindASpecific.setForeground(new Color(216, 191, 216));
-
 				}
 			});
 			txtFindASpecific.addKeyListener(new KeyAdapter() {
@@ -168,8 +167,6 @@ public class ConnectingWindow extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					txtFindASpecific.setText("");
 					txtFindASpecific.setForeground(new Color(0, 0, 0));
-
-
 				}
 			});
 			txtFindASpecific.setForeground(new Color(216, 191, 216));

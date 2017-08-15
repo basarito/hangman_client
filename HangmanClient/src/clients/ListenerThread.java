@@ -70,6 +70,12 @@ public class ListenerThread extends Thread {
 					GUIControler.receiveSignalRightLetter(letter);
 				}
 				
+				if(input.startsWith("/CHATRCV")) {
+					String name = input.split(":")[1];
+					String message = input.split(":")[2];
+					GUIControler.addMessage(name, message);
+				}
+				
 								
 			} catch (IOException e) {
 				System.out.println("Server is down.");

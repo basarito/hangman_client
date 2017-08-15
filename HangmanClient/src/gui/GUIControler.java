@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -52,6 +53,8 @@ public class GUIControler extends Thread {
 
 	public static int selectedOption;
 	public static int selectedOption1;
+	
+	 
 	
 
 	@Override 
@@ -581,6 +584,24 @@ public class GUIControler extends Thread {
 		} 
 		
 	}
+
+
+	
+	/**************CHATBOX********************/
+	
+	public static void addMessage(String username, String message) {
+		String newMsg = username + ":\n" + message;
+		Client.chatHistory.addElement(newMsg);		
+	}
+	
+//	public static void showMessage(String username, String message) {
+//		chatMessages += username + ":\n" + message + "\n\n";
+//		if(username.equals(Client.getUsername())) {
+//			mainWindow.getChatbox().setText(chatMessages);
+//		}
+//		
+//	}
+
 
 }
 
