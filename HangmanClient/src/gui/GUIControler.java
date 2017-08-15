@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -8,6 +9,10 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.rmi.server.ServerCloneException;
 import java.util.Random;
 
@@ -444,10 +449,11 @@ public class GUIControler extends Thread {
 			JLabel lbl = new JLabel("Enter a word: ");
 			JTextField txt = new JTextField(15);
 			panel.add(lbl);
-			panel.add(txt);
+			panel.add(txt);			
 			
 			do {
-				selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+				selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
+								
 				if(selectedOption==JOptionPane.CLOSED_OPTION){
 					int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
 							"Leaving the game", JOptionPane.YES_NO_OPTION);
@@ -462,6 +468,7 @@ public class GUIControler extends Thread {
 						
 					}
 				} 
+				
 
 				if(selectedOption==0){   
 					w = txt.getText();
@@ -474,6 +481,7 @@ public class GUIControler extends Thread {
 						break;
 					}
 				}
+				
 			} while (true);
 							
 			
@@ -486,7 +494,7 @@ public class GUIControler extends Thread {
 				
 				do {
 
-					selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+					selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
 					
 					if(selectedOption1==JOptionPane.CLOSED_OPTION){
 						int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
