@@ -106,18 +106,16 @@ public static void main(String[] args) {
 			}
 			pomocna.add(userarray[i]);
 		}
-//		System.out.println("Available online users:");
-//		for(String s : pomocna) {
-//			System.out.println(s);
-//		}
-//		System.out.println("------------");
+		for(String s : pomocna) {
+			System.out.println(s);
+		}
+		System.out.println("------------");
 		return pomocna;
 	}
 
 	public static void acceptInvite(String name) {
 		serverOutput.println("/RSVPTO:"+name+":ACCEPTED");
-		setOpponent(name);
-		
+		setOpponent(name);		
 		GUIControler.startGame();
 		
 	}

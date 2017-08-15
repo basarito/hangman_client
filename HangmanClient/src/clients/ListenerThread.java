@@ -28,7 +28,7 @@ public class ListenerThread extends Thread {
 				}
 				if(input.startsWith("/LIST")) {
 					String usernames = input.substring(6);
-					//System.out.println(usernames);
+					System.out.println("online:");
 					Client.onlineLista = Client.parseList(usernames);
 					GUIControler.updateTable();
 				}
@@ -48,8 +48,12 @@ public class ListenerThread extends Thread {
 				}
 				if(input.startsWith("/ACTIVEGAMES")) {
 					String usernames = input.split(":")[1];
-					if(usernames.equals("/EMPTY")) 
+					if(usernames.equals("/EMPTY")) {
+						Client.activeGames.clear();
+						System.out.println("No active players");
 						continue;
+					}
+					System.out.println("active players:");
 					Client.activeGames = Client.parseList(usernames);
 
 				}
@@ -77,7 +81,6 @@ public class ListenerThread extends Thread {
 					GUIControler.addMessage(name, message);
 				}
 				
-
 				if(input.startsWith("/QUIT_SENT")){
 					String name=input.split(":")[1];
 					GUIControler.recieveQuitTheGameSignal(name);
