@@ -279,23 +279,35 @@ public class GUIControler extends Thread {
 				switch (errorCount) {
 				case 1: 
 					setHangmanImage("/icons/state-1.png");
+					Client.changeHangmanPictureSignal("/icons/state-1.png", Client.getOpponent());
+					Client.changeWrongLettersSignal(letter, Client.getOpponent());
 					break;
 
 				case 2: 
 					setHangmanImage("/icons/state-2.png");
+					Client.changeHangmanPictureSignal("/icons/state-2.png", Client.getOpponent());
+					Client.changeWrongLettersSignal(letter, Client.getOpponent());
 					break;
 				case 3:
 					setHangmanImage("/icons/state-3.png");
+					Client.changeHangmanPictureSignal("/icons/state-3.png", Client.getOpponent());
+					Client.changeWrongLettersSignal(letter, Client.getOpponent());
 					break;
 
 				case 4:
 					setHangmanImage("/icons/state-4.png");
+					Client.changeHangmanPictureSignal("/icons/state-4.png", Client.getOpponent());
+					Client.changeWrongLettersSignal(letter, Client.getOpponent());
 					break;
 				case 5:
 					setHangmanImage("/icons/state-5.png");
+					Client.changeHangmanPictureSignal("/icons/state-5.png", Client.getOpponent());
+					Client.changeWrongLettersSignal(letter, Client.getOpponent());
 					break;
 				case 6:
 					setHangmanImage("/icons/state-6.png");
+					Client.changeHangmanPictureSignal("/icons/state-6.png", Client.getOpponent());
+					Client.changeWrongLettersSignal(letter, Client.getOpponent());
 					JOptionPane.showMessageDialog(null, "You have lost the game", "Game over ", JOptionPane.INFORMATION_MESSAGE);
 					break;
 				default : break;
@@ -305,7 +317,9 @@ public class GUIControler extends Thread {
 				for (int i=0; i<w.length(); i++){
 
 					if (letter.charAt(0)==w.charAt(i)){
+						Client.changeRigthLetterSignal(letter, Client.getOpponent());
 						MainWindow.listOfButtons.get(i).setText(letter);
+						
 						newW=newW+letter;
 						lettersCorrect++;
 
@@ -524,16 +538,48 @@ public class GUIControler extends Thread {
 		mainWindow.remove(mainWindow.getTextField());
 		//mainWindow.getTextField().setText(word);
 		//mainWindow.getTextField().setEditable(false);
-		JLabel lblWord = new JLabel(word.toUpperCase(), SwingConstants.CENTER);
-		lblWord.setPreferredSize(new Dimension(200, 30));
-		lblWord.setFont(new Font("Arial", Font.BOLD, 20));
-		mainWindow.getPanel_1().add(lblWord);
+		mainWindow.getLblWord().setText(word.toUpperCase()); 
+		mainWindow.getLblWord().setHorizontalAlignment(SwingConstants.CENTER);
+		mainWindow.getPanel_1().add(mainWindow.getLblWord());
 		mainWindow.getPanel_1().revalidate();
 		mainWindow.getPanel_1().repaint();
 		mainWindow.getLblCategory().setVisible(true);
 		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 
 
+	}
+	
+	
+	public static void receiveSignalHnagmanPicChanged(String url) {
+		setHangmanImage(url);;
+		
+	}
+
+	public static void receiveSignalWrongLetter(String letter) {
+		mainWindow.getTxtpnABC().setText(MainWindow.getTxtpnABC().getText()+letter +"\n");
+		
+	}
+
+	public static void receiveSignalRightLetter(String letter) {
+		String w= mainWindow.getLblWord().getText().toLowerCase();
+		System.out.println(w);
+		
+		for(int i=0; i<w.length(); i++){
+			if(w.charAt(i)==letter.charAt(0)){
+				String w_split_1=w.split(letter)[0];
+				String w_split_2=w.split(letter)[1];
+				System.out.println(w_split_2);
+				
+				mainWindow.getLblWord().setText(w_split_1+
+						"<html><font color=\"red\">"+String.valueOf(letter)+"</font></html>"
+						+w_split_2);
+				break;
+				
+				
+			} 
+			else continue;
+		} 
+		
 	}
 
 }

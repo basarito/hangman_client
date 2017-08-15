@@ -53,6 +53,23 @@ public class ListenerThread extends Thread {
 					Client.activeGames = Client.parseList(usernames);
 
 				}
+				
+				if(input.startsWith("/PIC_CHANGED")){
+					String url=input.split(":")[1];
+					GUIControler.receiveSignalHnagmanPicChanged(url);
+					
+				}
+				
+				if(input.startsWith("/WRONG_LETTER")) {
+					String letter=input.split(":")[1];
+					GUIControler.receiveSignalWrongLetter(letter);
+				}
+				
+				if(input.startsWith("/RIGHT_LETTER")) {
+					String letter=input.split(":")[1];
+					GUIControler.receiveSignalRightLetter(letter);
+				}
+				
 								
 			} catch (IOException e) {
 				System.out.println("Server is down.");

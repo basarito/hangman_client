@@ -126,5 +126,22 @@ public static void main(String[] args) {
 	public static void changeGameStatus(String status) {
 		serverOutput.println("/STATUS:"+status);
 	}
+	
+	
+	
+	public static void changeHangmanPictureSignal(String imgURL, String name) {
+		serverOutput.println("/PIC:"+name+":"+imgURL);
+		
+	}
+
+	public static void changeWrongLettersSignal(String letter, String opponent) {
+		
+		serverOutput.println("/LETTER:"+letter+":"+opponent);
+	}
+
+	public static void changeRigthLetterSignal(String letter, String opponent) {
+		serverOutput.println("/GUESSED_LETTER:"+letter+":"+opponent);
+		
+	}
 
 }

@@ -61,6 +61,7 @@ public class MainWindow extends JFrame {
 	private JLabel lblUserVsUser;
 	public static List<JButton> listOfButtons = new ArrayList<JButton>();
 	private JLabel lblCategory;
+	private static JLabel lblWord;
 
 	/**
 	 * Create the frame.
@@ -113,7 +114,17 @@ public class MainWindow extends JFrame {
 	public static void setIconImage(){
 		
 	}
+	
+	
 
+	public JLabel getLblWord() {
+		if (lblWord==null){
+			lblWord = new JLabel();
+			lblWord.setPreferredSize(new Dimension(200, 30));
+			lblWord.setFont(new Font("Arial", Font.BOLD, 20));
+		}
+		return lblWord;
+	}
 
 	public JScrollPane getScrollPane() {
 
