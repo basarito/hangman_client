@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -8,6 +9,10 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.rmi.server.ServerCloneException;
 import java.util.Random;
 
@@ -61,6 +66,7 @@ public class GUIControler extends Thread {
 					welcomeWindow = new WelcomeWindow();
 					welcomeWindow.setVisible(true);
 					welcomeWindow.setLocationRelativeTo(null);
+					welcomeWindow.getTextField().requestFocusInWindow();
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -318,8 +324,8 @@ public class GUIControler extends Thread {
 
 					if (letter.charAt(0)==w.charAt(i)){
 						Client.changeRigthLetterSignal(letter, Client.getOpponent());
-						MainWindow.listOfButtons.get(i).setText(letter);
-
+						MainWindow.listOfButtons.get(i).setText(letter.toUpperCase());
+						
 						newW=newW+letter;
 						lettersCorrect++;
 
@@ -422,6 +428,7 @@ public class GUIControler extends Thread {
 		} else {
 			givingWordMainWindow();
 		}
+
 	}
 
 	private static void waitingMainWindow() {
@@ -439,6 +446,7 @@ public class GUIControler extends Thread {
 		mainWindow.setEnabled(false);
 	}
 
+		
 	private static void givingWordMainWindow() {
 		String w="";
 		String[] options = {"OK"};
@@ -449,8 +457,9 @@ public class GUIControler extends Thread {
 		panel.add(lbl);
 		panel.add(txt);
 
+
 		do {
-			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
 
 			if(selectedOption==JOptionPane.CLOSED_OPTION){
 				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
@@ -465,29 +474,33 @@ public class GUIControler extends Thread {
 					mainWindow.setVisible(false);
 					return;
 				}
-			} 
-
-			if(selectedOption==JOptionPane.OK_OPTION){   
+			}
+			if(selectedOption==0){   
 				w = txt.getText();
 				if(w.equals("")){
-					JOptionPane.showMessageDialog(mainWindow, "You have to enter a word!", "Not a word", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
 				}else if(!w.matches("[A-Za-z]+")){
-					JOptionPane.showMessageDialog(mainWindow, "Use only A-Z characters!", "Not a word", JOptionPane.ERROR_MESSAGE);
-				} else{
-					word = w;
+					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+					txt.setText("");
+				}else{
+					word=w;
 					break;
 				}
+
 			}
+
 		} while (true);
+							
+		
 		
 		//KATEGORIJU BI TREBALO ODVOJITI KAO POSEBNU METODU
-
+		
 		String c="";
 		lbl.setText("Enter word category");
 		txt.setText("");
 
 		do {
-			int selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+			int selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
 			if(selectedOption1==JOptionPane.CLOSED_OPTION){
 				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
 						"Leaving the game", JOptionPane.YES_NO_OPTION);
@@ -520,10 +533,8 @@ public class GUIControler extends Thread {
 			setOpponentMainWindow();
 			
 		}
+		
 	}
-
-
-
 
 
 	//		if (Client.sentRequestForGame==1) { //wait for opponent to tell a word
@@ -721,6 +732,7 @@ public class GUIControler extends Thread {
 
 
 	public static void recieveQuitTheGameSignal(String name) {
+		dialogForWord.setVisible(false);
 		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game; Please choose a new one to play with.");
 		connectingWindow.setVisible(true);
 		connectingWindow.setEnabled(true);
