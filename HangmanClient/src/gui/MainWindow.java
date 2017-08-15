@@ -187,12 +187,15 @@ public class MainWindow extends JFrame {
 
 	public static JTextField getTextField() {
 		if(textField == null){
-			textField = new JTextField();
-			textField.setFont(new Font("Arial Black", Font.PLAIN, 30));
+			textField = new JTextField(){
+				
+			};
+			textField.setFont(new Font("Arial Black", Font.PLAIN, 20));
 			textField.setSize(new Dimension(20, 20));
 			textField.setMinimumSize(new Dimension(20, 20));
 			textField.setMaximumSize(new Dimension(100, 20));
-			textField.setColumns(2);
+			textField.setColumns(3);
+			
 			
 			
 			textField.addKeyListener(new KeyAdapter(){
@@ -230,6 +233,7 @@ public class MainWindow extends JFrame {
 			btnGuess.setBackground(new Color(221, 160, 221));
 			btnGuess.setForeground(new Color(255, 255, 255));
 			btnGuess.setFont(new Font("Arial", Font.BOLD, 13));
+			
 			
 			if(textField.getText() == null){
 			    btnGuess.setEnabled(false);
@@ -329,9 +333,12 @@ public class MainWindow extends JFrame {
 	}
 
 	public static JButton getBtnLetter() {
-			btnLetter = new JButton("_");
-			btnLetter.setOpaque(true);
-			btnLetter.setFont(new Font("Arial", Font.PLAIN, 15));
+			btnLetter = new JButton("__");
+			btnLetter.setBorderPainted( false );
+			btnLetter.setFocusPainted( false );
+			btnLetter.setContentAreaFilled( false );
+			btnLetter.setFont(new Font("Arial Black", Font.PLAIN, 20));
+			btnLetter.setMargin(new Insets(0, 0, 0, 0));
 			listOfButtons.add(btnLetter);
 			
 

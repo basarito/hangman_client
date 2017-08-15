@@ -66,6 +66,7 @@ public class GUIControler extends Thread {
 					welcomeWindow = new WelcomeWindow();
 					welcomeWindow.setVisible(true);
 					welcomeWindow.setLocationRelativeTo(null);
+					welcomeWindow.getTextField().requestFocusInWindow();
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -322,7 +323,7 @@ public class GUIControler extends Thread {
 
 					if (letter.charAt(0)==w.charAt(i)){
 						Client.changeRigthLetterSignal(letter, Client.getOpponent());
-						MainWindow.listOfButtons.get(i).setText(letter);
+						MainWindow.listOfButtons.get(i).setText(letter.toUpperCase());
 						
 						newW=newW+letter;
 						lettersCorrect++;
@@ -446,7 +447,6 @@ public class GUIControler extends Thread {
 			panel.add(txt);
 			
 			do {
-
 				selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
 				if(selectedOption==JOptionPane.CLOSED_OPTION){
 					int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
@@ -469,6 +469,7 @@ public class GUIControler extends Thread {
 						JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
 					}else if(!w.matches("[A-Za-z]+")){
 						JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+						txt.setText("");
 					}else{
 						break;
 					}
@@ -482,9 +483,11 @@ public class GUIControler extends Thread {
 				lbl.setText("Enter word category");
 				txt.setText("");
 				
+				
 				do {
 
 					selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
+					
 					if(selectedOption1==JOptionPane.CLOSED_OPTION){
 						int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
 								"Leaving the game", JOptionPane.YES_NO_OPTION);
@@ -504,6 +507,8 @@ public class GUIControler extends Thread {
 							JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
 						}else if(!c.matches("[A-Za-z ]+")){
 							JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+							txt.setText("");
+							
 						}else{
 							break;
 						}
@@ -627,7 +632,7 @@ public class GUIControler extends Thread {
 		connectingWindow.setEnabled(true);
 		connectingWindow.setLocationRelativeTo(mainWindow);
 		mainWindow.setVisible(false);
-		
+				
 	}
 
 
