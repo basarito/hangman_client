@@ -146,11 +146,15 @@ public static void main(String[] args) {
 		serverOutput.println("/GUESSED_LETTER:"+letter+":"+opponent);
 		
 	}
-	
+
 	/********CHATBOX**********/
 
 	public static void sendMessage(String message) {
 		serverOutput.println("/CHATSEND:"+getOpponent()+":"+message);
+	}
+
+	public static void sendQuitTheGameSignal(String opponent){
+		serverOutput.println("/QUIT:"+opponent);
 	}
 
 }
