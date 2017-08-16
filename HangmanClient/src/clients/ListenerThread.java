@@ -71,9 +71,21 @@ public class ListenerThread extends Thread {
 				
 				if(input.startsWith("/RIGHT_LETTER")) {
 					String letter=input.split(":")[1];
-					GUIControler.receiveSignalRightLetter(letter);
+					String index=input.split(":")[2];
+					GUIControler.receiveSignalRightLetter(letter, index);
 				}
 				
+				if(input.startsWith("/RCV_STATUS_WND")) {
+					String gameRqNum=input.split(":")[1];
+					String result=input.split(":")[2];
+					GUIControler.receiveSignalStatusWindow(gameRqNum, result);
+				}
+				
+				
+				if(input.startsWith("/RCV_SWITCH_WND:")) {
+					
+					GUIControler.receiveSignalSwitchWindow();
+				}
 
 				if(input.startsWith("/CHATRCV")) {
 					String name = input.split(":")[1];

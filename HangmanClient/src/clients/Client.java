@@ -140,8 +140,8 @@ public static void main(String[] args) {
 		serverOutput.println("/LETTER:"+letter+":"+opponent);
 	}
 
-	public static void changeRigthLetterSignal(String letter, String opponent) {
-		serverOutput.println("/GUESSED_LETTER:"+letter+":"+opponent);
+	public static void changeRigthLetterSignal(String letter, String opponent, String index) {
+		serverOutput.println("/GUESSED_LETTER:"+letter+":"+opponent+":"+index);
 		
 	}
 
@@ -154,6 +154,17 @@ public static void main(String[] args) {
 	public static void sendQuitTheGameSignal(String opponent){
 		serverOutput.println("/QUIT:"+opponent);
 	}
+	
 
+	public static void sendGameStatusWindow(String opponent, String gameRqNum, String result){
+		serverOutput.println("/STATUS_WND:"+opponent+":"+gameRqNum+":"+result);
+		
+	}
+
+	public static void switchOpponentMainWindow(String opponent) {
+		
+		serverOutput.println("/SWITCH_WND:"+opponent);
+	}
+	
 
 }

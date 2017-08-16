@@ -72,6 +72,7 @@ public class MainWindow extends JFrame {
 	private JTextArea txtMessage;
 	private JButton btnSend;
 	private JList<String> list;
+	private JLabel lblTip;
 
 	/**
 	 * Create the frame.
@@ -151,7 +152,8 @@ public class MainWindow extends JFrame {
 
 		return scrollPane;
 	}
-
+	
+	
 	public JLabel getLblChatbox() {
 		if(lblChatbox == null){
 			lblChatbox = new JLabel("CHATBOX");
@@ -514,5 +516,15 @@ public class MainWindow extends JFrame {
 		    list.addComponentListener(l);			
 		}
 		return list;
+	}
+
+
+	public JLabel getLblTip() {
+		if (lblTip==null){
+			lblTip= new JLabel();
+			lblTip.setPreferredSize(new Dimension(300, 10));
+			lblTip.setFont(new Font("Arial", Font.ITALIC, 10));
+		}
+		return lblTip;
 	}
 }

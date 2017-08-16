@@ -314,7 +314,12 @@ public class GUIControler extends Thread {
 					setHangmanImage("/icons/state-6.png");
 					Client.changeHangmanPictureSignal("/icons/state-6.png", Client.getOpponent());
 					Client.changeWrongLettersSignal(letter, Client.getOpponent());
-					JOptionPane.showMessageDialog(null, "You have lost the game", "Game over ", JOptionPane.INFORMATION_MESSAGE);
+					errorCount=0; lettersCorrect=0; newW=null; mainWindow.listOfButtons.clear();
+					JOptionPane.showMessageDialog(null, "You haven't gueesed the word. \n It's your turn to set a word for "+Client.getOpponent()+".", "Status ", JOptionPane.INFORMATION_MESSAGE);
+					Client.sendGameStatusWindow(Client.getOpponent(), 0+"" , 0+"");
+					//Client.sentRequestForGame=1;
+					startGame();
+					Client.switchOpponentMainWindow(Client.getOpponent());
 					break;
 				default : break;
 				}
@@ -323,8 +328,8 @@ public class GUIControler extends Thread {
 				for (int i=0; i<w.length(); i++){
 
 					if (letter.charAt(0)==w.charAt(i)){
-						Client.changeRigthLetterSignal(letter, Client.getOpponent());
 						MainWindow.listOfButtons.get(i).setText(letter.toUpperCase());
+						Client.changeRigthLetterSignal(letter, Client.getOpponent(), i+"");
 						
 						newW=newW+letter;
 						lettersCorrect++;
@@ -332,7 +337,11 @@ public class GUIControler extends Thread {
 					}
 				}
 				if(lettersCorrect==w.length()){
-					JOptionPane.showMessageDialog(null, "You won", "Game status", JOptionPane.INFORMATION_MESSAGE);
+					Client.sendGameStatusWindow(Client.getOpponent(), 0+"" , 1+"");
+					errorCount=0; lettersCorrect=0; newW=null;  mainWindow.listOfButtons.clear();
+					JOptionPane.showMessageDialog(null, "You guessed the word. \n It's your turn to set a word for "+Client.getOpponent()+".", "Status", JOptionPane.INFORMATION_MESSAGE);
+					startGame();
+					Client.switchOpponentMainWindow(Client.getOpponent());
 				}
 
 			}
@@ -416,9 +425,20 @@ public class GUIControler extends Thread {
 	}
 
 	public static void startGame() {
-		mainWindow = new MainWindow();
-		mainWindow.setLocationRelativeTo(connectingWindow);	 
-		connectingWindow.setVisible(false);
+		if(mainWindow!=null){
+			mainWindow.setVisible(false);
+			mainWindow= new MainWindow();
+			mainWindow.getLblWord().setText("");
+			mainWindow.getTxtpnABC().setText("");
+			mainWindow.getPanel_5().removeAll();
+		}
+		
+		else {
+			mainWindow = new MainWindow();
+			mainWindow.setLocationRelativeTo(connectingWindow);	 
+			connectingWindow.setVisible(false);
+		}
+		
 		mainWindow.getBtnGuess().setVisible(false);
 		mainWindow.getTextField().setVisible(false);
 		mainWindow.setVisible(true);
@@ -669,9 +689,13 @@ public class GUIControler extends Thread {
 		mainWindow.remove(mainWindow.getTextField());
 		//mainWindow.getTextField().setText(word);
 		//mainWindow.getTextField().setEditable(false);
-		mainWindow.getLblWord().setText(word.toUpperCase()); 
+		mainWindow.getLblWord().setText(word.toLowerCase()); 
 		mainWindow.getLblWord().setHorizontalAlignment(SwingConstants.CENTER);
-		mainWindow.getPanel_1().add(mainWindow.getLblWord());
+		mainWindow.getLblTip().setText("*Capital letters in word represent ones opponent has guessed.");
+		mainWindow.getPanel_5().add(mainWindow.getLblWord());
+		mainWindow.getPanel_5().revalidate();
+		mainWindow.getPanel_5().repaint();
+		mainWindow.getPanel_1().add(mainWindow.getLblTip());
 		mainWindow.getPanel_1().revalidate();
 		mainWindow.getPanel_1().repaint();
 		mainWindow.getLblCategory().setVisible(true);
@@ -691,25 +715,14 @@ public class GUIControler extends Thread {
 
 	}
 
-	public static void receiveSignalRightLetter(String letter) {
-		String w= mainWindow.getLblWord().getText().toLowerCase();
-		System.out.println(w);
-
-		for(int i=0; i<w.length(); i++){
-			if(w.charAt(i)==letter.charAt(0)){
-				String w_split_1=w.split(letter)[0];
-				String w_split_2=w.split(letter)[1];
-				System.out.println(w_split_2);
-
-				mainWindow.getLblWord().setText(w_split_1+
-						"<html><font color=\"red\">"+String.valueOf(letter)+"</font></html>"
-						+w_split_2);
-				break;
-
-
-			} 
-			else continue;
-		} 
+	public static void receiveSignalRightLetter(String letter, String index) {
+		String w= mainWindow.getLblWord().getText();
+	
+		w =  w.replace(w.charAt(Integer.parseInt(index))+"", letter.toUpperCase()) ;
+		mainWindow.getLblWord().setText(w);
+				
+			
+		
 
 	}
 
@@ -739,6 +752,28 @@ public class GUIControler extends Thread {
 		connectingWindow.setLocationRelativeTo(mainWindow);
 		mainWindow.setVisible(false);
 
+	}
+
+	public static void receiveSignalStatusWindow(String gameRqNum, String result) {
+		String message="";
+		int r=Integer.parseInt(result);
+		Client.sentRequestForGame=Integer.parseInt(gameRqNum);
+		if(r==1){
+			 message="Your opponent guessed the word";
+			
+		}
+		else {
+			message="Your opponent didn't guess the word";
+		}
+		
+		JOptionPane.showMessageDialog(null, message+ " \n It's your turn to guess now!", "Status", JOptionPane.INFORMATION_MESSAGE);
+		
+		
+	}
+
+	public static void receiveSignalSwitchWindow() {
+		startGame();
+		
 	}
 
 
