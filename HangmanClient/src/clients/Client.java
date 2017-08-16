@@ -27,12 +27,30 @@ public class Client {
 	
 	static String opponent = "";
 	static String playerUsername = "";
+	static int numOfWins=0;
+	static int numOfLosses=0;
 	
 	public static int sentRequestForGame=0;
 	
 	public static DefaultListModel<String> chatHistory = new DefaultListModel<>();
 	
 	//static boolean gameActive = false;
+	
+	public static int getNumOfLosses() {
+		return numOfLosses;
+	}
+	
+	public static void setNumOfLosses(int num) {
+		numOfLosses=num;
+	} 
+	
+	public static int getNumOfWins() {
+		return numOfWins;
+	} 
+	
+	public static void setNumOfWins(int num) {
+		numOfWins=num;
+	} 
 	
 	public static String getUsername() {
 		return playerUsername;
@@ -164,6 +182,11 @@ public static void main(String[] args) {
 	public static void switchOpponentMainWindow(String opponent) {
 		
 		serverOutput.println("/SWITCH_WND:"+opponent);
+	}
+
+	public static void sendChangeResult(String opponent, String r1, String r2) {
+		serverOutput.println("/CHNG_RSLT:"+opponent+":"+r1+":"+r2);
+		
 	}
 	
 

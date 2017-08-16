@@ -73,6 +73,9 @@ public class MainWindow extends JFrame {
 	private JButton btnSend;
 	private JList<String> list;
 	private JLabel lblTip;
+	private JLabel lblResult;
+	
+	
 
 	/**
 	 * Create the frame.
@@ -115,10 +118,12 @@ public class MainWindow extends JFrame {
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
 		getPanel_7().add(getUserVsUser());
+		getPanel_4().add(getlblResult());
 		getPanel_4().add(getLblCategory());
 		contentPane.add(getScrollPane_1_1());
 		contentPane.add(getBtnSend());
 		getLblCategory().setVisible(false);
+		getlblResult().setVisible(false);
 	}
 
 	
@@ -318,11 +323,24 @@ public class MainWindow extends JFrame {
 			panel_4.setPreferredSize(new Dimension(10, 20));
 			panel_4.setLayout(null);
 			
+		
 			
 		}
 
 		return panel_4;
 	}
+	
+	public JLabel getlblResult(){
+		if(lblResult == null){
+			lblResult = new JLabel();
+			lblResult.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
+			lblResult.setForeground(new Color(0, 0, 0));
+			
+			lblResult.setBounds(443, -3, 121, 23);
+		}
+		return lblResult;
+	}
+	
 
 	public static JPanel getPanel_5() {
 		if(panel_5 == null){
@@ -403,10 +421,10 @@ public class MainWindow extends JFrame {
 	public JLabel getLblCategory() {
 		if (lblCategory == null) {
 			lblCategory = new JLabel("Category: ");
+			lblCategory.setBounds(104, 0, 205, 17);
 			lblCategory.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
 			lblCategory.setForeground(new Color(0, 0, 0));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 18));
-			lblCategory.setBounds(106, 0, 200, 20);
 		}
 		return lblCategory;
 	}
