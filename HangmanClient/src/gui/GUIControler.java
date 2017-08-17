@@ -1,22 +1,17 @@
 package gui;
 
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
+
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.rmi.server.ServerCloneException;
+
 import java.util.Random;
 
-import javax.swing.DefaultListModel;
+
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,7 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
 
 import clients.Client;
 
@@ -50,7 +44,7 @@ public class GUIControler extends Thread {
 	public static String letter;
 	public static int errorCount=0;
 	public static int lettersCorrect=0;
-
+	public static int end=0;
 	public static boolean acceptedGame = false;
 
 	static String usernameToValidate = "";
@@ -306,8 +300,29 @@ public class GUIControler extends Thread {
 				case 6:
 					changeHangmnPicAndPlaceWrongLetter("/icons/state-6.png", Client.getOpponent(), letter);
 					Client.setNumOfLosses(Client.getNumOfLosses()+1);
-					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
-							Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
+					
+					
+					if(end<2) { //na dve pobede
+						if(Client.getNumOfLosses()>end ) {
+							end=Client.getNumOfLosses();
+							
+							if(end==2){
+								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
+								gameOver(Client.getOpponent(), "You lost :(", "YOU WON!");
+							}
+							else{
+								switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
+										Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
+							}
+							
+						}
+						else {
+							switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
+									Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
+						}
+						
+					}
+				
 					break;
 				default : break;
 				}
@@ -324,11 +339,30 @@ public class GUIControler extends Thread {
 
 					}
 				}
+				
 				if(lettersCorrect==w.length()){
 					Client.setNumOfWins(Client.getNumOfWins()+1);
-					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
-							+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+""
-							);
+					
+					if(end<2) { //na dve pobede
+						if(Client.getNumOfWins()>end ) {
+							end=Client.getNumOfWins();
+							
+							if(end==2){
+								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
+								gameOver(Client.getOpponent(), "YOU WON!", "You lost :(");
+							}
+							else{
+								switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
+										+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
+							}
+							
+						}
+						else{
+							switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
+									+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
+						}
+						
+					}
 				}
 			}
 		}
@@ -337,6 +371,32 @@ public class GUIControler extends Thread {
 		}
 
 
+	}
+// sending gameOver signal to opponent and launching gameOver JOptionPane
+	private static void gameOver(String opponent, String message, String msgOpp) {
+		Client.sendGameOverSignal(opponent, msgOpp);
+		gameOverWindow(message);
+	
+}
+	
+	// gameOver JOptionPane 
+	public static void gameOverWindow(String message){
+		String[] options = new String[] {"Wanna play with same player?", "Exit game"};
+	    int response = JOptionPane.showOptionDialog(mainWindow, message, "Game Status",
+	        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+	        null, options, options[0]);
+	    if(response==0){ //ponovo igraju
+	    	
+	    }
+	    if(response==1){ //vracaju se na izbor igraca
+	    	connectingWindow.setVisible(true);
+			connectingWindow.setEnabled(true);
+			connectingWindow.setLocationRelativeTo(mainWindow);
+			mainWindow.setVisible(false);
+	    }
+	    else{ //pritisnuto x
+	    	
+	    }
 	}
 
 	// Changing Hangman picture of player and opponent and placing letter that is not guessed on opponent Main Window
@@ -364,21 +424,23 @@ public class GUIControler extends Thread {
 	// Sending signal for changing result and showing game status window on opponent's Main Window
 	// Switching the users roles (one who was guessing is now setting the word)
 	
-	public static void switchMainWindow(String opponent, String gameRqNum, String result, String message, String r1, String r2) {
-		
-		
+	
+	public static void sendingResultNClearingValues(String opponent, String r1, String r2){
 		Client.sentRequestForGame=0;
-		
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
 		Client.sendChangeResult(opponent, r2, r1);
-		Client.sendGameStatusWindow(opponent, gameRqNum , result);
 		errorCount=0; 
 		lettersCorrect=0; 
 		newW=null;  
 		mainWindow.listOfButtons.clear();
+	}
+	
+	
+	public static void switchMainWindow(String opponent, String gameRqNum, String result, String message, String r1, String r2) {
+		sendingResultNClearingValues(opponent, r1, r2);
+		Client.sendGameStatusWindow(opponent, gameRqNum , result);
 		int input = JOptionPane.showOptionDialog(mainWindow, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 		if(input==0) {
-			
 			startGame();
 			
 		}
@@ -697,6 +759,11 @@ public class GUIControler extends Thread {
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
 		Client.setNumOfLosses(Integer.parseInt(r2));
 		Client.setNumOfWins(Integer.parseInt(r1));
+		
+	}
+
+	public static void receiveGameOverSignal(String msg) {
+		gameOverWindow(msg);
 		
 	}
 

@@ -185,6 +185,11 @@ public static void main(String[] args) {
 		serverOutput.println("/CHNG_RSLT:"+opponent+":"+r1+":"+r2);
 		
 	}
+
+	public static void sendGameOverSignal(String opponent2, String msgOpp) {
+		serverOutput.println("/GAME_OVER:"+opponent2+":"+msgOpp);
+		
+	}
 	
 
 }

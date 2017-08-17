@@ -87,6 +87,11 @@ public class ListenerThread extends Thread {
 					GUIControler.receiveSignalResultChanged(r1, r2);
 				}
 				
+				if(input.startsWith("/GAME_OVER_RCV")) {
+					String msg=input.split(":")[1];
+					GUIControler.receiveGameOverSignal(msg);
+				}
+				
 				 
 
 				if(input.startsWith("/CHATRCV")) {
