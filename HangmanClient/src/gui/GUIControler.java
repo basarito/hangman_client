@@ -63,7 +63,6 @@ public class GUIControler extends Thread {
 					welcomeWindow = new WelcomeWindow();
 					welcomeWindow.setVisible(true);
 					welcomeWindow.setLocationRelativeTo(null);
-					welcomeWindow.getTextField().requestFocusInWindow();
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -125,11 +124,15 @@ public class GUIControler extends Thread {
 		boolean valid=false;
 		if (username.isEmpty()) {
 			JOptionPane.showMessageDialog(welcomeWindow, "You have to enter a username!", "Try again :(", JOptionPane.ERROR_MESSAGE);
+			welcomeWindow.getTextField().requestFocusInWindow();
 		} else if(!username.matches("[A-Za-z0-9]+")) {
 			JOptionPane.showMessageDialog(welcomeWindow, "Incorrect username. Please use only letters a-z and/or numbers 0-9", "Try again :(", JOptionPane.ERROR_MESSAGE);
-
+			welcomeWindow.getTextField().setText("");
+			welcomeWindow.getTextField().requestFocusInWindow();
 		} else if(username.length()>10) {
 			JOptionPane.showMessageDialog(welcomeWindow, "Username too long. Please use up to 10 characters.", "Try again :(", JOptionPane.ERROR_MESSAGE);
+			welcomeWindow.getTextField().setText("");
+			welcomeWindow.getTextField().requestFocusInWindow();
 		} else {
 			valid=true;
 		}
@@ -530,7 +533,7 @@ public class GUIControler extends Thread {
 			waitingMainWindow();
 		} else {
 			mainWindow.getlblResult().setText("Result: "+Client.getNumOfWins()+":"+Client.getNumOfLosses());
-			givingWordMainWindow();
+			setUpWordAndCategory();
 		}
 
 	}
@@ -594,14 +597,21 @@ public class GUIControler extends Thread {
 			}
 
 		} while (true);
-							
-		
-		
-		//KATEGORIJU BI TREBALO ODVOJITI KAO POSEBNU METODU
+				
+	}
+	
+	public static void givingCategoryMainWindow(){
 		
 		String c="";
-		lbl.setText("Enter word category");
-		txt.setText("");
+		String[] options = {"OK"};
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(80, 50));
+		JLabel lbl = new JLabel("Enter word category: ");
+		JTextField txt = new JTextField(15);
+		panel.add(lbl);
+		panel.add(txt);
+//		lbl.setText("Enter word category");
+//		txt.setText("");
 
 		do {
 			int selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
@@ -625,21 +635,20 @@ public class GUIControler extends Thread {
 				}else if(!c.matches("[A-Za-z ]+")){
 					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
 				}else{
+					category = c;
 					break;
 				}
 			}
 		} while (true);
-
-
-		if(c!=null){
-			category = c;
-			Client.sendWordSetSignal(Client.getOpponent(), word, category);
-			setOpponentMainWindow();
-			
-		}
 		
 	}
 
+	public static void setUpWordAndCategory(){
+		givingWordMainWindow();
+		givingCategoryMainWindow();
+		Client.sendWordSetSignal(Client.getOpponent(), word, category);
+		setOpponentMainWindow();
+	}
 
 	public static void receiveSignalWordSet(String w, String c) {
 		dialogForWord.setVisible(false);
