@@ -304,7 +304,7 @@ public class GUIControler extends Thread {
 				case 6:
 					changeHangmnPicAndPlaceWrongLetter("/icons/state-6.png", Client.getOpponent(), letter);
 					Client.setNumOfLosses(Client.getNumOfLosses()+1);
-					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for"+
+					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
 							Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
 					break;
 				default : break;
@@ -325,7 +325,7 @@ public class GUIControler extends Thread {
 				if(lettersCorrect==w.length()){
 					Client.setNumOfWins(Client.getNumOfWins()+1);
 					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
-							+ "It's your turn to set a word for"+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+""
+							+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+""
 							);
 				}
 			}
@@ -374,13 +374,12 @@ public class GUIControler extends Thread {
 		lettersCorrect=0; 
 		newW=null;  
 		mainWindow.listOfButtons.clear();
-		int input = JOptionPane.showOptionDialog(null, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		int input = JOptionPane.showOptionDialog(mainWindow, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 		if(input==0) {
-			//Client.switchOpponentMainWindow(opponent);
+			
 			startGame();
 			
 		}
-		
 		if(input==-1){ //ovo je  ako se pritisne x, treba definisati
 			
 		}
@@ -680,17 +679,16 @@ public class GUIControler extends Thread {
 			message="Your opponent didn't guess the word. ";
 		}
 		
-		int option=JOptionPane.showOptionDialog(null, message+"\n It's your turn to guess", "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		int option=JOptionPane.showOptionDialog(mainWindow, message+"\n It's your turn to guess", "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 		if(option==0)
 			startGame();
-		//ovo bleji dok se ne pritisne x, to moze da se izmeni
+		if(option==-1) {
+			//pritisne se x definisati
+		}
 		
 	}
 
-	public static void receiveSignalSwitchWindow() {
-	//	startGame();
-		
-	} 
+	
 // Change result on opponent's Main Window
 	public static void receiveSignalResultChanged(String r1, String r2) {
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
