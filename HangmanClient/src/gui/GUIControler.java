@@ -103,8 +103,9 @@ public class GUIControler extends Thread {
 				"Leaving the game", JOptionPane.YES_NO_OPTION);
 
 		if (option == JOptionPane.YES_OPTION) {
+			mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			Client.sendQuitTheGameSignal(Client.getOpponent());
-//			System.out.println("quit signal sent");
+			resetVariables();
 			connectingWindow.setVisible(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			connectingWindow.setEnabled(true);
@@ -398,14 +399,25 @@ public class GUIControler extends Thread {
 	    	
 	    }
 	    if(response==1){ //vracaju se na izbor igraca
+	    	resetVariables();
+	    	Client.sendQuitTheGameSignal(Client.getOpponent());
 	    	connectingWindow.setVisible(true);
 			connectingWindow.setEnabled(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			mainWindow.setVisible(false);
 	    }
 	    else{ //pritisnuto x
-	    	
+	    	resetVariables();
+	    	Client.sendQuitTheGameSignal(Client.getOpponent());
+			//Client.sentRequestForGame=0;
+//			System.out.println("quit signal sent");
+			connectingWindow.setVisible(true);
+			connectingWindow.setLocationRelativeTo(mainWindow);
+			connectingWindow.setEnabled(true);
+			mainWindow.setVisible(false);
+			return;
 	    }
+
 	}
 
 	// Changing Hangman picture of player and opponent and placing letter that is not guessed on opponent Main Window
@@ -520,6 +532,8 @@ public class GUIControler extends Thread {
 			mainWindow.setVisible(false);
 			mainWindow= new MainWindow();
 			mainWindow.setLocationRelativeTo(connectingWindow);
+			//mora sledeci red da stoji da bi se sklanjao connectingWindow kad se pokrece igra nakon iskljucivanja
+			//prethodne 
 			connectingWindow.setVisible(false);
 			mainWindow.getLblWord().setText("");
 			mainWindow.getTxtpnABC().setText("");
@@ -581,6 +595,8 @@ public class GUIControler extends Thread {
 
 				if (option == JOptionPane.YES_OPTION) {
 					Client.sendQuitTheGameSignal(Client.getOpponent());
+					Client.sentRequestForGame=0;
+					resetVariables();
 //					System.out.println("quit signal sent");
 					connectingWindow.setVisible(true);
 					connectingWindow.setLocationRelativeTo(mainWindow);
@@ -743,6 +759,7 @@ public class GUIControler extends Thread {
 	public static void recieveQuitTheGameSignal(String name) {
 		dialogForWord.setVisible(false);
 		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game; Please choose another player to play with.");
+		Client.sentRequestForGame=0;
 		connectingWindow.setVisible(true);
 		connectingWindow.setEnabled(true);
 		connectingWindow.setLocationRelativeTo(mainWindow);
@@ -788,6 +805,14 @@ public class GUIControler extends Thread {
 	}
 
 
+	public static void resetVariables(){
+		errorCount = 0;
+		lettersCorrect = 0;
+		newW = null;
+		mainWindow.listOfButtons.clear();
+		Client.sentRequestForGame=0;
+		end = 0;
+	}
 }
 
 
