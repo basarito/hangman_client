@@ -118,7 +118,6 @@ public class MainWindow extends JFrame {
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
-		getPanel_7().add(getUserVsUser());
 		getPanel_4().add(getlblResult());
 		getPanel_4().add(getLblCategory());
 		contentPane.add(getScrollPane_1_1());
@@ -343,10 +342,11 @@ public class MainWindow extends JFrame {
 	public JLabel getlblResult(){
 		if(lblResult == null){
 			lblResult = new JLabel();
+			lblResult.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblResult.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
 			lblResult.setForeground(new Color(0, 0, 0));
 			
-			lblResult.setBounds(443, -3, 121, 23);
+			lblResult.setBounds(433, 0, 121, 20);
 		}
 		return lblResult;
 	}
@@ -411,7 +411,8 @@ public class MainWindow extends JFrame {
 		if(panel_7 == null){
 			panel_7 = new JPanel();
 			panel_7.setBounds(10, 11, 774, 23);
-			panel_7.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			panel_7.setLayout(null);
+			panel_7.add(getUserVsUser());
 		}
 
 		return panel_7;
@@ -421,6 +422,8 @@ public class MainWindow extends JFrame {
 	public JLabel getUserVsUser() {
 		if(lblUserVsUser == null){
 			lblUserVsUser = new JLabel(Client.getUsername()+" VS. "+Client.getOpponent());
+			lblUserVsUser.setHorizontalAlignment(SwingConstants.CENTER);
+			lblUserVsUser.setBounds(103, 0, 461, 22);
 			lblUserVsUser.setForeground(new Color(153, 50, 204));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 15));
 			
@@ -431,6 +434,7 @@ public class MainWindow extends JFrame {
 	public JLabel getLblCategory() {
 		if (lblCategory == null) {
 			lblCategory = new JLabel("Category: ");
+			lblCategory.setHorizontalAlignment(SwingConstants.LEFT);
 			lblCategory.setBounds(104, 0, 205, 17);
 			lblCategory.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
 			lblCategory.setForeground(new Color(0, 0, 0));
