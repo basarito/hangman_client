@@ -118,6 +118,7 @@ public class MainWindow extends JFrame {
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
+		//getPanel_7().add(getUserVsUser());
 		getPanel_4().add(getlblResult());
 		getPanel_4().add(getLblCategory());
 		contentPane.add(getScrollPane_1_1());
@@ -413,6 +414,7 @@ public class MainWindow extends JFrame {
 			panel_7.setBounds(10, 11, 774, 23);
 			panel_7.setLayout(null);
 			panel_7.add(getUserVsUser());
+
 		}
 
 		return panel_7;
