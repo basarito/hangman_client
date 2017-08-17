@@ -182,6 +182,7 @@ public static void main(String[] args) {
 	public static void switchOpponentMainWindow(String opponent) {
 		
 		serverOutput.println("/SWITCH_WND:"+opponent);
+	
 	}
 
 	public static void sendChangeResult(String opponent, String r1, String r2) {

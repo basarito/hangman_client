@@ -115,7 +115,7 @@ public class GUIControler extends Thread {
 		}
 
 	}
-
+//Show Connecting window
 	public static void showConnectingWindow() {
 		connectingWindow = new ConnectingWindow();
 		connectingWindow.setLocationRelativeTo(welcomeWindow);		
@@ -261,7 +261,7 @@ public class GUIControler extends Thread {
 
 	// ******************** game logic methods ***************** 
 
-
+//Set Hangman picture
 	public static void setHangmanImage(String imgPath){
 
 		ImageIcon img = new ImageIcon(MainWindow.class.getResource(imgPath));
@@ -272,7 +272,7 @@ public class GUIControler extends Thread {
 
 
 	} 	
-
+// Place guessed and not guessed letters on Main Window
 	public static void placeTheLetter() {
 		letter = MainWindow.getTextField().getText().toLowerCase();
 		MainWindow.getTextField().setText("");
@@ -304,9 +304,8 @@ public class GUIControler extends Thread {
 				case 6:
 					changeHangmnPicAndPlaceWrongLetter("/icons/state-6.png", Client.getOpponent(), letter);
 					Client.setNumOfLosses(Client.getNumOfLosses()+1);
-					switchMainWindow(Client.getOpponent(), 0+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for"+
-					Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
-					
+					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for"+
+							Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
 					break;
 				default : break;
 				}
@@ -325,7 +324,7 @@ public class GUIControler extends Thread {
 				}
 				if(lettersCorrect==w.length()){
 					Client.setNumOfWins(Client.getNumOfWins()+1);
-					switchMainWindow(Client.getOpponent(), 0+"" , 1+"", "You guessed the word. \n "
+					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
 							+ "It's your turn to set a word for"+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+""
 							);
 				}
@@ -338,7 +337,7 @@ public class GUIControler extends Thread {
 
 	}
 
-	
+	// Changing Hangman picture of player and opponent and placing letter that is not guessed on opponent Main Window
 
 	public static void changeHangmnPicAndPlaceWrongLetter(String url, String opponent, String letter1) {
 		setHangmanImage(url);
@@ -347,6 +346,8 @@ public class GUIControler extends Thread {
 		
 	}
 
+// Calculate number of letters in word that should be guessed
+	
 	public static int numberOfLettersInAWord(String word, String l) {
 		int count=0;
 		for(int i=0; i<word.length(); i++){
@@ -358,9 +359,13 @@ public class GUIControler extends Thread {
 
 	}
 	
-	///////////////
+	// Sending signal for changing result and showing game status window on opponent's Main Window
+	// Switching the users roles (one who was guessing is now setting the word)
 	
 	public static void switchMainWindow(String opponent, String gameRqNum, String result, String message, String r1, String r2) {
+		
+		
+		Client.sentRequestForGame=0;
 		
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
 		Client.sendChangeResult(opponent, r2, r1);
@@ -371,17 +376,15 @@ public class GUIControler extends Thread {
 		mainWindow.listOfButtons.clear();
 		int input = JOptionPane.showOptionDialog(null, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 		if(input==0) {
+			//Client.switchOpponentMainWindow(opponent);
 			startGame();
-			Client.switchOpponentMainWindow(opponent);
+			
 		}
-		else{ //ovo je  ako se pritisne x, treba definisati
+		
+		if(input==-1){ //ovo je  ako se pritisne x, treba definisati
 			
 		}
 	}
-	
-	
-	
-
 
 
 	/******Connecting two players in a game**************/
@@ -448,22 +451,19 @@ public class GUIControler extends Thread {
 			mainWindow.getTxtpnABC().setText("");
 			mainWindow.getPanel_5().removeAll();
 		}
-		
 		else {
 			mainWindow = new MainWindow();
 			mainWindow.setLocationRelativeTo(connectingWindow);	 
 			connectingWindow.setVisible(false);
 			
 		}
-		
 		mainWindow.getBtnGuess().setVisible(false);
 		mainWindow.getTextField().setVisible(false);
 		
 		mainWindow.setVisible(true);
 
-		if(Client.sentRequestForGame==1) {
+		if(Client.sentRequestForGame==1) { //ceka na rec
 			mainWindow.getlblResult().setText("Result: "+Client.getNumOfWins()+":"+Client.getNumOfLosses());
-			
 			waitingMainWindow();
 		} else {
 			mainWindow.getlblResult().setText("Result: "+Client.getNumOfWins()+":"+Client.getNumOfLosses());
@@ -579,11 +579,12 @@ public class GUIControler extends Thread {
 
 
 	public static void receiveSignalWordSet(String w, String c) {
-
 		dialogForWord.setVisible(false);
 		setPlayerMainWindow(w, c);
 	}
 
+	
+	//Main Window of player guessing the word
 	public static void setPlayerMainWindow(String w, String c){ 
 
 		dialogForWord.setVisible(false);
@@ -596,17 +597,16 @@ public class GUIControler extends Thread {
 			mainWindow.getPanel_5().add(mainWindow.getBtnLetter());
 			mainWindow.getPanel_5().revalidate();
 			mainWindow.getPanel_5().repaint();
-
 		} 
-
 		mainWindow.getPanel_1().revalidate();
 		mainWindow.getLblCategory().setVisible(true);
 		
 		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 		mainWindow.getlblResult().setVisible(true);
 	}
-
-	public static void setOpponentMainWindow() { //samo rec umesto guess i dugmica
+	
+// Main Window of player who is setting the word
+	public static void setOpponentMainWindow() { 
 
 		mainWindow.remove(mainWindow.getBtnGuess());
 		mainWindow.remove(mainWindow.getTextField());
@@ -622,7 +622,6 @@ public class GUIControler extends Thread {
 		mainWindow.getLblCategory().setVisible(true);
 		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 		mainWindow.getlblResult().setVisible(true);
-
 
 	}
 
@@ -670,7 +669,9 @@ public class GUIControler extends Thread {
 	public static void receiveSignalStatusWindow(String gameRqNum, String result) {
 		String message="";
 		int r=Integer.parseInt(result);
+		
 		Client.sentRequestForGame=Integer.parseInt(gameRqNum);
+	
 		if(r==1){
 			 message="Your opponent guessed the word";
 			
@@ -678,16 +679,19 @@ public class GUIControler extends Thread {
 		else {
 			message="Your opponent didn't guess the word. ";
 		}
-		JOptionPane.showOptionDialog(null, message+"\n It's your turn to guess","Status", JOptionPane.YES_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new Object[]{}, null);
-		//ovo bleji dok se ne pritisne x, to moz
+		
+		int option=JOptionPane.showOptionDialog(null, message+"\n It's your turn to guess", "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		if(option==0)
+			startGame();
+		//ovo bleji dok se ne pritisne x, to moze da se izmeni
 		
 	}
 
 	public static void receiveSignalSwitchWindow() {
-		startGame();
+	//	startGame();
 		
-	}
-
+	} 
+// Change result on opponent's Main Window
 	public static void receiveSignalResultChanged(String r1, String r2) {
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
 		Client.setNumOfLosses(Integer.parseInt(r2));

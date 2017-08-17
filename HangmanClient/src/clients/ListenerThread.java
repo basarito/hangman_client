@@ -91,7 +91,7 @@ public class ListenerThread extends Thread {
 				if(input.startsWith("/RCV_SWITCH_WND:")) {
 					
 					GUIControler.receiveSignalSwitchWindow();
-				}
+				} 
 
 				if(input.startsWith("/CHATRCV")) {
 					String name = input.split(":")[1];
