@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.text.DefaultCaret;
 
 import clients.Client;
 
@@ -30,22 +31,10 @@ public class MyCellRenderer implements ListCellRenderer {
 		ta = new JTextArea();
 		ta.setLineWrap(true);
 		ta.setWrapStyleWord(true);
-		ta.setMargin(new Insets(5, 5, 0, 5));
+		ta.setMargin(new Insets(5, 5, 5, 5));
 		ta.setBackground(Color.DARK_GRAY);
 		ta.setForeground(Color.WHITE);
 		
-		String msg = ta.getText();
-		//ta.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		
-		if(msg.startsWith(Client.getOpponent())) {
-			ta.setBackground(Color.BLACK);
-		} else if (msg.startsWith(Client.getOpponent())) {
-			//ta.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		}
-		
-//		ta.setBorder(BorderFactory.createCompoundBorder(
-//		        ta.getBorder(), 
-//		        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		p.add(ta, BorderLayout.CENTER);
 	}
 
@@ -55,10 +44,22 @@ public class MyCellRenderer implements ListCellRenderer {
 			final boolean hasFocus) {
 
 		ta.setText((String) value);
+		
+		DefaultCaret caret = (DefaultCaret)ta.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
+		if(value.toString().startsWith(Client.getUsername())) {
+			ta.setForeground(new Color(221, 160, 221));		
+		} else if(value.toString().startsWith(Client.getOpponent())) {
+			ta.setForeground(Color.WHITE);
+		}
+		
 		int width = list.getWidth();
 		int scrollbar = ((Integer)UIManager.get("ScrollBar.width")).intValue();
 		if (width > 0)
 			ta.setSize(width-scrollbar, Short.MAX_VALUE);
+		
+		p.repaint();
 		return p;
 	}
 
