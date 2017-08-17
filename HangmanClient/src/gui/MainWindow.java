@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -74,7 +76,6 @@ public class MainWindow extends JFrame {
 	private JList<String> list;
 	private JLabel lblTip;
 	private JLabel lblResult;
-	
 	
 
 	/**
@@ -152,6 +153,15 @@ public class MainWindow extends JFrame {
 			scrollPane.setColumnHeaderView(getLblChatbox());
 			//scrollPane.setViewportView(getChatbox());
 			scrollPane.setViewportView(getList());
+			
+			scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+		        public void adjustmentValueChanged(AdjustmentEvent e) { 
+		        	if (GUIControler.messageAdded) {
+		        		e.getAdjustable().setValue(e.getAdjustable().getMaximum()); 
+		        		GUIControler.messageAdded=false;
+		        	}
+		        }
+		    });
 
 		}
 
@@ -517,6 +527,12 @@ public class MainWindow extends JFrame {
 	private JList getList() {
 		if (list == null) {
 			list = new JList(Client.chatHistory);
+			
+//			getScrollPane().getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
+//		        public void adjustmentValueChanged(AdjustmentEvent e) {  
+//		            e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+//		        }
+//		    });
 			
 			list.setBackground(Color.DARK_GRAY);
 			
