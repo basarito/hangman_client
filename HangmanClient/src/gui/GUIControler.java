@@ -105,7 +105,7 @@ public class GUIControler extends Thread {
 		if (option == JOptionPane.YES_OPTION) {
 			mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			Client.sendQuitTheGameSignal(Client.getOpponent());
-			resetVariables();
+			resetVariables(Client.getOpponent());
 			connectingWindow.setVisible(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			connectingWindow.setEnabled(true);
@@ -399,7 +399,7 @@ public class GUIControler extends Thread {
 	    	
 	    }
 	    if(response==1){ //vracaju se na izbor igraca
-	    	resetVariables();
+	    	resetVariables(Client.getOpponent());
 	    	Client.sendQuitTheGameSignal(Client.getOpponent());
 	    	connectingWindow.setVisible(true);
 			connectingWindow.setEnabled(true);
@@ -407,10 +407,9 @@ public class GUIControler extends Thread {
 			mainWindow.setVisible(false);
 	    }
 	    else{ //pritisnuto x
-	    	resetVariables();
+	    	resetVariables(Client.getOpponent());
 	    	Client.sendQuitTheGameSignal(Client.getOpponent());
-			//Client.sentRequestForGame=0;
-//			System.out.println("quit signal sent");
+			
 			connectingWindow.setVisible(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			connectingWindow.setEnabled(true);
@@ -460,12 +459,13 @@ public class GUIControler extends Thread {
 	public static void switchMainWindow(String opponent, String gameRqNum, String result, String message, String r1, String r2) {
 		sendingResultNClearingValues(opponent, r1, r2);
 		Client.sendGameStatusWindow(opponent, gameRqNum , result);
-		int input = JOptionPane.showOptionDialog(mainWindow, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		
+		int input;
+		do {
+			input = JOptionPane.showOptionDialog(mainWindow, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		} while(input==-1);
 		if(input==0) {
 			startGame();
-			
-		}
-		if(input==-1){ //ovo je  ako se pritisne x, treba definisati
 			
 		}
 	}
@@ -596,7 +596,7 @@ public class GUIControler extends Thread {
 				if (option == JOptionPane.YES_OPTION) {
 					Client.sendQuitTheGameSignal(Client.getOpponent());
 					Client.sentRequestForGame=0;
-					resetVariables();
+					resetVariables(Client.getOpponent());
 //					System.out.println("quit signal sent");
 					connectingWindow.setVisible(true);
 					connectingWindow.setLocationRelativeTo(mainWindow);
@@ -781,12 +781,14 @@ public class GUIControler extends Thread {
 			message="Your opponent didn't guess the word. ";
 		}
 		
-		int option=JOptionPane.showOptionDialog(mainWindow, message+"\n It's your turn to guess", "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		int option;
+		do{
+			option=JOptionPane.showOptionDialog(mainWindow, message+"\n It's your turn to guess", "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+		} while(option==-1);
 		if(option==0)
 			startGame();
-		if(option==-1) {
-			//pritisne se x definisati
-		}
+		
 		
 	}
 
@@ -805,13 +807,21 @@ public class GUIControler extends Thread {
 	}
 
 
-	public static void resetVariables(){
+	public static void resetVariables(String opponent){
+		Client.setNumOfLosses(0);
+		Client.setNumOfWins(0);
+		Client.sendSignalResetWinsLosses(opponent);
 		errorCount = 0;
 		lettersCorrect = 0;
 		newW = null;
 		mainWindow.listOfButtons.clear();
 		Client.sentRequestForGame=0;
 		end = 0;
+	}
+
+	public static void receiveSignalResetWinsLosses() {
+		Client.setNumOfLosses(0);
+		Client.setNumOfWins(0);
 	}
 }
 

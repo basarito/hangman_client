@@ -64,6 +64,13 @@ public class ListenerThread extends Thread {
 					
 				}
 				
+				
+				if(input.startsWith("W_L_RCV")){
+					GUIControler.receiveSignalResetWinsLosses();
+					
+				}
+				
+				
 				if(input.startsWith("/WRONG_LETTER")) {
 					String letter=input.split(":")[1];
 					GUIControler.receiveSignalWrongLetter(letter);

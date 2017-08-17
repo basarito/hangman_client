@@ -190,6 +190,11 @@ public static void main(String[] args) {
 		serverOutput.println("/GAME_OVER:"+opponent2+":"+msgOpp);
 		
 	}
+
+	public static void sendSignalResetWinsLosses(String opponent2) {
+		serverOutput.println("/RST_W_L:"+opponent2);
+		
+	}
 	
 
 }
