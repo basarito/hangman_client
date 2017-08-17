@@ -118,6 +118,7 @@ public class MainWindow extends JFrame {
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
+		getPanel_7().setLayout(null);
 		getPanel_7().add(getUserVsUser());
 		getPanel_4().add(getlblResult());
 		getPanel_4().add(getLblCategory());
@@ -411,7 +412,6 @@ public class MainWindow extends JFrame {
 		if(panel_7 == null){
 			panel_7 = new JPanel();
 			panel_7.setBounds(10, 11, 774, 23);
-			panel_7.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		}
 
 		return panel_7;
@@ -421,6 +421,7 @@ public class MainWindow extends JFrame {
 	public JLabel getUserVsUser() {
 		if(lblUserVsUser == null){
 			lblUserVsUser = new JLabel(Client.getUsername()+" VS. "+Client.getOpponent());
+			lblUserVsUser.setBounds(368, 0, 150, 22);
 			lblUserVsUser.setForeground(new Color(153, 50, 204));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 15));
 			

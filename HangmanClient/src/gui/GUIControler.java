@@ -99,13 +99,19 @@ public class GUIControler extends Thread {
 
 	//Closing MainWindow
 	public static void closeApp3() {
-		int option = JOptionPane.showConfirmDialog(mainWindow.getContentPane(), "Are you sure you want to close the game?",
-				"Closing app", JOptionPane.YES_NO_OPTION);
+		int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
+				"Leaving the game", JOptionPane.YES_NO_OPTION);
 
 		if (option == JOptionPane.YES_OPTION) {
-			Client.sendExitSignal();
-			System.exit(0);
-		} else if(option == JOptionPane.NO_OPTION){
+			Client.sendQuitTheGameSignal(Client.getOpponent());
+//			System.out.println("quit signal sent");
+			connectingWindow.setVisible(true);
+			connectingWindow.setLocationRelativeTo(mainWindow);
+			connectingWindow.setEnabled(true);
+			mainWindow.setVisible(false);
+			return;
+		
+		}else if(option == JOptionPane.NO_OPTION){
 			mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
 
@@ -370,7 +376,7 @@ public class GUIControler extends Thread {
 			}
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "Enter a letter", "Error", JOptionPane.ERROR_MESSAGE );
+			JOptionPane.showMessageDialog(mainWindow, "Enter a letter", "Error", JOptionPane.ERROR_MESSAGE );
 		}
 
 
@@ -513,6 +519,8 @@ public class GUIControler extends Thread {
 		if(mainWindow!=null){
 			mainWindow.setVisible(false);
 			mainWindow= new MainWindow();
+			mainWindow.setLocationRelativeTo(connectingWindow);
+			connectingWindow.setVisible(false);
 			mainWindow.getLblWord().setText("");
 			mainWindow.getTxtpnABC().setText("");
 			mainWindow.getPanel_5().removeAll();
@@ -567,14 +575,13 @@ public class GUIControler extends Thread {
 
 		do {
 			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
-
 			if(selectedOption==JOptionPane.CLOSED_OPTION){
 				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
 						"Leaving the game", JOptionPane.YES_NO_OPTION);
 
 				if (option == JOptionPane.YES_OPTION) {
 					Client.sendQuitTheGameSignal(Client.getOpponent());
-					System.out.println("quit signal sent");
+//					System.out.println("quit signal sent");
 					connectingWindow.setVisible(true);
 					connectingWindow.setLocationRelativeTo(mainWindow);
 					connectingWindow.setEnabled(true);
@@ -584,7 +591,7 @@ public class GUIControler extends Thread {
 			}
 			if(selectedOption==0){   
 				w = txt.getText();
-				if(w.equals("")){
+				if(w.equals("") || w==null){
 					JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
 				}else if(!w.matches("[A-Za-z]+")){
 					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
@@ -610,8 +617,6 @@ public class GUIControler extends Thread {
 		JTextField txt = new JTextField(15);
 		panel.add(lbl);
 		panel.add(txt);
-//		lbl.setText("Enter word category");
-//		txt.setText("");
 
 		do {
 			int selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
@@ -630,7 +635,7 @@ public class GUIControler extends Thread {
 			}
 			if(selectedOption1==0){   
 				c = txt.getText();
-				if(c.equals("") || c.equals(" ")){
+				if(c==null || c.equals("") || c.equals(" ")){
 					JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
 				}else if(!c.matches("[A-Za-z ]+")){
 					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
@@ -645,9 +650,15 @@ public class GUIControler extends Thread {
 
 	public static void setUpWordAndCategory(){
 		givingWordMainWindow();
-		givingCategoryMainWindow();
-		Client.sendWordSetSignal(Client.getOpponent(), word, category);
-		setOpponentMainWindow();
+		if(!word.equals("")){
+			givingCategoryMainWindow();
+			if(!category.equals("")){
+				Client.sendWordSetSignal(Client.getOpponent(), word, category);
+				setOpponentMainWindow();
+				
+			}
+			
+		}
 	}
 
 	public static void receiveSignalWordSet(String w, String c) {
@@ -731,7 +742,7 @@ public class GUIControler extends Thread {
 
 	public static void recieveQuitTheGameSignal(String name) {
 		dialogForWord.setVisible(false);
-		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game; Please choose a new one to play with.");
+		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game; Please choose another player to play with.");
 		connectingWindow.setVisible(true);
 		connectingWindow.setEnabled(true);
 		connectingWindow.setLocationRelativeTo(mainWindow);
