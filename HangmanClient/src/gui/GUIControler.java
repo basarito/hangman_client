@@ -57,6 +57,8 @@ public class GUIControler extends Thread {
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
 	private static JDialog dialogForGameStatus;
+	
+	public static boolean messageAdded = false;
 
 
 	@Override 
@@ -649,7 +651,8 @@ public class GUIControler extends Thread {
 
 	public static void addMessage(String username, String message) {
 		String newMsg = username + ":\n" + message;
-		Client.chatHistory.addElement(newMsg);		
+		Client.chatHistory.addElement(newMsg);	
+		messageAdded=true;
 	}
 
 
