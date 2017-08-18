@@ -318,6 +318,7 @@ public class GUIControler extends Thread {
 							
 							if(end==2){
 								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
+								checkGameSentRq();
 								gameOver(Client.getOpponent(), "You lost :(", "YOU WON!");
 							}
 							else{
@@ -359,6 +360,7 @@ public class GUIControler extends Thread {
 							
 							if(end==2){
 								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
+								checkGameSentRq();;
 								gameOver(Client.getOpponent(), "YOU WON!", "You lost :(");
 							}
 							else{
@@ -382,6 +384,16 @@ public class GUIControler extends Thread {
 
 
 	}
+private static void checkGameSentRq() {
+	if(Client.sentRequestForGame==1){
+		Client.sendRqGmNum(Client.getOpponent(), 0+"");
+	}
+	if(Client.sentRequestForGame==0){
+		Client.sendRqGmNum(Client.getOpponent(), 1+"");
+	}
+	
+}
+
 // sending gameOver signal to opponent and launching gameOver JOptionPane
 	private static void gameOver(String opponent, String message, String msgOpp) {
 		Client.sendGameOverSignal(opponent, msgOpp);
@@ -391,12 +403,21 @@ public class GUIControler extends Thread {
 	
 	// gameOver JOptionPane 
 	public static void gameOverWindow(String message){
-		String[] options = new String[] {"Wanna play with same player?", "Exit game"};
+		String[] options = new String[] {"Wanna play again?", "Exit game"};
 	    int response = JOptionPane.showOptionDialog(mainWindow, message, "Game Status",
-	        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+	        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
 	        null, options, options[0]);
+	    
 	    if(response==0){ //ponovo igraju
-	    	
+	    	Client.setNumOfLosses(0);
+			Client.setNumOfWins(0);
+			errorCount = 0;
+			lettersCorrect = 0;
+			newW = null;
+			mainWindow.listOfButtons.clear();
+			end = 0;
+			
+	    	startGame();
 	    }
 	    if(response==1){ //vracaju se na izbor igraca
 	    	resetVariables(Client.getOpponent());
@@ -405,8 +426,9 @@ public class GUIControler extends Thread {
 			connectingWindow.setEnabled(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			mainWindow.setVisible(false);
+			System.out.println("dskjnsjk");
 	    }
-	    else{ //pritisnuto x
+	    if(response==-1){ //pritisnuto x
 	    	resetVariables(Client.getOpponent());
 	    	Client.sendQuitTheGameSignal(Client.getOpponent());
 			
@@ -810,19 +832,27 @@ public class GUIControler extends Thread {
 	public static void resetVariables(String opponent){
 		Client.setNumOfLosses(0);
 		Client.setNumOfWins(0);
-		Client.sendSignalResetWinsLosses(opponent);
+		
 		errorCount = 0;
 		lettersCorrect = 0;
 		newW = null;
 		mainWindow.listOfButtons.clear();
-		Client.sentRequestForGame=0;
 		end = 0;
+		Client.sentRequestForGame=0;
+		Client.sendSignalResetWinsLosses(opponent);
 	}
 
 	public static void receiveSignalResetWinsLosses() {
 		Client.setNumOfLosses(0);
 		Client.setNumOfWins(0);
 	}
+
+	public static void receiveGameRqNum(String num) {
+		Client.sentRequestForGame=Integer.parseInt(num);
+		
+	}
+
+	
 }
 
 

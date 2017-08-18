@@ -195,6 +195,12 @@ public static void main(String[] args) {
 		serverOutput.println("/RST_W_L:"+opponent2);
 		
 	}
+
+	public static void sendRqGmNum(String opponent2, String i) {
+		serverOutput.println("/NUM_GM_RQ:"+opponent2+":"+i);
+		
+	}
+
 	
 
 }

@@ -65,6 +65,7 @@ public class ListenerThread extends Thread {
 				}
 				
 				
+				
 				if(input.startsWith("W_L_RCV")){
 					GUIControler.receiveSignalResetWinsLosses();
 					
@@ -97,6 +98,11 @@ public class ListenerThread extends Thread {
 				if(input.startsWith("/GAME_OVER_RCV")) {
 					String msg=input.split(":")[1];
 					GUIControler.receiveGameOverSignal(msg);
+				}
+				
+				if(input.startsWith("/NUM_RCV")) {
+					String num=input.split(":")[1];
+					GUIControler.receiveGameRqNum(num);
 				}
 				
 				 
