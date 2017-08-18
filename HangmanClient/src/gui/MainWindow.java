@@ -495,10 +495,10 @@ public class MainWindow extends JFrame {
 						if(!message.equals("")) {
 							Client.sendMessage(message);
 							GUIControler.addMessage(Client.getUsername(), message);
-						}
-						txtMessage.setText("Write your message here...");
-						txtMessage.setForeground(new Color(216, 191, 216)); 
-						
+							e.consume();
+							txtMessage.setText("");
+						} else 
+							e.consume();					
 					}
 				}
 			});

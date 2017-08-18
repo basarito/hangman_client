@@ -286,7 +286,7 @@ public class ConnectingWindow extends JFrame {
 			table.setFillsViewportHeight(true);
 			table.setIntercellSpacing(new Dimension(0, 0));
 			table.setShowGrid(false);
-
+			table.setTableHeader(null);
 			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
 
 			{

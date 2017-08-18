@@ -779,7 +779,8 @@ private static void checkGameSentRq() {
 
 
 	public static void recieveQuitTheGameSignal(String name) {
-		dialogForWord.setVisible(false);
+		if(dialogForWord!=null)
+			dialogForWord.setVisible(false);
 		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game; Please choose another player to play with.");
 		Client.sentRequestForGame=0;
 		connectingWindow.setVisible(true);
