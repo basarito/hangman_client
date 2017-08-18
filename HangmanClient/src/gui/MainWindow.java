@@ -448,18 +448,6 @@ public class MainWindow extends JFrame {
 	
 	/***************CHATBOX**********************/
 	
-//	public JTextArea getChatbox() {
-//		if (textArea == null) {
-//			textArea = new JTextArea();
-//			textArea.setWrapStyleWord(true);
-//			textArea.setLineWrap(true);
-//			textArea.setForeground(Color.WHITE);
-//			textArea.setBackground(Color.DARK_GRAY);
-//		}
-//		return textArea;
-//	}
-	
-	
 	public JScrollPane getScrollPane_1_1() {
 		if (scrollPane_1 == null) {
 			scrollPane_1 = new JScrollPane();
@@ -533,12 +521,6 @@ public class MainWindow extends JFrame {
 	private JList getList() {
 		if (list == null) {
 			list = new JList(Client.chatHistory);
-			
-//			getScrollPane().getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-//		        public void adjustmentValueChanged(AdjustmentEvent e) {  
-//		            e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-//		        }
-//		    });
 			
 			list.setBackground(Color.DARK_GRAY);
 			

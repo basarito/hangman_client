@@ -51,7 +51,7 @@ public class GUIControler extends Thread {
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
 	private static JDialog dialogForGameStatus;
-	
+
 	public static boolean messageAdded = false;
 
 
@@ -111,13 +111,13 @@ public class GUIControler extends Thread {
 			connectingWindow.setEnabled(true);
 			mainWindow.setVisible(false);
 			return;
-		
+
 		}else if(option == JOptionPane.NO_OPTION){
 			mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		}
 
 	}
-//Show Connecting window
+	//Show Connecting window
 	public static void showConnectingWindow() {
 		connectingWindow = new ConnectingWindow();
 		connectingWindow.setLocationRelativeTo(welcomeWindow);		
@@ -267,7 +267,7 @@ public class GUIControler extends Thread {
 
 	// ******************** game logic methods ***************** 
 
-//Set Hangman picture
+	//Set Hangman picture
 	public static void setHangmanImage(String imgPath){
 
 		ImageIcon img = new ImageIcon(MainWindow.class.getResource(imgPath));
@@ -278,7 +278,7 @@ public class GUIControler extends Thread {
 
 
 	} 	
-// Place guessed and not guessed letters on Main Window
+	// Place guessed and not guessed letters on Main Window
 	public static void placeTheLetter() {
 		letter = MainWindow.getTextField().getText().toLowerCase();
 		MainWindow.getTextField().setText("");
@@ -296,7 +296,7 @@ public class GUIControler extends Thread {
 				case 2: 
 					changeHangmnPicAndPlaceWrongLetter("/icons/state-2.png", Client.getOpponent(), letter);
 					break;
-					
+
 				case 3:
 					changeHangmnPicAndPlaceWrongLetter("/icons/state-3.png", Client.getOpponent(), letter);
 					break;
@@ -310,12 +310,12 @@ public class GUIControler extends Thread {
 				case 6:
 					changeHangmnPicAndPlaceWrongLetter("/icons/state-6.png", Client.getOpponent(), letter);
 					Client.setNumOfLosses(Client.getNumOfLosses()+1);
-					
-					
+
+
 					if(end<2) { //na dve pobede
 						if(Client.getNumOfLosses()>end ) {
 							end=Client.getNumOfLosses();
-							
+
 							if(end==2){
 								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
 								checkGameSentRq();
@@ -325,15 +325,15 @@ public class GUIControler extends Thread {
 								switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
 										Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
 							}
-							
+
 						}
 						else {
 							switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
 									Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
 						}
-						
+
 					}
-				
+
 					break;
 				default : break;
 				}
@@ -344,20 +344,20 @@ public class GUIControler extends Thread {
 					if (letter.charAt(0)==w.charAt(i)){
 						MainWindow.listOfButtons.get(i).setText(letter.toUpperCase());
 						Client.changeRigthLetterSignal(letter, Client.getOpponent(), i+"");
-						
+
 						newW=newW+letter;
 						lettersCorrect++;
 
 					}
 				}
-				
+
 				if(lettersCorrect==w.length()){
 					Client.setNumOfWins(Client.getNumOfWins()+1);
-					
+
 					if(end<2) { //na dve pobede
 						if(Client.getNumOfWins()>end ) {
 							end=Client.getNumOfWins();
-							
+
 							if(end==2){
 								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
 								checkGameSentRq();;
@@ -367,13 +367,13 @@ public class GUIControler extends Thread {
 								switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
 										+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
 							}
-							
+
 						}
 						else{
 							switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
 									+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
 						}
-						
+
 					}
 				}
 			}
@@ -384,60 +384,60 @@ public class GUIControler extends Thread {
 
 
 	}
-private static void checkGameSentRq() {
-	if(Client.sentRequestForGame==1){
-		Client.sendRqGmNum(Client.getOpponent(), 0+"");
-	}
-	if(Client.sentRequestForGame==0){
-		Client.sendRqGmNum(Client.getOpponent(), 1+"");
-	}
-	
-}
+	private static void checkGameSentRq() {
+		if(Client.sentRequestForGame==1){
+			Client.sendRqGmNum(Client.getOpponent(), 0+"");
+		}
+		if(Client.sentRequestForGame==0){
+			Client.sendRqGmNum(Client.getOpponent(), 1+"");
+		}
 
-// sending gameOver signal to opponent and launching gameOver JOptionPane
+	}
+
+	// sending gameOver signal to opponent and launching gameOver JOptionPane
 	private static void gameOver(String opponent, String message, String msgOpp) {
 		Client.sendGameOverSignal(opponent, msgOpp);
 		gameOverWindow(message);
-	
-}
-	
+
+	}
+
 	// gameOver JOptionPane 
 	public static void gameOverWindow(String message){
 		String[] options = new String[] {"Wanna play again?", "Exit game"};
-	    int response = JOptionPane.showOptionDialog(mainWindow, message, "Game Status",
-	        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-	        null, options, options[0]);
-	    
-	    if(response==0){ //ponovo igraju
-	    	Client.setNumOfLosses(0);
+		int response = JOptionPane.showOptionDialog(mainWindow, message, "Game Status",
+				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, options[0]);
+
+		if(response==0){ //ponovo igraju
+			Client.setNumOfLosses(0);
 			Client.setNumOfWins(0);
 			errorCount = 0;
 			lettersCorrect = 0;
 			newW = null;
 			mainWindow.listOfButtons.clear();
 			end = 0;
-			
-	    	startGame();
-	    }
-	    if(response==1){ //vracaju se na izbor igraca
-	    	resetVariables(Client.getOpponent());
-	    	Client.sendQuitTheGameSignal(Client.getOpponent());
-	    	connectingWindow.setVisible(true);
+
+			startGame();
+		}
+		if(response==1){ //vracaju se na izbor igraca
+			resetVariables(Client.getOpponent());
+			Client.sendQuitTheGameSignal(Client.getOpponent());
+			connectingWindow.setVisible(true);
 			connectingWindow.setEnabled(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			mainWindow.setVisible(false);
 			System.out.println("dskjnsjk");
-	    }
-	    if(response==-1){ //pritisnuto x
-	    	resetVariables(Client.getOpponent());
-	    	Client.sendQuitTheGameSignal(Client.getOpponent());
-			
+		}
+		if(response==-1){ //pritisnuto x
+			resetVariables(Client.getOpponent());
+			Client.sendQuitTheGameSignal(Client.getOpponent());
+
 			connectingWindow.setVisible(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			connectingWindow.setEnabled(true);
 			mainWindow.setVisible(false);
 			return;
-	    }
+		}
 
 	}
 
@@ -447,11 +447,11 @@ private static void checkGameSentRq() {
 		setHangmanImage(url);
 		Client.changeHangmanPictureSignal(url, opponent);
 		Client.changeWrongLettersSignal(letter1, opponent);
-		
+
 	}
 
-// Calculate number of letters in word that should be guessed
-	
+	// Calculate number of letters in word that should be guessed
+
 	public static int numberOfLettersInAWord(String word, String l) {
 		int count=0;
 		for(int i=0; i<word.length(); i++){
@@ -462,11 +462,11 @@ private static void checkGameSentRq() {
 		return count;
 
 	}
-	
+
 	// Sending signal for changing result and showing game status window on opponent's Main Window
 	// Switching the users roles (one who was guessing is now setting the word)
-	
-	
+
+
 	public static void sendingResultNClearingValues(String opponent, String r1, String r2){
 		Client.sentRequestForGame=0;
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
@@ -476,19 +476,19 @@ private static void checkGameSentRq() {
 		newW=null;  
 		mainWindow.listOfButtons.clear();
 	}
-	
-	
+
+
 	public static void switchMainWindow(String opponent, String gameRqNum, String result, String message, String r1, String r2) {
 		sendingResultNClearingValues(opponent, r1, r2);
 		Client.sendGameStatusWindow(opponent, gameRqNum , result);
-		
+
 		int input;
 		do {
 			input = JOptionPane.showOptionDialog(mainWindow, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 		} while(input==-1);
 		if(input==0) {
 			startGame();
-			
+
 		}
 	}
 
@@ -565,11 +565,11 @@ private static void checkGameSentRq() {
 			mainWindow = new MainWindow();
 			mainWindow.setLocationRelativeTo(connectingWindow);	 
 			connectingWindow.setVisible(false);
-			
+
 		}
 		mainWindow.getBtnGuess().setVisible(false);
 		mainWindow.getTextField().setVisible(false);
-		
+
 		mainWindow.setVisible(true);
 
 		if(Client.sentRequestForGame==1) { //ceka na rec
@@ -577,7 +577,7 @@ private static void checkGameSentRq() {
 			waitingMainWindow();
 		} else {
 			mainWindow.getlblResult().setText("Result: "+Client.getNumOfWins()+":"+Client.getNumOfLosses());
-			setUpWordAndCategory();
+			givingWordMainWindow();
 		}
 
 	}
@@ -597,17 +597,21 @@ private static void checkGameSentRq() {
 		mainWindow.setEnabled(false);
 	}
 
-		
+
 	private static void givingWordMainWindow() {
 		String w="";
+		String c="";
 		String[] options = {"OK"};
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(80, 50));
+		panel.setPreferredSize(new Dimension(80, 100));
 		JLabel lbl = new JLabel("Enter a word: ");
 		JTextField txt = new JTextField(15);
+		JLabel lbl2 = new JLabel("Enter a category:");
+		JTextField txt2 = new JTextField(15);
 		panel.add(lbl);
 		panel.add(txt);
-
+		panel.add(lbl2);
+		panel.add(txt2);
 
 		do {
 			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
@@ -627,84 +631,90 @@ private static void checkGameSentRq() {
 					return;
 				}
 			}
-			if(selectedOption==0){   
+			if(selectedOption==JOptionPane.OK_OPTION){   
 				w = txt.getText();
-				if(w.equals("") || w==null){
-					JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
-				}else if(!w.matches("[A-Za-z]+")){
-					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
-					txt.setText("");
-				}else{
-					word=w;
-					break;
+				c = txt2.getText();
+
+				if(w.isEmpty() || c.isEmpty())
+					JOptionPane.showMessageDialog(mainWindow, "You have to enter both word and category!", "Please fill out everything", JOptionPane.ERROR_MESSAGE);
+				else if(!w.matches("[A-Za-z]+") || !c.matches("[A-Za-z]+")) {
+					JOptionPane.showMessageDialog(mainWindow, "Use only a-z characters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+					if(!w.matches("[A-Za-z]+"))
+						txt.setText("");
+					if(!c.matches("[A-Za-z]+"))
+						txt2.setText("");
+				} else {
+					word = w;
+					category=c;
+					break;				
 				}
-
 			}
-
-		} while (true);
-				
-	}
-	
-	public static void givingCategoryMainWindow(){
+		} while(true);	
 		
-		String c="";
-		String[] options = {"OK"};
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(80, 50));
-		JLabel lbl = new JLabel("Enter word category: ");
-		JTextField txt = new JTextField(15);
-		panel.add(lbl);
-		panel.add(txt);
-
-		do {
-			int selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
-			if(selectedOption1==JOptionPane.CLOSED_OPTION){
-				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
-						"Leaving the game", JOptionPane.YES_NO_OPTION);
-
-				if (option == JOptionPane.YES_OPTION) {
-					Client.sendQuitTheGameSignal(Client.getOpponent());
-					connectingWindow.setVisible(true);
-					connectingWindow.setLocationRelativeTo(mainWindow);
-					connectingWindow.setEnabled(true);
-					mainWindow.setVisible(false);
-					return;
-				}
-			}
-			if(selectedOption1==0){   
-				c = txt.getText();
-				if(c==null || c.equals("") || c.equals(" ")){
-					JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
-				}else if(!c.matches("[A-Za-z ]+")){
-					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
-				}else{
-					category = c;
-					break;
-				}
-			}
-		} while (true);
-		
+		Client.sendWordSetSignal(Client.getOpponent(), word, category);
+		setOpponentMainWindow();
 	}
 
-	public static void setUpWordAndCategory(){
-		givingWordMainWindow();
-		if(!word.equals("")){
-			givingCategoryMainWindow();
-			if(!category.equals("")){
-				Client.sendWordSetSignal(Client.getOpponent(), word, category);
-				setOpponentMainWindow();
-				
-			}
-			
-		}
-	}
+	//	public static void givingCategoryMainWindow(){
+	//		
+	//		String c="";
+	//		String[] options = {"OK"};
+	//		JPanel panel = new JPanel();
+	//		panel.setPreferredSize(new Dimension(80, 50));
+	//		JLabel lbl = new JLabel("Enter word category: ");
+	//		JTextField txt = new JTextField(15);
+	//		panel.add(lbl);
+	//		panel.add(txt);
+	//
+	//		do {
+	//			int selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
+	//			if(selectedOption1==JOptionPane.CLOSED_OPTION){
+	//				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
+	//						"Leaving the game", JOptionPane.YES_NO_OPTION);
+	//
+	//				if (option == JOptionPane.YES_OPTION) {
+	//					Client.sendQuitTheGameSignal(Client.getOpponent());
+	//					connectingWindow.setVisible(true);
+	//					connectingWindow.setLocationRelativeTo(mainWindow);
+	//					connectingWindow.setEnabled(true);
+	//					mainWindow.setVisible(false);
+	//					return;
+	//				}
+	//			}
+	//			if(selectedOption1==0){   
+	//				c = txt.getText();
+	//				if(c==null || c.equals("") || c.equals(" ")){
+	//					JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
+	//				}else if(!c.matches("[A-Za-z ]+")){
+	//					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
+	//				}else{
+	//					category = c;
+	//					break;
+	//				}
+	//			}
+	//		} while (true);
+	//		
+	//	}
+
+//	public static void setUpWordAndCategory(){
+//		givingWordMainWindow();
+//		if(!word.equals("")){
+//			givingCategoryMainWindow();
+//			if(!category.equals("")){
+//				Client.sendWordSetSignal(Client.getOpponent(), word, category);
+//				setOpponentMainWindow();
+//
+//			}
+//
+//		}
+//	}
 
 	public static void receiveSignalWordSet(String w, String c) {
 		dialogForWord.setVisible(false);
 		setPlayerMainWindow(w, c);
 	}
 
-	
+
 	//Main Window of player guessing the word
 	public static void setPlayerMainWindow(String w, String c){ 
 
@@ -721,12 +731,12 @@ private static void checkGameSentRq() {
 		} 
 		mainWindow.getPanel_1().revalidate();
 		mainWindow.getLblCategory().setVisible(true);
-		
+
 		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 		mainWindow.getlblResult().setVisible(true);
 	}
-	
-// Main Window of player who is setting the word
+
+	// Main Window of player who is setting the word
 	public static void setOpponentMainWindow() { 
 
 		mainWindow.remove(mainWindow.getBtnGuess());
@@ -759,7 +769,7 @@ private static void checkGameSentRq() {
 
 	public static void receiveSignalRightLetter(String letter, String index) {
 		String w= mainWindow.getLblWord().getText();
-	
+
 		w =  w.replace(w.charAt(Integer.parseInt(index))+"", letter.toUpperCase()) ;
 		mainWindow.getLblWord().setText(w);
 
@@ -793,17 +803,17 @@ private static void checkGameSentRq() {
 	public static void receiveSignalStatusWindow(String gameRqNum, String result) {
 		String message="";
 		int r=Integer.parseInt(result);
-		
+
 		Client.sentRequestForGame=Integer.parseInt(gameRqNum);
-	
+
 		if(r==1){
-			 message="Your opponent guessed the word";
-			
+			message="Your opponent guessed the word";
+
 		}
 		else {
 			message="Your opponent didn't guess the word. ";
 		}
-		
+
 		int option;
 		do{
 			option=JOptionPane.showOptionDialog(mainWindow, message+"\n It's your turn to guess", "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
@@ -811,29 +821,29 @@ private static void checkGameSentRq() {
 		} while(option==-1);
 		if(option==0)
 			startGame();
-		
-		
+
+
 	}
 
-	
-// Change result on opponent's Main Window
+
+	// Change result on opponent's Main Window
 	public static void receiveSignalResultChanged(String r1, String r2) {
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
 		Client.setNumOfLosses(Integer.parseInt(r2));
 		Client.setNumOfWins(Integer.parseInt(r1));
-		
+
 	}
 
 	public static void receiveGameOverSignal(String msg) {
 		gameOverWindow(msg);
-		
+
 	}
 
 
 	public static void resetVariables(String opponent){
 		Client.setNumOfLosses(0);
 		Client.setNumOfWins(0);
-		
+
 		errorCount = 0;
 		lettersCorrect = 0;
 		newW = null;
@@ -850,10 +860,10 @@ private static void checkGameSentRq() {
 
 	public static void receiveGameRqNum(String num) {
 		Client.sentRequestForGame=Integer.parseInt(num);
-		
+
 	}
 
-	
+
 }
 
 
