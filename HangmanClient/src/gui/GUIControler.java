@@ -1,6 +1,7 @@
 package gui;
 
 
+import java.awt.Dialog;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -10,12 +11,15 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Random;
 
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -38,6 +42,7 @@ public class GUIControler extends Thread {
 
 	static JDialog dialog = null;
 	static JDialog timeoutDialog = null;
+	static JDialog gameOverDialog = null;
 	static boolean answered = false;
 
 	//public static boolean goodbye = false;
@@ -59,6 +64,7 @@ public class GUIControler extends Thread {
 
 	public static boolean messageAdded = false;
 	
+	public static boolean giving = true;
 
 
 	@Override 
@@ -403,41 +409,109 @@ public class GUIControler extends Thread {
 
 	// gameOver JOptionPane 
 	public static void gameOverWindow(String message){
-		String[] options = new String[] {"Wanna play again?", "Exit game"};
-		int response = JOptionPane.showOptionDialog(mainWindow, message, "Game Status",
-				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-				null, options, options[0]);
+				
+		JButton btnAgain = new JButton("Wanna play again?");
+		JButton btnExit = new JButton("Exit game");
+		
+		Object[] options = new Object[] {btnAgain, btnExit};
+//		Object[] options = new Object[] {"Wanna play again?", "Exit game"};
+		JOptionPane paneGameOver = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE,  JOptionPane.YES_NO_OPTION, null, options);
 
-		if(response==0){ //ponovo igraju
-			Client.setNumOfLosses(0);
-			Client.setNumOfWins(0);
-			errorCount = 0;
-			lettersCorrect = 0;
-			newW = null;
-			mainWindow.listOfButtons.clear();
-			end = 0;
+		gameOverDialog = paneGameOver.createDialog(mainWindow.getContentPane(), "Game Status!");
+		gameOverDialog.setModalityType(Dialog.ModalityType.MODELESS);;
+		gameOverDialog.setVisible(true);
 
-			startGame();
-		}
-		if(response==1){ //vracaju se na izbor igraca
-			resetVariables(Client.getOpponent());
-			Client.sendQuitTheGameSignal(Client.getOpponent());
-			connectingWindow.setLocationRelativeTo(mainWindow);
-			connectingWindow.setEnabled(true);
-			connectingWindow.setVisible(true);
-			mainWindow.setVisible(false);
-			System.out.println("dskjnsjk");
-		}
-		if(response==-1){ //pritisnuto x
-			resetVariables(Client.getOpponent());
-			Client.sendQuitTheGameSignal(Client.getOpponent());
+		gameOverDialog.addWindowListener(new WindowAdapter() 
+		{
+		  public void windowClosing(WindowEvent e)
+		  {
+			  int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
+						"Leaving the game", JOptionPane.YES_NO_OPTION);
 
-			connectingWindow.setLocationRelativeTo(mainWindow);
-			connectingWindow.setEnabled(true);
-			connectingWindow.setVisible(true);
-			mainWindow.setVisible(false);
-			return;
-		}
+				if (option == JOptionPane.YES_OPTION) {
+					Client.sendQuitTheGameSignal(Client.getOpponent());
+					resetVariables(Client.getOpponent());
+					connectingWindow.setLocationRelativeTo(mainWindow);
+					connectingWindow.setEnabled(true);
+					connectingWindow.setVisible(true);
+					mainWindow.setVisible(false);
+					return;
+				}else if(option == JOptionPane.NO_OPTION){
+					gameOverDialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				}
+		  }
+		});
+		
+		
+		
+		
+		btnAgain.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Client.setNumOfLosses(0);
+				Client.setNumOfWins(0);
+				errorCount = 0;
+				lettersCorrect = 0;
+				newW = null;
+				mainWindow.listOfButtons.clear();
+				end = 0;
+				
+	
+				startGame();
+			}
+		}); 
+		
+		btnExit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				resetVariables(Client.getOpponent());
+				Client.sendQuitTheGameSignal(Client.getOpponent());
+				connectingWindow.setLocationRelativeTo(mainWindow);
+				connectingWindow.setEnabled(true);
+				connectingWindow.setVisible(true);
+				mainWindow.setVisible(false);
+				return;
+			}
+		}); 
+		
+		
+
+		
+		//		String[] options = new String[] {"Wanna play again?", "Exit game"};
+//		int response = JOptionPane.showOptionDialog(mainWindow, message, "Game Status",
+//				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+//				null, options, options[0]);
+//
+//		if(response==0){ //ponovo igraju
+//			Client.setNumOfLosses(0);
+//			Client.setNumOfWins(0);
+//			errorCount = 0;
+//			lettersCorrect = 0;
+//			newW = null;
+//			mainWindow.listOfButtons.clear();
+//			end = 0;
+//
+//			startGame();
+//		}
+//		if(response==1){ //vracaju se na izbor igraca
+//			resetVariables(Client.getOpponent());
+//			Client.sendQuitTheGameSignal(Client.getOpponent());
+//			connectingWindow.setLocationRelativeTo(mainWindow);
+//			connectingWindow.setEnabled(true);
+//			connectingWindow.setVisible(true);
+//			mainWindow.setVisible(false);
+//			System.out.println("dskjnsjk");
+//		}
+//		if(response==-1){ //pritisnuto x
+//			resetVariables(Client.getOpponent());
+//			Client.sendQuitTheGameSignal(Client.getOpponent());
+//
+//			connectingWindow.setLocationRelativeTo(mainWindow);
+//			connectingWindow.setEnabled(true);
+//			connectingWindow.setVisible(true);
+//			mainWindow.setVisible(false);
+//			return;
+//		}
 
 	}
 
@@ -551,6 +625,7 @@ public class GUIControler extends Thread {
 
 	public static void startGame() {
 		if(mainWindow!=null){
+			giving = true;
 			mainWindow.setVisible(false);
 			mainWindow= new MainWindow();
 			mainWindow.setLocationRelativeTo(connectingWindow);
@@ -612,6 +687,8 @@ public class GUIControler extends Thread {
 					connectingWindow.setVisible(true);
 					mainWindow.setVisible(false);
 					return;
+				}else if(option == JOptionPane.NO_OPTION){
+					dialogForWord.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				}
 		  }
 		});
@@ -637,19 +714,25 @@ public class GUIControler extends Thread {
 
 		do {
 			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panelWord, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
-			if(selectedOption==JOptionPane.CLOSED_OPTION){
-				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
-						"Leaving the game", JOptionPane.YES_NO_OPTION);
-
-				if (option == JOptionPane.YES_OPTION) {
-					Client.sendQuitTheGameSignal(Client.getOpponent());
-					resetVariables(Client.getOpponent());
-					connectingWindow.setVisible(true);
-					connectingWindow.setLocationRelativeTo(mainWindow);
-					connectingWindow.setEnabled(true);
-					mainWindow.setVisible(false);
-					return;
+			
+			if(giving == true){
+				if(selectedOption==JOptionPane.CLOSED_OPTION){
+					int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
+							"Leaving the game", JOptionPane.YES_NO_OPTION);
+					
+					if (option == JOptionPane.YES_OPTION) {
+						Client.sendQuitTheGameSignal(Client.getOpponent());
+						resetVariables(Client.getOpponent());
+						connectingWindow.setVisible(true);
+						connectingWindow.setLocationRelativeTo(mainWindow);
+						connectingWindow.setEnabled(true);
+						mainWindow.setVisible(false);
+						return;
+					}
 				}
+				
+			}else{
+				return;
 			}
 			if(selectedOption==JOptionPane.OK_OPTION){   
 				w = txt.getText();
@@ -720,6 +803,8 @@ public class GUIControler extends Thread {
 		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
 		mainWindow.getlblResult().setVisible(true);
 
+		
+		
 	}
 
 
@@ -754,17 +839,20 @@ public class GUIControler extends Thread {
 
 
 
-	public static void recieveQuitTheGameSignal(String name) {
+	public static void receiveQuitTheGameSignal(String name) {
 
 		if(dialogForWord!=null)
 			dialogForWord.setVisible(false);
+		giving=false;		
 		
+		System.out.println("signal received");
 		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game. Please choose another player to play with.");
 		resetVariables(name);
 		connectingWindow.setEnabled(true);
 		connectingWindow.setLocationRelativeTo(mainWindow);
 		connectingWindow.setVisible(true);
 		mainWindow.setVisible(false);
+		
 
 	}
 
@@ -819,6 +907,7 @@ public class GUIControler extends Thread {
 		end = 0;
 		Client.sentRequestForGame=0;
 		Client.sendSignalResetWinsLosses(opponent);
+		
 	}
 
 	public static void receiveSignalResetWinsLosses() {
