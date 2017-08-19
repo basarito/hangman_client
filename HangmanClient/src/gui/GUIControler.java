@@ -557,6 +557,7 @@ public class GUIControler extends Thread {
 			//mora sledeci red da stoji da bi se sklanjao connectingWindow kad se pokrece igra nakon iskljucivanja
 			//prethodne 
 			connectingWindow.setVisible(false);
+			mainWindow.setVisible(true);
 			mainWindow.getLblWord().setText("");
 			mainWindow.getTxtpnABC().setText("");
 			mainWindow.getPanel_5().removeAll();
@@ -642,9 +643,7 @@ public class GUIControler extends Thread {
 
 				if (option == JOptionPane.YES_OPTION) {
 					Client.sendQuitTheGameSignal(Client.getOpponent());
-					Client.sentRequestForGame=0;
 					resetVariables(Client.getOpponent());
-					//					System.out.println("quit signal sent");
 					connectingWindow.setVisible(true);
 					connectingWindow.setLocationRelativeTo(mainWindow);
 					connectingWindow.setEnabled(true);
@@ -658,7 +657,7 @@ public class GUIControler extends Thread {
 
 				if(w.isEmpty() || c.isEmpty())
 					JOptionPane.showMessageDialog(mainWindow, "You have to enter both word and category!", "Please fill out everything", JOptionPane.ERROR_MESSAGE);
-				else if(!w.matches("[A-Za-z]+") || !c.matches("[A-Za-z]+")) {
+				else if(!w.matches("[A-Za-z]+") || !c.matches("[A-Za-z][A-Za-z ]*")) {
 					JOptionPane.showMessageDialog(mainWindow, "Use only a-z characters!", "Not a word", JOptionPane.ERROR_MESSAGE);
 					if(!w.matches("[A-Za-z]+"))
 						txt.setText("");
@@ -675,60 +674,6 @@ public class GUIControler extends Thread {
 		Client.sendWordSetSignal(Client.getOpponent(), word, category);
 		setOpponentMainWindow();
 	}
-
-	//	public static void givingCategoryMainWindow(){
-	//		
-	//		String c="";
-	//		String[] options = {"OK"};
-	//		JPanel panel = new JPanel();
-	//		panel.setPreferredSize(new Dimension(80, 50));
-	//		JLabel lbl = new JLabel("Enter word category: ");
-	//		JTextField txt = new JTextField(15);
-	//		panel.add(lbl);
-	//		panel.add(txt);
-	//
-	//		do {
-	//			int selectedOption1 = JOptionPane.showOptionDialog(mainWindow, panel, "Now give us word category!", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
-	//			if(selectedOption1==JOptionPane.CLOSED_OPTION){
-	//				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
-	//						"Leaving the game", JOptionPane.YES_NO_OPTION);
-	//
-	//				if (option == JOptionPane.YES_OPTION) {
-	//					Client.sendQuitTheGameSignal(Client.getOpponent());
-	//					connectingWindow.setVisible(true);
-	//					connectingWindow.setLocationRelativeTo(mainWindow);
-	//					connectingWindow.setEnabled(true);
-	//					mainWindow.setVisible(false);
-	//					return;
-	//				}
-	//			}
-	//			if(selectedOption1==0){   
-	//				c = txt.getText();
-	//				if(c==null || c.equals("") || c.equals(" ")){
-	//					JOptionPane.showMessageDialog(mainWindow, "You have to type something!", "Not a word", JOptionPane.ERROR_MESSAGE);
-	//				}else if(!c.matches("[A-Za-z ]+")){
-	//					JOptionPane.showMessageDialog(mainWindow, "Use only a-z caracters!", "Not a word", JOptionPane.ERROR_MESSAGE);
-	//				}else{
-	//					category = c;
-	//					break;
-	//				}
-	//			}
-	//		} while (true);
-	//		
-	//	}
-
-	//	public static void setUpWordAndCategory(){
-	//		givingWordMainWindow();
-	//		if(!word.equals("")){
-	//			givingCategoryMainWindow();
-	//			if(!category.equals("")){
-	//				Client.sendWordSetSignal(Client.getOpponent(), word, category);
-	//				setOpponentMainWindow();
-	//
-	//			}
-	//
-	//		}
-	//	}
 
 	public static void receiveSignalWordSet(String w, String c) {
 		dialogForWord.setVisible(false);
@@ -810,13 +755,12 @@ public class GUIControler extends Thread {
 
 
 	public static void recieveQuitTheGameSignal(String name) {
-		if(wordInputDialog.isVisible()) {
-			wordInputDialog.setVisible(false);
-		}
+
 		if(dialogForWord!=null)
 			dialogForWord.setVisible(false);
+		
 		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game. Please choose another player to play with.");
-		Client.sentRequestForGame=0;
+		resetVariables(name);
 		connectingWindow.setEnabled(true);
 		connectingWindow.setLocationRelativeTo(mainWindow);
 		connectingWindow.setVisible(true);

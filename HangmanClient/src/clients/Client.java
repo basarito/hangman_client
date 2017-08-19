@@ -71,7 +71,7 @@ public class Client {
 public static void main(String[] args) {
 		
 		try {
-			int port = 6666;
+			int port = 5555;
 			
 			if(args.length>0)
 				port = Integer.parseInt(args[0]);
