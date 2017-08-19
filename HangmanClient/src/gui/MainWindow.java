@@ -137,7 +137,7 @@ public class MainWindow extends JFrame {
 	public JLabel getLblWord() {
 		if (lblWord==null){
 			lblWord = new JLabel();
-			lblWord.setPreferredSize(new Dimension(200, 30));
+			lblWord.setPreferredSize(new Dimension(400, 30));
 			lblWord.setFont(new Font("Arial", Font.BOLD, 20));
 		}
 		return lblWord;
@@ -543,7 +543,7 @@ public class MainWindow extends JFrame {
 	public JLabel getLblTip() {
 		if (lblTip==null){
 			lblTip= new JLabel();
-			lblTip.setPreferredSize(new Dimension(300, 10));
+			lblTip.setPreferredSize(new Dimension(300, 15));
 			lblTip.setFont(new Font("Arial", Font.ITALIC, 10));
 		}
 		return lblTip;
