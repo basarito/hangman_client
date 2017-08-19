@@ -220,8 +220,7 @@ public class MainWindow extends JFrame {
 					 
 					 if(textField.getText().length() > 0) {
 					 		e.consume();
-					 }
-		               
+					 }	               
 				            
 				 }
 				 @Override

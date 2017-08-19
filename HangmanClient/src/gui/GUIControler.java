@@ -1,14 +1,17 @@
 package gui;
 
 
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Random;
 
 
@@ -51,8 +54,11 @@ public class GUIControler extends Thread {
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
 	private static JDialog dialogForGameStatus;
+	public static JDialog wordInputDialog=null;
+	
 
 	public static boolean messageAdded = false;
+	
 
 
 	@Override 
@@ -106,8 +112,8 @@ public class GUIControler extends Thread {
 			mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			Client.sendQuitTheGameSignal(Client.getOpponent());
 			resetVariables(Client.getOpponent());
-			connectingWindow.setVisible(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
+			connectingWindow.setVisible(true);
 			connectingWindow.setEnabled(true);
 			mainWindow.setVisible(false);
 			return;
@@ -164,7 +170,7 @@ public class GUIControler extends Thread {
 	//Select user from the list to send invite
 	public static void choose(String user) {
 		if(Client.activeGames.contains(user)) {
-			JOptionPane.showMessageDialog(connectingWindow, user+" is already playing a game. Try a different user or try again later.",
+			JOptionPane.showMessageDialog(connectingWindow.getContentPane(), user+" is already playing a game. Try a different user or try again later.",
 					"User unavailable", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -197,12 +203,7 @@ public class GUIControler extends Thread {
 
 	//Receive and handle response to invite
 	public static void receiveResponseToInvite(String name, String response) {
-		//		if(response.equals("BUSY")) {
-		//			dialog.setVisible(false);
-		//			connectingWindow.setEnabled(true);
-		//			JOptionPane.showMessageDialog(connectingWindow, "User "+name+" is already playing a game. Try a different user or try again later.",
-		//					"Connection failed", JOptionPane.ERROR_MESSAGE);
-		//		}
+
 		if(response.equals("ACCEPTED")) {			
 			Client.setOpponent(name);
 			//Client.changeGameStatus("true");
@@ -224,8 +225,8 @@ public class GUIControler extends Thread {
 	//Random button functionality 
 	public static void chooseRandom() {
 		if(Client.onlineLista.isEmpty() || (Client.onlineLista.size()==Client.activeGames.size())){
-			JOptionPane.showMessageDialog(connectingWindow, "There are no available players at the moment!");						
-		}else{
+			JOptionPane.showMessageDialog(connectingWindow.getContentPane(), "There are no available players at the moment!");						
+		} else {
 			Random randomizer = new Random();
 			String random = "";
 
@@ -239,7 +240,6 @@ public class GUIControler extends Thread {
 
 			int option = JOptionPane.showConfirmDialog(connectingWindow.getContentPane(), random+" is available. Do you want to play with them? ",
 					"Connecting", JOptionPane.YES_NO_OPTION);
-
 
 			if(option == JOptionPane.YES_OPTION){
 				tryOpponent = random;
@@ -422,9 +422,9 @@ public class GUIControler extends Thread {
 		if(response==1){ //vracaju se na izbor igraca
 			resetVariables(Client.getOpponent());
 			Client.sendQuitTheGameSignal(Client.getOpponent());
-			connectingWindow.setVisible(true);
-			connectingWindow.setEnabled(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
+			connectingWindow.setEnabled(true);
+			connectingWindow.setVisible(true);
 			mainWindow.setVisible(false);
 			System.out.println("dskjnsjk");
 		}
@@ -432,9 +432,9 @@ public class GUIControler extends Thread {
 			resetVariables(Client.getOpponent());
 			Client.sendQuitTheGameSignal(Client.getOpponent());
 
-			connectingWindow.setVisible(true);
 			connectingWindow.setLocationRelativeTo(mainWindow);
 			connectingWindow.setEnabled(true);
+			connectingWindow.setVisible(true);
 			mainWindow.setVisible(false);
 			return;
 		}
@@ -484,7 +484,7 @@ public class GUIControler extends Thread {
 
 		int input;
 		do {
-			input = JOptionPane.showOptionDialog(mainWindow, message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+			input = JOptionPane.showOptionDialog(mainWindow.getContentPane(), message, "Status", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 		} while(input==-1);
 		if(input==0) {
 			startGame();
@@ -594,6 +594,27 @@ public class GUIControler extends Thread {
 		dialogForWord.pack();
 		dialogForWord.setLocationRelativeTo(mainWindow);
 		dialogForWord.setVisible(true);
+		
+		dialogForWord.addWindowListener(new WindowAdapter() 
+		{
+		  public void windowClosing(WindowEvent e)
+		  {
+			  int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
+						"Leaving the game", JOptionPane.YES_NO_OPTION);
+
+				if (option == JOptionPane.YES_OPTION) {
+					Client.sendQuitTheGameSignal(Client.getOpponent());
+					Client.sentRequestForGame=0;
+					resetVariables(Client.getOpponent());
+					connectingWindow.setLocationRelativeTo(mainWindow);
+					connectingWindow.setEnabled(true);
+					connectingWindow.setVisible(true);
+					mainWindow.setVisible(false);
+					return;
+				}
+		  }
+		});
+		
 		mainWindow.setEnabled(false);
 	}
 
@@ -602,19 +623,19 @@ public class GUIControler extends Thread {
 		String w="";
 		String c="";
 		String[] options = {"OK"};
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(80, 100));
+		JPanel panelWord = new JPanel();
+		panelWord.setPreferredSize(new Dimension(80, 100));
 		JLabel lbl = new JLabel("Enter a word: ");
 		JTextField txt = new JTextField(15);
 		JLabel lbl2 = new JLabel("Enter a category:");
 		JTextField txt2 = new JTextField(15);
-		panel.add(lbl);
-		panel.add(txt);
-		panel.add(lbl2);
-		panel.add(txt2);
+		panelWord.add(lbl);
+		panelWord.add(txt);
+		panelWord.add(lbl2);
+		panelWord.add(txt2);
 
 		do {
-			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panel, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
+			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panelWord, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
 			if(selectedOption==JOptionPane.CLOSED_OPTION){
 				int option = JOptionPane.showConfirmDialog(mainWindow, "Are you sure you want to quit the game?",
 						"Leaving the game", JOptionPane.YES_NO_OPTION);
@@ -623,7 +644,7 @@ public class GUIControler extends Thread {
 					Client.sendQuitTheGameSignal(Client.getOpponent());
 					Client.sentRequestForGame=0;
 					resetVariables(Client.getOpponent());
-//					System.out.println("quit signal sent");
+					//					System.out.println("quit signal sent");
 					connectingWindow.setVisible(true);
 					connectingWindow.setLocationRelativeTo(mainWindow);
 					connectingWindow.setEnabled(true);
@@ -650,7 +671,7 @@ public class GUIControler extends Thread {
 				}
 			}
 		} while(true);	
-		
+
 		Client.sendWordSetSignal(Client.getOpponent(), word, category);
 		setOpponentMainWindow();
 	}
@@ -696,18 +717,18 @@ public class GUIControler extends Thread {
 	//		
 	//	}
 
-//	public static void setUpWordAndCategory(){
-//		givingWordMainWindow();
-//		if(!word.equals("")){
-//			givingCategoryMainWindow();
-//			if(!category.equals("")){
-//				Client.sendWordSetSignal(Client.getOpponent(), word, category);
-//				setOpponentMainWindow();
-//
-//			}
-//
-//		}
-//	}
+	//	public static void setUpWordAndCategory(){
+	//		givingWordMainWindow();
+	//		if(!word.equals("")){
+	//			givingCategoryMainWindow();
+	//			if(!category.equals("")){
+	//				Client.sendWordSetSignal(Client.getOpponent(), word, category);
+	//				setOpponentMainWindow();
+	//
+	//			}
+	//
+	//		}
+	//	}
 
 	public static void receiveSignalWordSet(String w, String c) {
 		dialogForWord.setVisible(false);
@@ -789,13 +810,16 @@ public class GUIControler extends Thread {
 
 
 	public static void recieveQuitTheGameSignal(String name) {
+		if(wordInputDialog.isVisible()) {
+			wordInputDialog.setVisible(false);
+		}
 		if(dialogForWord!=null)
 			dialogForWord.setVisible(false);
-		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game; Please choose another player to play with.");
+		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game. Please choose another player to play with.");
 		Client.sentRequestForGame=0;
-		connectingWindow.setVisible(true);
 		connectingWindow.setEnabled(true);
 		connectingWindow.setLocationRelativeTo(mainWindow);
+		connectingWindow.setVisible(true);
 		mainWindow.setVisible(false);
 
 	}
