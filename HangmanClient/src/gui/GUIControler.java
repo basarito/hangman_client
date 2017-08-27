@@ -58,7 +58,7 @@ public class GUIControler extends Thread {
 	static String usernameToValidate = "";
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
-	private static JDialog dialogForGameStatus;
+	//private static JDialog dialogForGameStatus;
 	public static JDialog wordInputDialog=null;
 	
 
@@ -216,6 +216,7 @@ public class GUIControler extends Thread {
 			dialog.setVisible(false);
 			Client.sentRequestForGame=1;
 			startGame();
+			//Client.gameActive = true;
 		}
 		else if(response.equals("REJECTED")) {
 			dialog.setVisible(false);
@@ -410,7 +411,7 @@ public class GUIControler extends Thread {
 	// gameOver JOptionPane 
 	public static void gameOverWindow(String message){
 				
-		JButton btnAgain = new JButton("Wanna play again?");
+		JButton btnAgain = new JButton("Play again");
 		JButton btnExit = new JButton("Exit game");
 		
 		Object[] options = new Object[] {btnAgain, btnExit};
@@ -624,6 +625,7 @@ public class GUIControler extends Thread {
 	}
 
 	public static void startGame() {
+		//Client.gameActive = true;
 		if(mainWindow!=null){
 			giving = true;
 			mainWindow.setVisible(false);
@@ -845,11 +847,12 @@ public class GUIControler extends Thread {
 			dialogForWord.setVisible(false);
 		giving=false;		
 		
-		System.out.println("signal received");
-		JOptionPane.showMessageDialog(mainWindow, name+" has quit the game. Please choose another player to play with.");
+		//System.out.println("signal received");
+		if(!connectingWindow.isVisible())
+			JOptionPane.showMessageDialog(mainWindow, name+" has quit the game. Please choose another player to play with.");
 		resetVariables(name);
-		connectingWindow.setEnabled(true);
 		connectingWindow.setLocationRelativeTo(mainWindow);
+		connectingWindow.setEnabled(true);
 		connectingWindow.setVisible(true);
 		mainWindow.setVisible(false);
 		
@@ -905,6 +908,7 @@ public class GUIControler extends Thread {
 		newW = null;
 		mainWindow.listOfButtons.clear();
 		end = 0;
+		//Client.gameActive = false;
 		Client.sentRequestForGame=0;
 		Client.sendSignalResetWinsLosses(opponent);
 		

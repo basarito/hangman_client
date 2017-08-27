@@ -34,7 +34,7 @@ public class Client {
 	
 	public static DefaultListModel<String> chatHistory = new DefaultListModel<>();
 	
-	//static boolean gameActive = false;
+	//public static boolean gameActive = false;
 	
 	public static int getNumOfLosses() {
 		return numOfLosses;
@@ -135,6 +135,7 @@ public static void main(String[] args) {
 		serverOutput.println("/RSVPTO:"+name+":ACCEPTED");
 		setOpponent(name);		
 		GUIControler.startGame();
+		//gameActive = true;
 		
 	}
 
@@ -171,6 +172,7 @@ public static void main(String[] args) {
 
 	public static void sendQuitTheGameSignal(String opponent){
 		serverOutput.println("/QUIT:"+opponent);
+		//gameActive = false;
 	}
 	
 

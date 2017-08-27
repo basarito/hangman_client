@@ -76,7 +76,7 @@ public class MainWindow extends JFrame {
 	private JList<String> list;
 	private JLabel lblTip;
 	private JLabel lblResult;
-	
+
 
 	/**
 	 * Create the frame.
@@ -84,8 +84,8 @@ public class MainWindow extends JFrame {
 	public MainWindow() {
 		setResizable(false);
 		setMinimumSize(new Dimension(800, 480));
-		
-		
+
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -114,7 +114,7 @@ public class MainWindow extends JFrame {
 		getPanel_2().add(getPanel_5(), BorderLayout.SOUTH);
 		//getPanel_5().add(getBtnLetter());
 		//GameLogic.insertButtonsForLetters();
-		
+
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
@@ -127,12 +127,12 @@ public class MainWindow extends JFrame {
 		getlblResult().setVisible(false);
 	}
 
-	
+
 	public static void setIconImage(){
-		
+
 	}
-	
-	
+
+
 
 	public JLabel getLblWord() {
 		if (lblWord==null){
@@ -153,22 +153,22 @@ public class MainWindow extends JFrame {
 			scrollPane.setColumnHeaderView(getLblChatbox());
 			//scrollPane.setViewportView(getChatbox());
 			scrollPane.setViewportView(getList());
-			
+
 			scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
-		        public void adjustmentValueChanged(AdjustmentEvent e) { 
-		        	if (GUIControler.messageAdded) {
-		        		e.getAdjustable().setValue(e.getAdjustable().getMaximum()); 
-		        		GUIControler.messageAdded=false;
-		        	}
-		        }
-		    });
+				public void adjustmentValueChanged(AdjustmentEvent e) { 
+					if (GUIControler.messageAdded) {
+						e.getAdjustable().setValue(e.getAdjustable().getMaximum()); 
+						GUIControler.messageAdded=false;
+					}
+				}
+			});
 
 		}
 
 		return scrollPane;
 	}
-	
-	
+
+
 	public JLabel getLblChatbox() {
 		if(lblChatbox == null){
 			lblChatbox = new JLabel("CHATBOX");
@@ -205,43 +205,43 @@ public class MainWindow extends JFrame {
 	public static JTextField getTextField() {
 		if(textField == null){
 			textField = new JTextField(){
-				
+
 			};
 			textField.setFont(new Font("Arial Black", Font.PLAIN, 20));
 			textField.setSize(new Dimension(20, 20));
 			textField.setMinimumSize(new Dimension(20, 20));
 			textField.setMaximumSize(new Dimension(100, 20));
 			textField.setColumns(3);
-			
-			
-			
+
+
+
 			textField.addKeyListener(new KeyAdapter(){
-				 public void keyTyped(KeyEvent e) { 
-					 
-					 if(textField.getText().length() > 0) {
-					 		e.consume();
-					 }	               
-				            
-				 }
-				 @Override
-					public void keyPressed(KeyEvent e) {
-						if(e.getKeyCode() == KeyEvent.VK_ENTER){
-							if(textField.getText()!=null && textField.getText()!=""){
-								GUIControler.placeTheLetter();
-							}
+				public void keyTyped(KeyEvent e) { 
+
+					if(textField.getText().length() > 0) {
+						e.consume();
+					}	               
+
+				}
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_ENTER){
+						if(textField.getText()!=null && textField.getText()!=""){
+							GUIControler.placeTheLetter();
 						}
 					}
-});
-			
+				}
+			});
 
-			
-				
-			
-			
+
+
+
+
+
 		}
 		return textField;
 	}
-	
+
 
 	public JButton getBtnGuess() {
 		if(btnGuess == null){
@@ -249,22 +249,22 @@ public class MainWindow extends JFrame {
 			btnGuess.setBackground(new Color(221, 160, 221));
 			btnGuess.setForeground(new Color(255, 255, 255));
 			btnGuess.setFont(new Font("Arial", Font.BOLD, 13));
-			
-			
+
+
 			if(textField.getText() == null){
-			    btnGuess.setEnabled(false);
+				btnGuess.setEnabled(false);
 			}
 			else {
 				btnGuess.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-							GUIControler.placeTheLetter();
-							getTextField().requestFocusInWindow();
-						
-						
+						GUIControler.placeTheLetter();
+						getTextField().requestFocusInWindow();
+
+
 					}
 				});
-			
+
 			}
 		}
 
@@ -285,9 +285,9 @@ public class MainWindow extends JFrame {
 		if(panel_3 ==null){
 			panel_3 = new JPanel();
 			panel_3.setLayout(new BorderLayout(0,0));
-			
-			
-			
+
+
+
 		}
 
 		return panel_3;
@@ -302,8 +302,8 @@ public class MainWindow extends JFrame {
 			txtpnABC.setFont(new Font("Viner Hand ITC", Font.BOLD, 20));
 			txtpnABC.setEditable(false);
 			txtpnABC.setText(" ");
-			
-			
+
+
 		}
 
 		return txtpnABC;
@@ -320,7 +320,7 @@ public class MainWindow extends JFrame {
 			txtrLettersYou.setWrapStyleWord(true);
 			txtrLettersYou.setLineWrap(true);
 			txtrLettersYou.setText("\r\nLetters you got wrong:\r\n");
-			
+
 		}
 
 		return txtrLettersYou;
@@ -331,26 +331,26 @@ public class MainWindow extends JFrame {
 			panel_4 = new JPanel();
 			panel_4.setPreferredSize(new Dimension(10, 20));
 			panel_4.setLayout(null);
-			
-		
-			
+
+
+
 		}
 
 		return panel_4;
 	}
-	
+
 	public JLabel getlblResult(){
 		if(lblResult == null){
 			lblResult = new JLabel();
 			lblResult.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblResult.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
 			lblResult.setForeground(new Color(0, 0, 0));
-			
+
 			lblResult.setBounds(433, 0, 121, 20);
 		}
 		return lblResult;
 	}
-	
+
 
 	public static JPanel getPanel_5() {
 		if(panel_5 == null){
@@ -364,20 +364,20 @@ public class MainWindow extends JFrame {
 	}
 
 	public static JButton getBtnLetter() {
-			btnLetter = new JButton("__");
-			btnLetter.setBorderPainted( false );
-			btnLetter.setFocusPainted( false );
-			btnLetter.setContentAreaFilled( false );
-			btnLetter.setFont(new Font("Arial Black", Font.PLAIN, 20));
-			btnLetter.setMargin(new Insets(0, 0, 0, 0));
-			btnLetter.setVisible(true);
-			listOfButtons.add(btnLetter);
-			
+		btnLetter = new JButton("__");
+		btnLetter.setBorderPainted( false );
+		btnLetter.setFocusPainted( false );
+		btnLetter.setContentAreaFilled( false );
+		btnLetter.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		btnLetter.setMargin(new Insets(0, 0, 0, 0));
+		btnLetter.setVisible(true);
+		listOfButtons.add(btnLetter);
+
 
 		return btnLetter;
 	}
-	
-	
+
+
 
 	public JPanel getPanel_6() {
 		if(panel_6 == null){
@@ -427,7 +427,7 @@ public class MainWindow extends JFrame {
 			lblUserVsUser.setBounds(103, 0, 461, 22);
 			lblUserVsUser.setForeground(new Color(153, 50, 204));
 			lblUserVsUser.setFont(new Font("Arial", Font.BOLD, 15));
-			
+
 		}
 
 		return lblUserVsUser;
@@ -443,10 +443,10 @@ public class MainWindow extends JFrame {
 		}
 		return lblCategory;
 	}
-	
-	
+
+
 	/***************CHATBOX**********************/
-	
+
 	public JScrollPane getScrollPane_1_1() {
 		if (scrollPane_1 == null) {
 			scrollPane_1 = new JScrollPane();
@@ -465,7 +465,7 @@ public class MainWindow extends JFrame {
 			txtMessage.setText("Write your message here...");
 			txtMessage.setForeground(new Color(216, 191, 216));
 			txtMessage.setMargin(new Insets(5, 5, 5, 5));
-			
+
 			txtMessage.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -473,7 +473,7 @@ public class MainWindow extends JFrame {
 					txtMessage.setForeground(new Color(0, 0, 0));
 				}
 			});	
-			
+
 			txtMessage.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -499,7 +499,7 @@ public class MainWindow extends JFrame {
 			btnSend.setForeground(Color.WHITE);
 			btnSend.setFont(new Font("Arial", Font.BOLD, 13));
 			btnSend.setBounds(584, 417, 200, 23);
-			
+
 			btnSend.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -510,31 +510,31 @@ public class MainWindow extends JFrame {
 					}
 					txtMessage.setText("Write your message here...");
 					txtMessage.setForeground(new Color(216, 191, 216)); 
-					
+
 				}
 			});
-			
+
 		}
 		return btnSend;
 	}
 	private JList getList() {
 		if (list == null) {
 			list = new JList(Client.chatHistory);
-			
+
 			list.setBackground(Color.DARK_GRAY);
-			
+
 			//custom rendering of cells:
 			list.setCellRenderer(new MyCellRenderer());
 
-		    ComponentListener l = new ComponentAdapter() {
-		        @Override
-		        public void componentResized(ComponentEvent e) {
-		            // for core: force cache invalidation by temporarily setting fixed height
-		            list.setFixedCellHeight(10);
-		            list.setFixedCellHeight(-1);
-		        }
-		    };
-		    list.addComponentListener(l);			
+			ComponentListener l = new ComponentAdapter() {
+				@Override
+				public void componentResized(ComponentEvent e) {
+					// for core: force cache invalidation by temporarily setting fixed height
+					list.setFixedCellHeight(10);
+					list.setFixedCellHeight(-1);
+				}
+			};
+			list.addComponentListener(l);			
 		}
 		return list;
 	}
