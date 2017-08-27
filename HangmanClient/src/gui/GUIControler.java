@@ -1,14 +1,11 @@
 package gui;
 
-
 import java.awt.Dialog;
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Random;
-
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -59,7 +55,6 @@ public class GUIControler extends Thread {
 	private static JDialog dialogForWord;
 	public static JDialog wordInputDialog=null;
 	
-
 	public static boolean messageAdded = false;
 	
 	public static boolean giving = true;
@@ -160,7 +155,6 @@ public class GUIControler extends Thread {
 			JOptionPane.showMessageDialog(welcomeWindow, "Username already taken. Please choose a different one.", "Try again :(", JOptionPane.ERROR_MESSAGE);			
 		} else {
 			Client.setUsername(usernameToValidate);
-			System.out.println("******"+Client.getUsername().toUpperCase()+"******");
 			showConnectingWindow();
 		}
 
@@ -266,6 +260,7 @@ public class GUIControler extends Thread {
 		}	
 	} 
 
+	//Update online users
 	public static void updateTable() {
 		connectingWindow.refreshTable();
 	}	
@@ -279,8 +274,8 @@ public class GUIControler extends Thread {
 		img = new ImageIcon(img2);
 		mainWindow.getLblSlika().setIcon(img);
 
-
-	} 	
+	}
+	
 	// Place guessed and not guessed letters on Main Window
 	public static void placeTheLetter(String text) {
 		letter = text.toLowerCase();
@@ -340,7 +335,6 @@ public class GUIControler extends Thread {
 				default : break;
 				}
 			} else if(newW!=null && newW.contains(letter)) {
-				System.out.println(newW);
 				return;
 			} else {
 				for (int i=0; i<w.length(); i++){
@@ -467,13 +461,9 @@ public class GUIControler extends Thread {
 				return;
 			}
 		}); 
-		
-		
-
 	}
 
 	// Changing Hangman picture of player and opponent and placing letter that is not guessed on opponent Main Window
-
 	public static void changeHangmnPicAndPlaceWrongLetter(String url, String opponent, String letter1) {
 		setHangmanImage(url);
 		Client.changeHangmanPictureSignal(url, opponent);
@@ -482,7 +472,6 @@ public class GUIControler extends Thread {
 	}
 
 	// Calculate number of letters in word that should be guessed
-
 	public static int numberOfLettersInAWord(String word, String l) {
 		int count=0;
 		for(int i=0; i<word.length(); i++){
@@ -496,8 +485,6 @@ public class GUIControler extends Thread {
 
 	// Sending signal for changing result and showing game status window on opponent's Main Window
 	// Switching the users roles (one who was guessing is now setting the word)
-
-
 	public static void sendingResultNClearingValues(String opponent, String r1, String r2){
 		Client.sentRequestForGame=0;
 		mainWindow.getlblResult().setText("Result: "+r1+":"+r2);
@@ -752,9 +739,7 @@ public class GUIControler extends Thread {
 		mainWindow.getPanel_1().repaint();
 		mainWindow.getLblCategory().setVisible(true);
 		mainWindow.getLblCategory().setText(mainWindow.getLblCategory().getText()+" "+category);
-		mainWindow.getlblResult().setVisible(true);
-
-		
+		mainWindow.getlblResult().setVisible(true);		
 		
 	}
 
@@ -778,13 +763,12 @@ public class GUIControler extends Thread {
 	}
 
 
-	//CHATBOX
+	//Add message to the chatbox
 	public static void addMessage(String username, String message) {
 		String newMsg = username + ":\n" + message;
 		Client.chatHistory.addElement(newMsg);	
 		messageAdded=true;
 	}
-
 
 
 	//Recieve the popup when your opponent has left the game
@@ -854,7 +838,6 @@ public class GUIControler extends Thread {
 		newW = "";
 		mainWindow.listOfButtons.clear();
 		end = 0;
-		//Client.gameActive = false;
 		Client.sentRequestForGame=0;
 		Client.sendSignalResetWinsLosses(opponent);
 	

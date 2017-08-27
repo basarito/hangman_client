@@ -107,13 +107,9 @@ public class MainWindow extends JFrame {
 		getPanel_3().add(getTxtrLettersYou(), BorderLayout.NORTH);
 		getPanel_2().add(getPanel_4(), BorderLayout.NORTH);
 		getPanel_2().add(getPanel_5(), BorderLayout.SOUTH);
-		//getPanel_5().add(getBtnLetter());
-		//GameLogic.insertButtonsForLetters();
-
 		getPanel_2().add(getPanel_6(), BorderLayout.CENTER);
 		getPanel_6().add(getLblSlika());
 		contentPane.add(getPanel_7());
-		//getPanel_7().add(getUserVsUser());
 		getPanel_4().add(getlblResult());
 		getPanel_4().add(getLblCategory());
 		contentPane.add(getScrollPane_1_1());
@@ -140,7 +136,6 @@ public class MainWindow extends JFrame {
 			scrollPane.setBackground(Color.BLACK);
 			scrollPane.setBounds(584, 11, 200, 351);
 			scrollPane.setColumnHeaderView(getLblChatbox());
-			//scrollPane.setViewportView(getChatbox());
 			scrollPane.setViewportView(getList());
 
 			scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
@@ -151,12 +146,10 @@ public class MainWindow extends JFrame {
 					}
 				}
 			});
-
 		}
 
 		return scrollPane;
 	}
-
 
 	public JLabel getLblChatbox() {
 		if(lblChatbox == null){
@@ -202,15 +195,11 @@ public class MainWindow extends JFrame {
 			textField.setMaximumSize(new Dimension(100, 20));
 			textField.setColumns(3);
 
-
-
 			textField.addKeyListener(new KeyAdapter(){
 				public void keyTyped(KeyEvent e) { 
-
 					if(textField.getText().length() > 0) {
 						e.consume();
 					}	               
-
 				}
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -223,12 +212,6 @@ public class MainWindow extends JFrame {
 					}
 				}
 			});
-
-
-
-
-
-
 		}
 		return textField;
 	}
@@ -241,7 +224,6 @@ public class MainWindow extends JFrame {
 			btnGuess.setForeground(new Color(255, 255, 255));
 			btnGuess.setFont(new Font("Arial", Font.BOLD, 13));
 
-
 			if(textField.getText() == null){
 				btnGuess.setEnabled(false);
 			}
@@ -252,11 +234,8 @@ public class MainWindow extends JFrame {
 						GUIControler.placeTheLetter(textField.getText());
 						getTextField().setText("");
 						getTextField().requestFocusInWindow();
-
-
 					}
 				});
-
 			}
 		}
 
@@ -277,9 +256,6 @@ public class MainWindow extends JFrame {
 		if(panel_3 ==null){
 			panel_3 = new JPanel();
 			panel_3.setLayout(new BorderLayout(0,0));
-
-
-
 		}
 
 		return panel_3;
@@ -293,9 +269,7 @@ public class MainWindow extends JFrame {
 			txtpnABC.setBackground(new Color(255, 255, 255));
 			txtpnABC.setFont(new Font("Viner Hand ITC", Font.BOLD, 20));
 			txtpnABC.setEditable(false);
-			txtpnABC.setText(" ");
-
-
+			txtpnABC.setText("");
 		}
 
 		return txtpnABC;
@@ -323,9 +297,6 @@ public class MainWindow extends JFrame {
 			panel_4 = new JPanel();
 			panel_4.setPreferredSize(new Dimension(10, 20));
 			panel_4.setLayout(null);
-
-
-
 		}
 
 		return panel_4;
@@ -337,7 +308,6 @@ public class MainWindow extends JFrame {
 			lblResult.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblResult.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 13));
 			lblResult.setForeground(new Color(0, 0, 0));
-
 			lblResult.setBounds(433, 0, 121, 20);
 		}
 		return lblResult;
@@ -365,7 +335,6 @@ public class MainWindow extends JFrame {
 		btnLetter.setVisible(true);
 		listOfButtons.add(btnLetter);
 
-
 		return btnLetter;
 	}
 
@@ -386,18 +355,15 @@ public class MainWindow extends JFrame {
 			lblSlika = new JLabel("");
 			lblSlika.setPreferredSize(new Dimension(200, 270));
 			ImageIcon img = new ImageIcon(MainWindow.class.getResource("/icons/state-0.png"));
-			Image img1 = img.getImage();
+			//Image img1 = img.getImage();
 			Image img2 = img.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
 			img = new ImageIcon(img2);
 			lblSlika.setIcon(img);
 			lblSlika.setSize(300, 300);
-			//GUIControler.setHangmanImage();
 		}
 
 		return lblSlika;
 	}
-
-
 
 	public JPanel getPanel_7() {
 		if(panel_7 == null){
@@ -437,8 +403,8 @@ public class MainWindow extends JFrame {
 	}
 
 
-	/***************CHATBOX**********************/
-
+/***************CHATBOX**********************/
+	
 	public JScrollPane getScrollPane_1_1() {
 		if (scrollPane_1 == null) {
 			scrollPane_1 = new JScrollPane();
@@ -509,9 +475,11 @@ public class MainWindow extends JFrame {
 		}
 		return btnSend;
 	}
-	private JList getList() {
+	
+	@SuppressWarnings("unchecked")
+	private JList<String> getList() {
 		if (list == null) {
-			list = new JList(Client.chatHistory);
+			list = new JList<String>(Client.chatHistory);
 
 			list.setBackground(Color.DARK_GRAY);
 
@@ -521,7 +489,7 @@ public class MainWindow extends JFrame {
 			ComponentListener l = new ComponentAdapter() {
 				@Override
 				public void componentResized(ComponentEvent e) {
-					// for core: force cache invalidation by temporarily setting fixed height
+					//force cache invalidation by temporarily setting fixed height
 					list.setFixedCellHeight(10);
 					list.setFixedCellHeight(-1);
 				}
@@ -530,7 +498,6 @@ public class MainWindow extends JFrame {
 		}
 		return list;
 	}
-
 
 	public JLabel getLblTip() {
 		if (lblTip==null){

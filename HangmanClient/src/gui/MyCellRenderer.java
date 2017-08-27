@@ -3,21 +3,17 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Insets;
-
-import javax.swing.BorderFactory;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.text.DefaultCaret;
 
 import clients.Client;
 
+@SuppressWarnings("rawtypes")
 public class MyCellRenderer implements ListCellRenderer {
 
 	private JPanel p;
@@ -27,7 +23,7 @@ public class MyCellRenderer implements ListCellRenderer {
 		p = new JPanel();
 		p.setLayout(new BorderLayout());
 
-		// text
+		//single message
 		ta = new JTextArea();
 		ta.setLineWrap(true);
 		ta.setWrapStyleWord(true);

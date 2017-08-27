@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,18 +20,13 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.UIManager;
 import javax.swing.JButton;
-import javax.swing.JList;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Vector;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
@@ -173,7 +167,7 @@ public class ConnectingWindow extends JFrame {
 			txtFindASpecific.setFont(new Font("Arial", Font.ITALIC, 12));
 			txtFindASpecific.setText("Find a specific user...");
 			txtFindASpecific.setColumns(14);
-			
+
 		}
 
 		return txtFindASpecific;
@@ -270,41 +264,34 @@ public class ConnectingWindow extends JFrame {
 
 	public JTable getTable() {
 		try {
-
-		if (table == null) {
-			dtm = new DefaultTableModel(new String[1][1],
-					new Object[] { "" });
-			table=new JTable(dtm){
-				@Override
-				public boolean isCellEditable(int row, int column) {
-					return false;
-				}
-			};
-
-			table.setPreferredScrollableViewportSize(new Dimension(100, 100));
-			table.setFillsViewportHeight(true);
-			table.setIntercellSpacing(new Dimension(0, 0));
-			table.setShowGrid(false);
-			table.setTableHeader(null);
-			table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
-
-			{
-				@Override
-				public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-				{
-					final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-					c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
-					if(isSelected==true){
-						c.setBackground(new Color(153, 50, 204));
+			if (table == null) {
+				dtm = new DefaultTableModel(new String[1][1],
+						new Object[] { "" });
+				table=new JTable(dtm) {
+					@Override
+					public boolean isCellEditable(int row, int column) {
+						return false;
 					}
-					return c;
-				}
-			});
-			
-			
+				};
 
-			
-			
+				table.setPreferredScrollableViewportSize(new Dimension(100, 100));
+				table.setFillsViewportHeight(true);
+				table.setIntercellSpacing(new Dimension(0, 0));
+				table.setShowGrid(false);
+				table.setTableHeader(null);
+				table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+					@Override
+					public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+					{
+						final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+						c.setBackground(row % 2 == 0 ? new Color(229,204,255) : Color.WHITE);
+						if(isSelected==true){
+							c.setBackground(new Color(153, 50, 204));
+						}
+						return c;
+					}
+				});	
+
 				table.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent e) {
@@ -316,18 +303,15 @@ public class ConnectingWindow extends JFrame {
 										convertRowIndexToModel(row), 0).toString().equals("There are no online players at the moment")){
 									GUIControler.choose(table.getModel().getValueAt(table.
 											convertRowIndexToModel(row), 0).toString());
-								}
-								
+								}								
 							}
 						}
 					}
-				});
-			
-		}
+				});	
+			}
+			return table;
 
-		return table;
 		} catch (Exception e) {
-			System.out.println("eve ga exception");
 			return null;
 		}
 	}
@@ -348,7 +332,6 @@ public class ConnectingWindow extends JFrame {
 			getTxtFindASpecific().setEditable(false);
 			getTxtFindASpecific().setToolTipText("There are no online players at the moment");
 			UIManager.put("ToolTip.background", new Color(229,204,255));
-
 		} else {
 			data = new String[listSize][1];
 			for (int i=0; i< listSize; i++) {
@@ -359,26 +342,20 @@ public class ConnectingWindow extends JFrame {
 			getTxtFindASpecific().setText("Find a specific user...");
 			getTxtFindASpecific().setFocusable(true);
 			getTxtFindASpecific().setEditable(true);
-			
-
 		}
-	
+
 		DefaultTableModel dtm = (DefaultTableModel)this.table.getModel();
 		if (dtm.getRowCount() > 0) {
 			for (int i = dtm.getRowCount() - 1; i > -1; i--) {
 				dtm.removeRow(i);
 			}
 		}
-
 		dtm.fireTableDataChanged();
-
 		for(int i = 0; i < data.length; i++) {
 			dtm.addRow(data[i]);
 		}
-
 		dtm.fireTableDataChanged();
 	}
-
 
 	public void filter(String txt){
 		TableRowSorter<DefaultTableModel> trs = new TableRowSorter<DefaultTableModel>(dtm);
