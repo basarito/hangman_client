@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -12,7 +11,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -26,12 +24,10 @@ import clients.Client;
 
 
 import java.awt.Dimension;
-import java.awt.Event;
 
 import javax.swing.JScrollPane;
 import java.awt.Color;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
 import java.awt.FlowLayout;
@@ -43,7 +39,6 @@ import java.awt.Image;
 import java.awt.Insets;
 
 import javax.swing.JTextArea;
-import java.awt.Rectangle;
 import javax.swing.JList;
 
 @SuppressWarnings("serial")
@@ -126,12 +121,6 @@ public class MainWindow extends JFrame {
 		getLblCategory().setVisible(false);
 		getlblResult().setVisible(false);
 	}
-
-
-	public static void setIconImage(){
-
-	}
-
 
 
 	public JLabel getLblWord() {
@@ -227,7 +216,6 @@ public class MainWindow extends JFrame {
 				public void keyPressed(KeyEvent e) {
 					if(e.getKeyCode() == KeyEvent.VK_ENTER){
 						String text = textField.getText();
-						//if(textField.getText()!=null && textField.getText()!=""){
 						if(!text.isEmpty()) {
 							GUIControler.placeTheLetter(text);
 							textField.setText("");

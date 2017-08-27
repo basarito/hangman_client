@@ -165,7 +165,6 @@ public class WelcomeWindow extends JFrame {
 					if(e.getKeyCode() == KeyEvent.VK_ENTER){
 						String name=getTextField().getText().toLowerCase();
 						if(GUIControler.validateUsernameLocally(name)) {
-							//GUIControler.validateUsernameFromServer(name);
 							Client.sendUsernameToServer(name);
 						}
 					}
@@ -185,7 +184,6 @@ public class WelcomeWindow extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					String name=getTextField().getText().toLowerCase();
 					if(GUIControler.validateUsernameLocally(name)) {
-						//GUIControler.validateUsernameFromServer(name);
 						Client.sendUsernameToServer(name);
 					}
 				}

@@ -45,7 +45,6 @@ public class GUIControler extends Thread {
 	static JDialog gameOverDialog = null;
 	static boolean answered = false;
 
-	//public static boolean goodbye = false;
 	public static String word="";
 	public static String category="";
 	public static String newW="";
@@ -58,7 +57,6 @@ public class GUIControler extends Thread {
 	static String usernameToValidate = "";
 	static String tryOpponent = "";
 	private static JDialog dialogForWord;
-	//private static JDialog dialogForGameStatus;
 	public static JDialog wordInputDialog=null;
 	
 
@@ -229,7 +227,7 @@ public class GUIControler extends Thread {
 		}
 	}
 
-	//Random button functionality 
+	//Choosing an opponent at random
 	public static void chooseRandom() {
 		if(Client.onlineLista.isEmpty() || (Client.onlineLista.size()==Client.activeGames.size())){
 			JOptionPane.showMessageDialog(connectingWindow.getContentPane(), "There are no available players at the moment!");						
@@ -272,8 +270,6 @@ public class GUIControler extends Thread {
 		connectingWindow.refreshTable();
 	}	
 
-	// ******************** game logic methods ***************** 
-
 	//Set Hangman picture
 	public static void setHangmanImage(String imgPath){
 
@@ -287,13 +283,10 @@ public class GUIControler extends Thread {
 	} 	
 	// Place guessed and not guessed letters on Main Window
 	public static void placeTheLetter(String text) {
-		//letter = MainWindow.getTextField().getText().toLowerCase();
-		//MainWindow.getTextField().setText("");
 		letter = text.toLowerCase();
 		String w =word.toLowerCase();
 		if(letter.matches("[a-z]")) {
 
-			//if (!(w.contains(letter)) || (newW!=null && numberOfLettersInAWord(newW, letter)==numberOfLettersInAWord(w, letter))){
 			if (!w.contains(letter)) {	
 			MainWindow.getTxtpnABC().setText(MainWindow.getTxtpnABC().getText()+letter +"\n");
 				errorCount++;
@@ -405,25 +398,24 @@ public class GUIControler extends Thread {
 
 	}
 
-	// sending gameOver signal to opponent and launching gameOver JOptionPane
+	// Sending gameOver signal to opponent and launching gameOver JOptionPane
 	private static void gameOver(String opponent, String message, String msgOpp) {
 		Client.sendGameOverSignal(opponent, msgOpp);
 		gameOverWindow(message);
 
 	}
 
-	// gameOver JOptionPane 
+	// Showing gameOver dialog to the players and asking them if they want to play again
 	public static void gameOverWindow(String message){
 				
 		JButton btnAgain = new JButton("Play again");
 		JButton btnExit = new JButton("Exit game");
 		
 		Object[] options = new Object[] {btnAgain, btnExit};
-//		Object[] options = new Object[] {"Wanna play again?", "Exit game"};
 		JOptionPane paneGameOver = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE,  JOptionPane.YES_NO_OPTION, null, options);
 
 		gameOverDialog = paneGameOver.createDialog(mainWindow.getContentPane(), "Game Status!");
-		gameOverDialog.setModalityType(Dialog.ModalityType.MODELESS);;
+		gameOverDialog.setModalityType(Dialog.ModalityType.MODELESS);
 		gameOverDialog.setVisible(true);
 
 		gameOverDialog.addWindowListener(new WindowAdapter() 
@@ -446,9 +438,6 @@ public class GUIControler extends Thread {
 				}
 		  }
 		});
-		
-		
-		
 		
 		btnAgain.addMouseListener(new MouseAdapter() {
 			@Override
@@ -480,43 +469,6 @@ public class GUIControler extends Thread {
 		}); 
 		
 		
-
-		
-		//		String[] options = new String[] {"Wanna play again?", "Exit game"};
-//		int response = JOptionPane.showOptionDialog(mainWindow, message, "Game Status",
-//				JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
-//				null, options, options[0]);
-//
-//		if(response==0){ //ponovo igraju
-//			Client.setNumOfLosses(0);
-//			Client.setNumOfWins(0);
-//			errorCount = 0;
-//			lettersCorrect = 0;
-//			newW = null;
-//			mainWindow.listOfButtons.clear();
-//			end = 0;
-//
-//			startGame();
-//		}
-//		if(response==1){ //vracaju se na izbor igraca
-//			resetVariables(Client.getOpponent());
-//			Client.sendQuitTheGameSignal(Client.getOpponent());
-//			connectingWindow.setLocationRelativeTo(mainWindow);
-//			connectingWindow.setEnabled(true);
-//			connectingWindow.setVisible(true);
-//			mainWindow.setVisible(false);
-//			System.out.println("dskjnsjk");
-//		}
-//		if(response==-1){ //pritisnuto x
-//			resetVariables(Client.getOpponent());
-//			Client.sendQuitTheGameSignal(Client.getOpponent());
-//
-//			connectingWindow.setLocationRelativeTo(mainWindow);
-//			connectingWindow.setEnabled(true);
-//			connectingWindow.setVisible(true);
-//			mainWindow.setVisible(false);
-//			return;
-//		}
 
 	}
 
@@ -571,10 +523,7 @@ public class GUIControler extends Thread {
 		}
 	}
 
-
-	/******Connecting two players in a game**************/
-
-
+	//Connecting two players in a game
 	public static void receiveInvite(String name) {
 		JOptionPane pane = null;
 		answered=false;
@@ -613,21 +562,19 @@ public class GUIControler extends Thread {
 			} else if (value == JOptionPane.NO_OPTION) {
 				answered=true;
 				Client.rejectInvite(name);
-				//System.out.println("clicked no");
 			} else if (value == JOptionPane.CLOSED_OPTION) {
 				answered=true;
 				Client.rejectInvite(name);
-				//System.out.println("clicked X");
 			}
 		} catch (NumberFormatException e1) {
 			answered=false;
-			//System.out.println("did nothing");
 			return;
 		} catch (Exception e) {
 			return;
 		}
 	}
-
+	
+	//Start the game between two players
 	public static void startGame() {
 		//Client.gameActive = true;
 		if(mainWindow!=null){
@@ -635,8 +582,6 @@ public class GUIControler extends Thread {
 			mainWindow.setVisible(false);
 			mainWindow= new MainWindow();
 			mainWindow.setLocationRelativeTo(connectingWindow);
-			//mora sledeci red da stoji da bi se sklanjao connectingWindow kad se pokrece igra nakon iskljucivanja
-			//prethodne 
 			connectingWindow.setVisible(false);
 			mainWindow.setVisible(true);
 			mainWindow.getLblWord().setText("");
@@ -663,7 +608,8 @@ public class GUIControler extends Thread {
 		}
 
 	}
-
+	
+	//Setting the look of the window for the player who is waiting for the opponent to set a word 
 	private static void waitingMainWindow() {
 		//loading screen:
 		dialogForWord = new JDialog();
@@ -685,9 +631,8 @@ public class GUIControler extends Thread {
 						"Leaving the game", JOptionPane.YES_NO_OPTION);
 
 				if (option == JOptionPane.YES_OPTION) {
-					Client.sendQuitTheGameSignal(Client.getOpponent());
-					Client.sentRequestForGame=0;
 					resetVariables(Client.getOpponent());
+					Client.sendQuitTheGameSignal(Client.getOpponent());
 					connectingWindow.setLocationRelativeTo(mainWindow);
 					connectingWindow.setEnabled(true);
 					connectingWindow.setVisible(true);
@@ -702,7 +647,7 @@ public class GUIControler extends Thread {
 		mainWindow.setEnabled(false);
 	}
 
-
+	//Getting word and category that the player set for his opponent
 	private static void givingWordMainWindow() {
 		String w="";
 		String c="";
@@ -719,7 +664,7 @@ public class GUIControler extends Thread {
 		panelWord.add(txt2);
 
 		do {
-			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panelWord, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , null);
+			int selectedOption = JOptionPane.showOptionDialog(mainWindow, panelWord, "It's your turn to give a word", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options , options[0]);
 			
 			if(giving == true){
 				if(selectedOption==JOptionPane.CLOSED_OPTION){
@@ -833,9 +778,7 @@ public class GUIControler extends Thread {
 	}
 
 
-
-	/**************CHATBOX********************/
-
+	//CHATBOX
 	public static void addMessage(String username, String message) {
 		String newMsg = username + ":\n" + message;
 		Client.chatHistory.addElement(newMsg);	
@@ -844,14 +787,13 @@ public class GUIControler extends Thread {
 
 
 
-
+	//Recieve the popup when your opponent has left the game
 	public static void receiveQuitTheGameSignal(String name) {
 
 		if(dialogForWord!=null)
 			dialogForWord.setVisible(false);
 		giving=false;		
 		
-		//System.out.println("signal received");
 		if(!connectingWindow.isVisible())
 			JOptionPane.showMessageDialog(mainWindow, name+" has quit the game. Please choose another player to play with.");
 		resetVariables(name);
@@ -902,7 +844,7 @@ public class GUIControler extends Thread {
 
 	}
 
-
+	//Reset variables from the game played, so that it can be played again
 	public static void resetVariables(String opponent){
 		Client.setNumOfLosses(0);
 		Client.setNumOfWins(0);
@@ -915,8 +857,8 @@ public class GUIControler extends Thread {
 		//Client.gameActive = false;
 		Client.sentRequestForGame=0;
 		Client.sendSignalResetWinsLosses(opponent);
-		
-	}
+	
+		}
 
 	public static void receiveSignalResetWinsLosses() {
 		Client.setNumOfLosses(0);

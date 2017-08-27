@@ -235,7 +235,6 @@ public class ConnectingWindow extends JFrame {
 			panel_6 = new JPanel();
 			panel_6.setLayout(new BorderLayout(0, 0));
 			panel_6.add(getScrollPane(), BorderLayout.CENTER);
-			//panel_6.add(getTable(), BorderLayout.CENTER);
 		}
 
 		return panel_6;
