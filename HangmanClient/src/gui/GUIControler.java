@@ -48,7 +48,7 @@ public class GUIControler extends Thread {
 	//public static boolean goodbye = false;
 	public static String word="";
 	public static String category="";
-	public static String newW=null;
+	public static String newW="";
 	public static String letter;
 	public static int errorCount=0;
 	public static int lettersCorrect=0;
@@ -286,14 +286,16 @@ public class GUIControler extends Thread {
 
 	} 	
 	// Place guessed and not guessed letters on Main Window
-	public static void placeTheLetter() {
-		letter = MainWindow.getTextField().getText().toLowerCase();
-		MainWindow.getTextField().setText("");
+	public static void placeTheLetter(String text) {
+		//letter = MainWindow.getTextField().getText().toLowerCase();
+		//MainWindow.getTextField().setText("");
+		letter = text.toLowerCase();
+		String w =word.toLowerCase();
 		if(letter.matches("[a-z]")) {
 
-			String w =word.toLowerCase();
-			if (!(w.contains(letter)) || (newW!=null && numberOfLettersInAWord(newW, letter)==numberOfLettersInAWord(w, letter))){
-				MainWindow.getTxtpnABC().setText(MainWindow.getTxtpnABC().getText()+letter +"\n");
+			//if (!(w.contains(letter)) || (newW!=null && numberOfLettersInAWord(newW, letter)==numberOfLettersInAWord(w, letter))){
+			if (!w.contains(letter)) {	
+			MainWindow.getTxtpnABC().setText(MainWindow.getTxtpnABC().getText()+letter +"\n");
 				errorCount++;
 				switch (errorCount) {
 				case 1: 
@@ -344,8 +346,10 @@ public class GUIControler extends Thread {
 					break;
 				default : break;
 				}
-			}
-			else {
+			} else if(newW!=null && newW.contains(letter)) {
+				System.out.println(newW);
+				return;
+			} else {
 				for (int i=0; i<w.length(); i++){
 
 					if (letter.charAt(0)==w.charAt(i)){
@@ -453,7 +457,7 @@ public class GUIControler extends Thread {
 				Client.setNumOfWins(0);
 				errorCount = 0;
 				lettersCorrect = 0;
-				newW = null;
+				newW = "";
 				mainWindow.listOfButtons.clear();
 				end = 0;
 				
@@ -548,7 +552,7 @@ public class GUIControler extends Thread {
 		Client.sendChangeResult(opponent, r2, r1);
 		errorCount=0; 
 		lettersCorrect=0; 
-		newW=null;  
+		newW="";  
 		mainWindow.listOfButtons.clear();
 	}
 
@@ -905,7 +909,7 @@ public class GUIControler extends Thread {
 
 		errorCount = 0;
 		lettersCorrect = 0;
-		newW = null;
+		newW = "";
 		mainWindow.listOfButtons.clear();
 		end = 0;
 		//Client.gameActive = false;

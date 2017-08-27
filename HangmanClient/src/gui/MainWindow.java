@@ -226,8 +226,11 @@ public class MainWindow extends JFrame {
 				@Override
 				public void keyPressed(KeyEvent e) {
 					if(e.getKeyCode() == KeyEvent.VK_ENTER){
-						if(textField.getText()!=null && textField.getText()!=""){
-							GUIControler.placeTheLetter();
+						String text = textField.getText();
+						//if(textField.getText()!=null && textField.getText()!=""){
+						if(!text.isEmpty()) {
+							GUIControler.placeTheLetter(text);
+							textField.setText("");
 						}
 					}
 				}
@@ -258,7 +261,8 @@ public class MainWindow extends JFrame {
 				btnGuess.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						GUIControler.placeTheLetter();
+						GUIControler.placeTheLetter(textField.getText());
+						getTextField().setText("");
 						getTextField().requestFocusInWindow();
 
 
