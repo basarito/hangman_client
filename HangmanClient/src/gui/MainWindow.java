@@ -477,7 +477,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private JList<String> getList() {
+	public JList<String> getList() {
 		if (list == null) {
 			list = new JList<String>(Client.chatHistory);
 

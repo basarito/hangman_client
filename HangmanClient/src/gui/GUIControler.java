@@ -14,12 +14,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Random;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -277,6 +279,7 @@ public class GUIControler extends Thread {
 	}
 	
 	// Place guessed and not guessed letters on Main Window
+	//Game logic
 	public static void placeTheLetter(String text) {
 		letter = text.toLowerCase();
 		String w =word.toLowerCase();
@@ -307,31 +310,9 @@ public class GUIControler extends Thread {
 				case 6:
 					changeHangmnPicAndPlaceWrongLetter("/icons/state-6.png", Client.getOpponent(), letter);
 					Client.setNumOfLosses(Client.getNumOfLosses()+1);
-
-
-					if(end<2) { //na dve pobede
-						if(Client.getNumOfLosses()>end ) {
-							end=Client.getNumOfLosses();
-
-							if(end==2){
-								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
-								checkGameSentRq();
-								gameOver(Client.getOpponent(), "You lost :(", "YOU WON!");
-							}
-							else{
-								switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
-										Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
-							}
-
-						}
-						else {
-							switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 0+"", "You haven't gueesed the word. \n It's your turn to set a word for "+
-									Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
-						}
-
-					}
-
-					break;
+					set2VictoriesEndGame(Client.getNumOfLosses(), "You lost :(", "YOU WON!", 0,
+										"You haven't gueesed the word. \n It's your turn to set a word for ");
+					break; 
 				default : break;
 				}
 			} else if(newW!=null && newW.contains(letter)) {
@@ -351,28 +332,8 @@ public class GUIControler extends Thread {
 
 				if(lettersCorrect==w.length()){
 					Client.setNumOfWins(Client.getNumOfWins()+1);
-
-					if(end<2) { //na dve pobede
-						if(Client.getNumOfWins()>end ) {
-							end=Client.getNumOfWins();
-
-							if(end==2){
-								sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
-								checkGameSentRq();;
-								gameOver(Client.getOpponent(), "YOU WON!", "You lost :(");
-							}
-							else{
-								switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
-										+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
-							}
-
-						}
-						else{
-							switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , 1+"", "You guessed the word. \n "
-									+ "It's your turn to set a word for "+Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
-						}
-
-					}
+					set2VictoriesEndGame(Client.getNumOfWins(), "YOU WON!", "You lost :(", 1, 
+							"You guessed the word. \n "+ "It's your turn to set a word for ");
 				}
 			}
 		}
@@ -382,6 +343,31 @@ public class GUIControler extends Thread {
 
 
 	}
+	public static void set2VictoriesEndGame(int wLNum, String msg1, String msg2, int gmRqNum, String msg3) {
+		if(end<2) { 
+			if(Client.getNumOfLosses()>end ) {
+				end=wLNum;
+
+				if(end==2){
+					sendingResultNClearingValues(Client.getOpponent(), Client.getNumOfWins()+"", Client.getNumOfLosses()+"");
+					checkGameSentRq();
+					gameOver(Client.getOpponent(), msg1, msg2 );
+				}
+				else{
+					switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , gmRqNum+"" , msg3+
+							Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
+				}
+
+			}
+			else {
+				switchMainWindow(Client.getOpponent(), Client.sentRequestForGame+"" , gmRqNum+"", msg3+
+						Client.getOpponent()+".", Client.getNumOfWins()+"", Client.getNumOfLosses()+"" );
+			}
+
+		}   
+		
+	}
+
 	private static void checkGameSentRq() {
 		if(Client.sentRequestForGame==1){
 			Client.sendRqGmNum(Client.getOpponent(), 0+"");
@@ -495,7 +481,7 @@ public class GUIControler extends Thread {
 		mainWindow.listOfButtons.clear();
 	}
 
-
+	// Switch appearance of Main window for both players when the word is guessed/hangman is drawn
 	public static void switchMainWindow(String opponent, String gameRqNum, String result, String message, String r1, String r2) {
 		sendingResultNClearingValues(opponent, r1, r2);
 		Client.sendGameStatusWindow(opponent, gameRqNum , result);
@@ -788,7 +774,7 @@ public class GUIControler extends Thread {
 		
 
 	}
-
+	//Pop up that comes up when someone guessed the word
 	public static void receiveSignalStatusWindow(String gameRqNum, String result) {
 		String message="";
 		int r=Integer.parseInt(result);
@@ -840,6 +826,7 @@ public class GUIControler extends Thread {
 		end = 0;
 		Client.sentRequestForGame=0;
 		Client.sendSignalResetWinsLosses(opponent);
+		Client.chatHistory.clear();
 	
 		}
 
@@ -847,7 +834,7 @@ public class GUIControler extends Thread {
 		Client.setNumOfLosses(0);
 		Client.setNumOfWins(0);
 	}
-
+	//Game request number determines who is giving the word and who is guessing it
 	public static void receiveGameRqNum(String num) {
 		Client.sentRequestForGame=Integer.parseInt(num);
 
